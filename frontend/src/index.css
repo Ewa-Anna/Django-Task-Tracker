@@ -1,0 +1,31 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+
+}
+
+.button_one{
+    text-decoration: none;
+    font-size: 14px;
+    color:#fff;
+    font-weight: 600;
+    background: #867cfa;
+    padding: 5px 15px;
+    border-radius: 0.5em;
+    text-transform: uppercase;
+    box-shadow: inset 2px 2px 2px rgba(99, 124, 135, 0.4);
+    /* inset :-5px  -10px 10px #867cfa; */
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .button_two{
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    color: #d1d0d5;
+    border: 2px solid #867cfa;
+    border-radius: .5em;
+    padding: 5px 15px;
+    margin: 0px 5px;
+  }
