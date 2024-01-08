@@ -13,7 +13,7 @@
 
 3. Change the directory
 
-` cd bookstore `
+` cd backend `
 
 4. Run the project
 
