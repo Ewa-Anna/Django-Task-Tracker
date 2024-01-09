@@ -1,0 +1,9 @@
+ import clinetApi from "../axios/axios"
+import {RegisterFormData} from "../../components/pages/register/Register"
+
+
+export const register = async(formData:RegisterFormData)=>{
+
+const response = await clinetApi.post("/register",formData)
+return response.data
+}
