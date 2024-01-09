@@ -17,7 +17,11 @@ router.register(
 urlpatterns = [
     re_path(r"", include(router.urls)),
     path("login/", LoginView.as_view(), name="login"),
-    path("activate/<slug:uidb64>/<slug:token>/", ActivationUserEmailView.as_view(), name="activate"),
+    path(
+        "activate/<slug:uidb64>/<slug:token>/",
+        ActivationUserEmailView.as_view(),
+        name="activate",
+    ),
     path("register/", RegistrationView.as_view(), name="register"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
 ]

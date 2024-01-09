@@ -20,6 +20,7 @@ class ProfileSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer(read_only=True)
+
     class Meta:
         model = User
         fields = ["id", "username", "email", "password", "profile"]
@@ -67,7 +68,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class CustomTokenCreateSerializer(TokenCreateSerializer):
-
     def validate(self, attrs):
         password = attrs.get("password")
         params = {settings.LOGIN_FIELD: attrs.get(settings.LOGIN_FIELD)}

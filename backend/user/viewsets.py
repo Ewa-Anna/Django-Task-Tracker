@@ -40,7 +40,7 @@ class UserViewSet(ModelViewSet):
 
         url = f"{protocol}://{domain}/task-tracker/v1/user/activate/{uid.decode()}/{token}"
         message = f'<p><a href="{url}">{url}</a></p>'
-        
+
         try:
             email = EmailMessage(mail_subject, message, to=[user.email])
             email.send()
