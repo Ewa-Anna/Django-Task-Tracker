@@ -15,7 +15,12 @@
 
 ` cd backend `
 
-4. Run the project
+4. Apply database migrations
+
+` python manage.py makemigrations `
+` python manage.py migrate `
+
+5. Run the development server
 
 ` python manage.py runserver `
 
