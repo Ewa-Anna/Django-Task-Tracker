@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Project, Task, Comment, Attachment
 
+
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project

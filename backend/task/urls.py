@@ -32,8 +32,8 @@ attachment_router.register(
 
 
 urlpatterns = [
-     re_path(r"projects/", include(project_router.urls)),
-     re_path(r"tasks/", include(task_router.urls)),
-     re_path(r"comments/", include(comment_router.urls)),
-     re_path(r"attachments/", include(attachment_router.urls)),
+    re_path(r"projects/", include(project_router.urls)),
+    re_path(r"tasks/", include(task_router.urls)),
+    re_path(r"comments/", include(comment_router.urls)),
+    re_path(r"attachments/", include(attachment_router.urls)),
 ]
