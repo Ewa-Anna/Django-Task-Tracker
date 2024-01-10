@@ -17,7 +17,8 @@ The application allows users to create, edit, and organize tasks effectively. Th
 
 ## Installation
 ### Running project locally
-For frontend please refer to frontend README.md
+For frontend please refer to [frontend README.md](frontend/README.md)
+
 For backend please refer to [backend README.md](backend/README.md)
 
 ### docker-compose
@@ -54,6 +55,7 @@ Running Docker Container
 
     [![VisualStudio](https://skillicons.dev/icons?i=vscode)](https://skillicons.dev)
     [![Docker](https://skillicons.dev/icons?i=docker)](https://skillicons.dev)
+    [![Postman](https://skillicons.dev/icons?i=postman)](https://skillicons.dev)
 
 
 ## License

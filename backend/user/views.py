@@ -22,7 +22,10 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         login(request, user)
-        return Response(None, status=status.HTTP_202_ACCEPTED)
+        response_data = {
+            "user_id": user.id,
+        }
+        return Response(response_data, status=status.HTTP_202_ACCEPTED)
 
 
 class RegistrationView(generics.CreateAPIView):

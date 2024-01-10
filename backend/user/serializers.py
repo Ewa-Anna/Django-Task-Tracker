@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model, authenticate
-
 from djoser.conf import settings
 from djoser.serializers import TokenCreateSerializer
 
@@ -36,7 +35,7 @@ class UserSerializer(ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(label="Username", write_only=True)
+    email = serializers.EmailField()
     password = serializers.CharField(
         label="Password",
         style={"input_type": "password"},
@@ -45,18 +44,18 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        username = attrs.get("username")
+        email = attrs.get("email")
         password = attrs.get("password")
 
-        if username and password:
+        if email and password:
             user = authenticate(
                 request=self.context.get("request"),
-                username=username,
+                email=email,
                 password=password,
             )
 
             if not user:
-                msg = "Incorrect username or password"
+                msg = "Incorrect email or password"
                 raise serializers.ValidationError(msg, code="authorization")
 
         else:
