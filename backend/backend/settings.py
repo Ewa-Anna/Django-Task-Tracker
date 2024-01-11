@@ -65,7 +65,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
 ]
 
-AUTHENTICATION_BACKENDS = ["user.backends.EmailBackend"]
+AUTHENTICATION_BACKENDS = [
+    "user.backends.EmailBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 ROOT_URLCONF = "backend.urls"
 AUTH_USER_MODEL = "user.CustomUser"
