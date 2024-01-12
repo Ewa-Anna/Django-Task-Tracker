@@ -82,6 +82,10 @@ CORS_ALLOW_HEADERS = "*"
 
 
 AUTHENTICATION_BACKENDS = ["user.backends.EmailBackend"]
+AUTHENTICATION_BACKENDS = [
+    "user.backends.EmailBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 ROOT_URLCONF = "backend.urls"
 AUTH_USER_MODEL = "user.CustomUser"

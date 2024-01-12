@@ -21,7 +21,7 @@ class LoginView(APIView):
         )
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
-        login(request, user)
+        login(request, user, backend="user.backends.EmailBackend")
         response_data = {
             "user_id": user.id,
         }
@@ -38,7 +38,7 @@ class RegistrationView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        login(self.request, user)
+        login(self.request, user, backend="user.backends.EmailBackend")
 
         response_data = {
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
