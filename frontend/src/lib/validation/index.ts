@@ -23,3 +23,12 @@ export const signupValidationSchema = z.object({
     }),
     
   });
+
+  export const ProjectValidationSchema = z.object({
+ 
+    title:z.string().min(5).max(100),
+    description:z.string().min(15).max(2200),
+    file:z.custom<File[]>(),
+    
+    
+  });
