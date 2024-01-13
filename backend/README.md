@@ -1,5 +1,6 @@
 ## Table of Contents
 - [Installation](#how-to-install-and-run-the-project)
+- [API](#API)
 
 ## How to install and run the project?
 ### Running the project locally
@@ -28,3 +29,8 @@ Project will run on http://127.0.0.1:8000/
 
 ### Creating .env file
 You need to rename ` .env.template ` to ` .env ` and fill all variables.
+
+## API
+### Tasks
+`GET // `
+### User
