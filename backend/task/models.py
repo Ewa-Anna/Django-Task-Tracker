@@ -29,7 +29,11 @@ class Project(models.Model):
     owner = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="owned_projects"
     )
-    visibility = models.CharField(max_length=10, choices=[("public", "Public"), ("private", "Private")], default="public")
+    visibility = models.CharField(
+        max_length=10,
+        choices=[("public", "Public"), ("private", "Private")],
+        default="public",
+    )
 
     tags = TaggableManager()
 

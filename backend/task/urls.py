@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import re_path
-from django.urls.conf import include
+from django.urls.conf import include, path
 
 from .viewsets import ProjectViewSet, TaskViewSet, CommentViewSet, AttachmentViewSet
 
@@ -36,4 +36,9 @@ urlpatterns = [
     re_path(r"tasks/", include(task_router.urls)),
     re_path(r"comments/", include(comment_router.urls)),
     re_path(r"attachments/", include(attachment_router.urls)),
+    path(
+        "projects/<int:project_id>/tasks/<int:task_id>/",
+        TaskViewSet.as_view({"get": "retrieve"}),
+        name="project-task-detail",
+    ),
 ]
