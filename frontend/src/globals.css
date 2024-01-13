@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+html {
+  overflow-y: hidden
+}
 @layer base {
   * {
     @apply box-border list-none p-0 m-0 scroll-smooth;
@@ -109,7 +113,7 @@
   }
 
   .common-container {
-    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar;
+    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-24 custom-scrollbar;
   }
 
   /* All Users */

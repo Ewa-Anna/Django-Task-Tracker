@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
-import { useDropzone, FileWithPath } from "react-dropzone";
+import {useDropzone} from 'react-dropzone'
 import { Button } from "../button";
-import { Divide } from "lucide-react";
+
 
 type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
