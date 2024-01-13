@@ -4,9 +4,11 @@ from .models import Project, Task, Comment, Attachment
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(source="tags.names", required=False)
+
     class Meta:
         model = Project
-        fields = ["title", "description", "deadline", "owner"]
+        fields = "__all__"
 
 
 class TaskSerializer(serializers.ModelSerializer):

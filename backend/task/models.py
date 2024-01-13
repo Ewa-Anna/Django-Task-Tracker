@@ -1,5 +1,7 @@
 from django.db import models
 
+from taggit.managers import TaggableManager
+
 from user.models import CustomUser
 
 
@@ -27,6 +29,9 @@ class Project(models.Model):
     owner = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="owned_projects"
     )
+    visibility = models.CharField(max_length=10, choices=[("public", "Public"), ("private", "Private")], default="public")
+
+    tags = TaggableManager()
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

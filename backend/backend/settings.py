@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "task",
     "rest_framework",
     "drf_yasg",
+    "taggit",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -64,7 +65,6 @@ CORS_ALLOWED_ORIGINS = [
   
 ]
 
-
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -73,15 +73,9 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+
 CORS_ALLOW_HEADERS = "*"
 
-
-
-
-
-
-
-AUTHENTICATION_BACKENDS = ["user.backends.EmailBackend"]
 AUTHENTICATION_BACKENDS = [
     "user.backends.EmailBackend",
     "django.contrib.auth.backends.ModelBackend",
