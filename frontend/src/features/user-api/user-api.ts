@@ -4,6 +4,8 @@ import axios from "../axios/axios";
 import clientApi from "../axios/axios";
 import jsonApi from "../axios/axios-json";
 
+const API_BASE_URL= import.meta.env.VITE_API_BASE_URL
+
 
 export const createUserAccount = async (formData: RegisterFormData) => {
   const response = await axios.post("user/register/", formData);
@@ -29,7 +31,7 @@ export const logoutUser = async () => {
 
 export const getUsers = async () => {
   try {
-    const response = await jsonApi.get("/users");
+    const response = await clientApi.get("task/tasks/");
     return response.data;
   } catch (error) {
     console.log(error);
