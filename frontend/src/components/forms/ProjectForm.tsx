@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,22 +24,26 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../ui/shared/FileUploader";
 import { ProjectValidationSchema } from "@/lib/validation";
+import { Link } from "react-router-dom";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
+type ProjectFormProps = {
+  title: string;
+  description: string;
+  file: string[];
+  tags: string[];
+};
 
-const ProjectForm = ({ post }) => {
+const ProjectForm = ({ project, users }: ProjectFormProps) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
     defaultValues: {
-      // title:project?project.title:"",
-      // description:project?project.description:"",
-      // file:project?project.file:[],
-      // tags:project?project.tags:"",
+      title: project ? project.title : "",
+      description: project ? project.description : "",
+      file: project ? project.file : [],
+      tags: project ? project.tags : "",
+      leader: project ? project.leader : "",
+      visibility: project ? project.visibility : "",
     },
   });
 
@@ -48,6 +53,8 @@ const ProjectForm = ({ post }) => {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  users && console.log(users && users);
 
   return (
     <Form {...form}>
@@ -97,7 +104,7 @@ const ProjectForm = ({ post }) => {
               <FormControl>
                 <FileUploader
                   fieldChange={field.onChange}
-                  mediaUrl={post?.imageUrl}
+                  mediaUrl={project?.imageUrl}
                 />
               </FormControl>
 
@@ -127,7 +134,73 @@ const ProjectForm = ({ post }) => {
             </FormItem>
           )}
         />
-        <div className="flex"></div>
+        <div className="flex gap-5">
+          <div className="flex-1">
+            <FormField
+            
+              control={form.control}
+              name="leader"
+              render={({ field }) => (
+                <FormItem >
+                  <FormLabel>Project Leader</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    
+                    
+                  >
+                    <FormControl >
+                      <SelectTrigger >
+                        <SelectValue placeholder="Select a project leader" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {users &&
+                        users.map((user) => {
+                          return <SelectItem value={user}>{user.name}</SelectItem>;
+                        })}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex-1">
+            <FormField
+              control={form.control}
+              name="visibility"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Project Leader</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a project leader" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="m@example.com">
+                        m@example.com
+                      </SelectItem>
+                      <SelectItem value="m@google.com">m@google.com</SelectItem>
+                      <SelectItem value="m@support.com">
+                        m@support.com
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
 
         <div className="flex gap-4 items-center justify-end">
           <Button type="button" className="shad-button_dark_4">
@@ -140,25 +213,6 @@ const ProjectForm = ({ post }) => {
             Create
           </Button>
         </div>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="visibility" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="public">Public</SelectItem>
-            <SelectItem value="private">Private</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Theme" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Light</SelectItem>
-            <SelectItem value="dark">Dark</SelectItem>
-            <SelectItem value="system">System</SelectItem>
-          </SelectContent>
-        </Select>
       </form>
     </Form>
   );
