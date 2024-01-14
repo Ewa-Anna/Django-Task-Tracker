@@ -19,13 +19,14 @@ import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createUserAccount } from "@/features/user-api/user-api";
 import { useMutation } from "react-query";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 
 const SignupForm = () => {
   const navigate = useNavigate()
 const toast = useToast()
 const isLoading = false;
-
+const  {showToast}=useAuthContext()
 
 
 
@@ -42,11 +43,14 @@ const isLoading = false;
   });
 
   const mutation = useMutation(createUserAccount,{
-    onSuccess:(data)=>{
-      console.log(data)
+    onSuccess:()=>{
+      showToast({
+        message:"Registration Sucess",type:"SUCCESS"
+      })
+      navigate("/")
     },
-    onError:(error)=>{
-  console.log(error)
+    onError:(error:Error)=>{
+ showToast({message:error.message,type:"ERROR"})
     }
   })
   
