@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+
+# import dj_database_url
+from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -33,27 +36,28 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "user",
-    "task",
-    "rest_framework",
-    "drf_yasg",
-    "taggit",
-    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "user",
+    "task",
+    "taggit",
+    "rest_framework",
+    "drf_yasg",
+    "corsheaders",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "user.middleware.SetLastUserLoggin",
@@ -73,6 +77,10 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOW_HEADERS = "*"
+CORS_ALLOW_CREDENTIALS = True
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+CSRF_USE_SESSIONS = True
 
 AUTHENTICATION_BACKENDS = [
     "user.backends.EmailBackend",
@@ -102,7 +110,9 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -116,27 +126,37 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin@task-tracker.com"
 
-DJOSER = {
-    "USER_ID_FIELD": "username",
-    "LOGIN_FIELD": "email",
-    "SEND_ACTIVATION_EMAIL": True,
-    "ACTIVATION_URL": "activate/{uid}/{token}",
-    "SERIALIZERS": {
-        "token_create": "apps.accounts.serializers.CustomTokenCreateSerializer",
-    },
-}
+# DJOSER = {
+#     "USER_ID_FIELD": "username",
+#     "LOGIN_FIELD": "email",
+#     "SEND_ACTIVATION_EMAIL": True,
+#     "ACTIVATION_URL": "activate/{uid}/{token}",
+#     "SERIALIZERS": {
+#         "token_create": "apps.accounts.serializers.CustomTokenCreateSerializer",
+#     },
+# }
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+NAME = os.getenv("NAME")
+USER_POSTGRES = os.getenv("USER_POSTGRES")
+PASSWORD_POSTGRES = os.getenv("PASSWORD_POSTGRES")
+HOST = os.getenv("HOST")
+PORT = os.getenv("PORT")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": NAME,
+        "USER": USER_POSTGRES,
+        "PASSWORD": PASSWORD_POSTGRES,
+        "HOST": HOST,
+        "PORT": PORT,
+    },
+    # "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
