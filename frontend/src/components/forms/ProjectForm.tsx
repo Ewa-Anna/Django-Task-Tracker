@@ -25,6 +25,9 @@ import { Textarea } from "../ui/textarea";
 import FileUploader from "../ui/shared/FileUploader";
 import { ProjectValidationSchema } from "@/lib/validation";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type ProjectFormProps = {
   title: string;
@@ -34,6 +37,13 @@ type ProjectFormProps = {
 };
 
 const ProjectForm = ({ project, users }: ProjectFormProps) => {
+  const [formStep, setFormStep] = useState(0);
+
+
+
+
+
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
@@ -62,144 +72,159 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">Project Title</FormLabel>
-              <FormControl>
-                <Input type="text" className="shad-input" {...field} />
-              </FormControl>
+        <div
+          className={cn("flex flex-col gap-9 w-full max-w-5xl", {
+            hidden: formStep === 1,
+          })}
+        >
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="shad-form_label">Project Title</FormLabel>
+                <FormControl>
+                  <Input type="text" className="shad-input" {...field} />
+                </FormControl>
 
-              <FormMessage className="shad-form_message" />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">
-                Project overview
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  className="shad-textarea custom-scrollbar"
-                  {...field}
-                />
-              </FormControl>
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="shad-form_label">
+                  Project overview
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="shad-textarea custom-scrollbar"
+                    {...field}
+                  />
+                </FormControl>
 
-              <FormMessage className="shad-form_message" />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="file"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">Add files</FormLabel>
-              <FormControl>
-                <FileUploader
-                  fieldChange={field.onChange}
-                  mediaUrl={project?.imageUrl}
-                />
-              </FormControl>
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
 
-              <FormMessage className="shad-form_message" />
-            </FormItem>
-          )}
-        />
+          <div className="flex gap-5">
+            <div className="flex-1">
+              <FormField
+                control={form.control}
+                name="leader"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Visibility</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a project visibility" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {users &&
+                          users.map((user) => {
+                            return (
+                              <SelectItem value={user}>{user.name}</SelectItem>
+                            );
+                          })}
+                            <SelectItem value={"user"}>TEST</SelectItem>
+                      </SelectContent>
+                    </Select>
 
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="shad-form_label">
-                Add Tags (separated y comma " , "
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="JS, React, NextJS, Node"
-                  type="text"
-                  className="shad-input"
-                  {...field}
-                />
-              </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-              <FormMessage className="shad-form_message" />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-5">
-          <div className="flex-1">
-            <FormField
-            
-              control={form.control}
-              name="leader"
-              render={({ field }) => (
-                <FormItem >
-                  <FormLabel>Project Leader</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    
-                    
-                  >
-                    <FormControl >
-                      <SelectTrigger >
-                        <SelectValue placeholder="Select a project leader" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {users &&
-                        users.map((user) => {
-                          return <SelectItem value={user}>{user.name}</SelectItem>;
-                        })}
-                    </SelectContent>
-                  </Select>
+            <div className="flex-1">
+              <FormField
+                control={form.control}
+                name="visibility"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Leader</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a project leader" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="m@example.com">
+                          m@example.com
+                        </SelectItem>
+                        <SelectItem value="m@google.com">
+                          m@google.com
+                        </SelectItem>
+                        <SelectItem value="m@support.com">
+                          m@support.com
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
-          <div className="flex-1">
-            <FormField
-              control={form.control}
-              name="visibility"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Project Leader</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a project leader" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="m@example.com">
-                        m@example.com
-                      </SelectItem>
-                      <SelectItem value="m@google.com">m@google.com</SelectItem>
-                      <SelectItem value="m@support.com">
-                        m@support.com
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="shad-form_label">
+                  Add Tags (separated y comma " , "
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="JS, React, NextJS, Node"
+                    type="text"
+                    className="shad-input"
+                    {...field}
+                  />
+                </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div
+          className={cn({
+            hidden: formStep === 0,
+          })}
+        >
+          <FormField
+            control={form.control}
+            name="file"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="shad-form_label">Add files</FormLabel>
+                <FormControl>
+                  <FileUploader
+                    fieldChange={field.onChange}
+                    mediaUrl={project?.imageUrl}
+                  />
+                </FormControl>
+
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="flex gap-4 items-center justify-end">
@@ -207,11 +232,50 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
             Cancel
           </Button>
           <Button
+            // shad-button_primary
             type="submit"
-            className="shad-button_primary whitespace-nowrap"
+            className={cn(" whitespace-nowrap ", {
+              hidden: formStep === 0,
+            })}
           >
             Create
           </Button>
+          <Button
+              className={cn(" whitespace-nowrap ", {
+                hidden: formStep === 1,
+              })}
+            variant="ghost"
+            onClick={() => {
+              form.trigger(['title','description','leader','visibility','tags'])
+const titleState= form.getFieldState("title");
+const descriptionState= form.getFieldState("description");
+const leaderState= form.getFieldState("leader");
+const visibilityState= form.getFieldState("visibility");
+const tagsState= form.getFieldState("tags");
+
+if(!titleState.isDirty || titleState.invalid)return;
+if(!descriptionState.isDirty || descriptionState.invalid)return;
+if(!leaderState.isDirty || leaderState.invalid)return;
+if(!visibilityState.isDirty || visibilityState.invalid)return;
+if(!tagsState.isDirty || tagsState.invalid)return;
+              setFormStep((prev)=>prev+1);
+            }}
+          >
+            Next step <ArrowRight className="w-4 h-4 ml-2 " />
+          </Button>
+
+          <Button
+            // shad-button_primary
+            type="submit"
+            className={cn(" whitespace-nowrap ", {
+              hidden: formStep === 0,
+            })}
+            onClick={()=>setFormStep((prev)=>prev-1)}
+          >
+            <ArrowLeft/>
+            Go back
+          </Button>
+
         </div>
       </form>
     </Form>
