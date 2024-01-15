@@ -9,6 +9,7 @@ This repository contains a full-stack task management system built with React an
 - [Features](#features)
 - [Tools](#technologies-and-frameworks)
 - [License](#license)
+- [Contributors](#contributors)
 
 
 ## Overview
@@ -60,3 +61,10 @@ Running Docker Container
 
 ## License
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+## Contributors
+### Frontend
+> [HurasAdam](https://github.com/HurasAdam)
+
+### Backend
+> [Ewa-Anna](https://github.com/Ewa-Anna)
