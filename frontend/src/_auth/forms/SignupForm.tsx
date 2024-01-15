@@ -138,6 +138,20 @@ mutation.mutate(values)
               </FormItem>
             )}
           />
+                                <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input type="password" className="shad-input"{...field} />
+                </FormControl>
+         
+                <FormMessage className="text-red-300" />
+              </FormItem>
+            )}
+          />
   
           <Button className="shad-button_primary" type="submit">
             {isLoading?(<div className="flex-center gap-3"><Loader/>Loading...</div>):("Sign up")}
