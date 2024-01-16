@@ -20,8 +20,7 @@ const AllUsers = () => {
     isFetching,
   } = useQuery("recipes", () => getUsers());
 
-
-  console.log(users&&users)
+ 
   return (
     // <main className="w-full h-full max-w-7xl mx-auto my-12 custom-scrollbar overflow-scroll pb-20">
     //   <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-4 lg:grid-cols-4 lg:gap-12">

@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MdOutlinePublic } from "react-icons/md";
+import { MdPrivateConnectivity } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -24,6 +26,7 @@ import { Textarea } from "../ui/textarea";
 import FileUploader from "../ui/shared/FileUploader";
 import { ProjectValidationSchema } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import { Value } from "@radix-ui/react-select";
 
 type ProjectFormProps = {
   title: string;
@@ -39,6 +42,8 @@ const TicketForm = ({ ticket }: ProjectFormProps) => {
     defaultValues: {
       title: ticket ? ticket.title : "",
       description: ticket ? ticket.description : "",
+      type:ticket?ticket.type:"",
+      priority:ticket?ticket.priority:""
     },
   });
 
@@ -88,30 +93,71 @@ const TicketForm = ({ ticket }: ProjectFormProps) => {
             </FormItem>
           )}
         />
-        <div className="flex flex-1">
+    
+        <div className="flex gap-5 ">
           <div className="flex-1">
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="visibility" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="public">Public</SelectItem>
-                <SelectItem value="private">Private</SelectItem>
-              </SelectContent>
-            </Select>
+          <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ticket Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select ticket type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                      
+                              <SelectItem className="cursor-pointer " value={"public"}><span className="flex gap-2"><MdOutlinePublic/>Public </span> </SelectItem>
+                              <SelectItem className="cursor-pointer " value={"private"}><span className="flex gap-2"><MdPrivateConnectivity/>Private </span>  </SelectItem>
+                      
+                       
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
           </div>
           <div className="flex-1 w-full">
-            <Select >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Theme" />
-              </SelectTrigger>
-              <SelectContent className={cn("bg-red-600")}>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
+          <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ticket Priority</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select ticket priority" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                      
+                              <SelectItem className="cursor-pointer" value={"low"}>Low</SelectItem>
+                              <SelectItem className="cursor-pointer" value={"medium"}>Medium</SelectItem>
+                              <SelectItem className="cursor-pointer" value={"high"}>High</SelectItem>
+                              <SelectItem className="cursor-pointer" value={"critical"}>Critical</SelectItem>
+                      
+                       
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
           </div>
+      
         </div>
         <FormField
           control={form.control}

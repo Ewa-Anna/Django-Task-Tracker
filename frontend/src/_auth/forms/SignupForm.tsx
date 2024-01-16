@@ -34,10 +34,11 @@ const  {showToast}=useAuthContext()
   const form = useForm<z.infer<typeof signupValidationSchema>>({
     resolver: zodResolver(signupValidationSchema),
     defaultValues: {
-      name: "",
-      username: "",
+      first_name: "",
+      last_name: "",
       email: "",
       password: "",
+      confirm_password:""
       
     },
   });
@@ -84,7 +85,7 @@ mutation.mutate(values)
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
           <FormField
             control={form.control}
-            name="name"
+            name="first_name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -98,10 +99,10 @@ mutation.mutate(values)
           />
                     <FormField
             control={form.control}
-            name="username"
+            name="last_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Lastname</FormLabel>
                 <FormControl>
                   <Input type="text" className="shad-input"{...field} />
                 </FormControl>
@@ -140,7 +141,7 @@ mutation.mutate(values)
           />
                                 <FormField
             control={form.control}
-            name="confirmPassword"
+            name="confirm_password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>

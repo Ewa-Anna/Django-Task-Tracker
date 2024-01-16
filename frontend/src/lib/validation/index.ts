@@ -1,18 +1,18 @@
 import * as z from "zod"
 
 export const signupValidationSchema = z.object({
-    name: z.string().min(2, {
+    first_name: z.string().min(2, {
       message: "Username must be at least 2 characters.",
     }),
-    username:z.string().min(2,{
+    last_name:z.string().min(2,{
         message:"Surname must be at least 2 characters."
     }),
     email:z.string().email(),
     password:z.string().min(8,{
         message:"Password must be at least 8 characters."
     }),
-confirmPassword:z.string()
-  }).refine((data)=>data.password===data.confirmPassword,{
+confirm_password:z.string()
+  }).refine((data)=>data.password===data.confirm_password,{
     path:['confirmPassword'],
     message:"Passwords do not match"
   })
