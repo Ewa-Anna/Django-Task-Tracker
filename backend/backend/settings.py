@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 
 # import dj_database_url
-from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -67,6 +66,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -76,11 +77,33 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-CORS_ALLOW_HEADERS = "*"
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
-SESSION_ENGINE = "django.contrib.sessions.backends.db"
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+
+CORS_ORIGIN_WHITELIST = "http://localhost:5173"
+
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = "None"
+
 CSRF_USE_SESSIONS = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTP_ONLY = True
+CSRF_COOKIE_SAMESITE = "None"
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 AUTHENTICATION_BACKENDS = [
     "user.backends.EmailBackend",

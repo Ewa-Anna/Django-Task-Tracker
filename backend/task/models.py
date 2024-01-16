@@ -16,14 +16,14 @@ STATUS = [
     ("blocked", "Blocked"),
     ("pending", "Pending"),
     ("assigned", "Assigned"),
-    ("in_progess", "In Progress"),
+    ("in_progress", "In Progress"),
     ("completed", "Completed"),
     ("cancelled", "Cancelled"),
 ]
 
 
 class Project(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
     deadline = models.DateTimeField()
     owner = models.ForeignKey(
@@ -108,6 +108,14 @@ class Attachment(models.Model):
         null=True,
         blank=True,
     )
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        null=True,
+        blank=True,
+    )
+
     file = models.FileField(upload_to="documents/attachments/%Y/%m/%d/")
     uploader = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 

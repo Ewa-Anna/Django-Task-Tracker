@@ -6,12 +6,16 @@ from django.contrib.auth.models import (
 )
 
 
-# User's roles list
 ROLES = [
     ("guest", "Guest"),
     ("member", "Member"),
     ("manager", "Manager"),
     ("admin", "Admin"),
+]
+
+THEMES = [
+    ("dark_blue", "Dark Blue"),
+    ("light_blue", "Light Blue"),
 ]
 
 
@@ -67,6 +71,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
+    theme = models.CharField(
+        max_length=20, choices=THEMES, default="dark_blue", editable=False
+    )
     role = models.CharField(
         max_length=20, choices=ROLES, default="guest", editable=False
     )
