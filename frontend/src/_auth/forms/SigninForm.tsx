@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { signinValidationSchema } from "@/lib/validation";
 import { Loader } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { createUserAccount, loginUser } from "@/features/user-api/user-api";
 
@@ -25,7 +25,7 @@ import { createUserAccount, loginUser } from "@/features/user-api/user-api";
 const SigninForm = () => {
 const toast = useToast()
 const isLoading = false;
-
+const navigate= useNavigate()
 
 
   // 1. Define form
@@ -41,6 +41,7 @@ const isLoading = false;
 const mutation = useMutation(loginUser,{
   onSuccess:(data)=>{
     console.log(data)
+    navigate("/")
   },
   onError:(error)=>{
 console.log(error)
@@ -50,7 +51,7 @@ console.log(error)
   // 2. Define a submit handler.
    function onSubmit(values: z.infer) {
 
-    console.log(values)
+    
     mutation.mutate(values)
   }
 

@@ -31,9 +31,7 @@ export const logoutUser = async () => {
 
 export const getUsers = async () => {
   try {
-    const response = await clientApi.get("user/users/",{
-      withXSRFToken:true
-    });
+    const response = await clientApi.get("user/users/");
     return response.data;
   } catch (error) {
     console.log(error);

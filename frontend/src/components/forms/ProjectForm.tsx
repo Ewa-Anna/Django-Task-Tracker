@@ -115,7 +115,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
             <div className="flex-1">
               <FormField
                 control={form.control}
-                name="leader"
+                name="visibility"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Project Visibility</FormLabel>
@@ -129,13 +129,11 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {users &&
-                          users.map((user) => {
-                            return (
-                              <SelectItem value={user}>{user.name}</SelectItem>
-                            );
-                          })}
-                            <SelectItem value={"user"}>TEST</SelectItem>
+                      
+                              <SelectItem value={"public"}>Public</SelectItem>
+                              <SelectItem value={"private"}>Private</SelectItem>
+                      
+                       
                       </SelectContent>
                     </Select>
 
@@ -148,7 +146,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
             <div className="flex-1">
               <FormField
                 control={form.control}
-                name="visibility"
+                name="leader"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Project Leader</FormLabel>
@@ -161,17 +159,18 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                           <SelectValue placeholder="Select a project leader" />
                         </SelectTrigger>
                       </FormControl>
+                    
                       <SelectContent>
-                        <SelectItem value="m@example.com">
-                          m@example.com
-                        </SelectItem>
-                        <SelectItem value="m@google.com">
-                          m@google.com
-                        </SelectItem>
-                        <SelectItem value="m@support.com">
-                          m@support.com
-                        </SelectItem>
+                        {users &&
+                          users?.results.map((user) => {
+                          
+                            return (
+                              <SelectItem value={user.email}>{user.email}</SelectItem>
+                            );
+                          })}
+                       
                       </SelectContent>
+                  
                     </Select>
 
                     <FormMessage />
