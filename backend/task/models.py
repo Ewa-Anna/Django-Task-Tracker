@@ -21,6 +21,8 @@ STATUS = [
     ("cancelled", "Cancelled"),
 ]
 
+VISIBILITY = [("public", "Public"), ("private", "Private")]
+
 
 class Project(models.Model):
     title = models.CharField(max_length=255, unique=True)
@@ -31,7 +33,7 @@ class Project(models.Model):
     )
     visibility = models.CharField(
         max_length=10,
-        choices=[("public", "Public"), ("private", "Private")],
+        choices=VISIBILITY,
         default="public",
     )
 

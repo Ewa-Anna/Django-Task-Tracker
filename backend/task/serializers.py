@@ -27,3 +27,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
         fields = ["file"]
+
+
+class DictionaryContentSerializer(serializers.Serializer):
+    dictionary_name = serializers.CharField(max_length=255)
+    content = serializers.DictField()
