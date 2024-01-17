@@ -24,9 +24,9 @@ export const sidebarLinks = [
     },
  
     {
-      imgURL: "/assets/icons/gallery-add.svg",
-      route: "/create-post",
-      label: "Create Post",
+      imgURL: "/assets/icons/archive.svg",
+      route: "/Archive",
+      label: "Archive",
     },
   ];
   

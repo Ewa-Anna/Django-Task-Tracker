@@ -1,4 +1,5 @@
 import TicketForm from '@/components/forms/TicketForm'
+import { ImTicket } from "react-icons/im";
 import React from 'react'
 
 const CreateTicket = () => {
@@ -8,8 +9,8 @@ const CreateTicket = () => {
 <div className='common-container'>
 
 <div className='max-w-5xl flex-start gap-3 justify-center'>
-  <img src="/assets/icons/add-post.svg" alt="add" width={36} height={36}/>
-  <h2 className='h3-bold md:h2-bold text-left w-full'>Create Project</h2>
+<ImTicket className="w-10 h-10" />
+  <h2 className='h3-bold md:h2-bold text-left w-full'>Create Ticket</h2>
 </div>
 <TicketForm />
 </div>
