@@ -33,6 +33,7 @@ confirm_password:z.string()
     file:z.custom<File[]>(),
     leader:z.string(),
     visibility:z.string(),
-    tags:z.string()
+    tags:z.string(),
+    deadline:z.date()
     
   });
