@@ -1,10 +1,12 @@
 import axios from "axios"
-import jsonApi from "../axios/axios-json"
+import clientApi from "../axios/axios"
+
 
 
 export const getProjects = async()=>{
 
 
-    const response = await jsonApi.get("/projects/")
+    const response = await clientApi.get("/task/projects/")
     return response.data
 }
+

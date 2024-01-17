@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../ui/shared/FileUploader";
 import { ProjectValidationSchema } from "@/lib/validation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -34,12 +34,13 @@ type ProjectFormProps = {
   description: string;
   file: string[];
   tags: string[];
+ 
 };
 
 const ProjectForm = ({ project, users }: ProjectFormProps) => {
   const [formStep, setFormStep] = useState(0);
 
-
+  const navigate = useNavigate()
 
 
 
@@ -227,7 +228,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
         </div>
 
         <div className="flex gap-4 items-center justify-end">
-          <Button type="button" className="shad-button_dark_4">
+          <Button type="button" className="shad-button_dark_4" onClick={()=>navigate(-1)}>
             Cancel
           </Button>
           <Button

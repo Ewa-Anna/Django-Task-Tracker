@@ -27,6 +27,7 @@ import FileUploader from "../ui/shared/FileUploader";
 import { ProjectValidationSchema } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import { Value } from "@radix-ui/react-select";
+import { useNavigate } from "react-router-dom";
 
 type ProjectFormProps = {
   title: string;
@@ -36,6 +37,8 @@ type ProjectFormProps = {
 };
 
 const TicketForm = ({ ticket }: ProjectFormProps) => {
+
+  const navigate = useNavigate()
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
@@ -178,7 +181,7 @@ const TicketForm = ({ ticket }: ProjectFormProps) => {
         />
 
         <div className="flex gap-4 items-center justify-end">
-          <Button type="button" className="shad-button_dark_4">
+          <Button type="button" className="shad-button_dark_4" onClick={()=>navigate(-1)}>
             Cancel
           </Button>
           <Button
