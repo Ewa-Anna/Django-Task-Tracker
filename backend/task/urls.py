@@ -2,6 +2,7 @@ from rest_framework.routers import DefaultRouter
 from django.urls import re_path
 from django.urls.conf import include, path
 
+from .views import DictionaryContentView
 from .viewsets import ProjectViewSet, TaskViewSet, CommentViewSet, AttachmentViewSet
 
 
@@ -40,5 +41,10 @@ urlpatterns = [
         "projects/<int:project_id>/tasks/<int:task_id>/",
         TaskViewSet.as_view({"get": "retrieve"}),
         name="project-task-detail",
+    ),
+    path(
+        "dropdown-list/<str:dictionary_name>",
+        DictionaryContentView.as_view(),
+        name="dropdown-list",
     ),
 ]

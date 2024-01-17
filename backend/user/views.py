@@ -13,6 +13,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
 from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer
+from .models import Profile
 
 
 User = get_user_model()
@@ -31,8 +32,20 @@ class LoginView(APIView):
         login(request, user, backend="user.backends.EmailBackend")
         # token, created = Token.objects.get_or_create(user=user)
 
+        profile = Profile.objects.get_or_create(user=user)[0]
+
         response_data = {
             "user_id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "theme": user.theme,
+            "role": user.role,
+            "join_date": user.join_date,
+            "last_loggin": user.last_loggin,
+            "bio": profile.bio,
+            "photo": profile.photo,
+            "birthdate": profile.birthdate,
             # "token": token.key,
         }
 
