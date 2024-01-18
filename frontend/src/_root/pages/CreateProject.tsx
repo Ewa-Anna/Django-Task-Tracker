@@ -9,7 +9,6 @@ const CreateProject = () => {
 
 const {data:users,isLoading,isError}=useQuery(["users"],()=>getUsers())
 
-console.log(users&&users)
   
   return (
     <div className='flex flex-1'>

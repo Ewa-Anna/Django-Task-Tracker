@@ -24,7 +24,9 @@ const AllUsers = () => {
     isError,
     isLoading,
     isFetching,
-  } = useQuery("all_users", () => getUsers());
+  } = useQuery("all_users", () => getUsers(),{
+    refetchOnWindowFocus:false,
+  });
 
  
   return (

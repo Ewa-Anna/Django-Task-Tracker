@@ -1,6 +1,8 @@
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProjects } from "@/features/project-api/project-api"
+import { Badge } from "lucide-react";
 import { LuGitCompare } from "react-icons/lu";
 
 import { useQuery } from "react-query"
@@ -24,14 +26,39 @@ const Projects = () => {
 </div>
      </div>
 
-      {projects&&projects?.results.map((project)=>{
-        return(
-          <div>
-            {project.title}
-          </div>
-        )
-      })
-      }</main>
+     <div className="  grid grid-cols-1 gap-8 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-4 lg:gap-12 px-22">
+        {projects &&
+          projects.results.map((project) => {
+            return (
+              <Card key={project.id} className="flex flex-col justify-between  border-dark-4 ">
+                <CardHeader className="flex-row gap-4 items-center justify-evenly flex flex-wrap-reverse">
+          
+             <div className="flex flex-col items-center gap-1">
+          
+             <Badge variant="secondary"> ROLE</Badge>
+             </div>
+               
+                       <div>
+                    <CardTitle>{project?.title}</CardTitle>
+                    <CardTitle className="text-sm"></CardTitle>
+                    {/* <CardDescription>{user.last_name}</CardDescription> */}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p></p>
+                </CardContent>
+                <CardFooter className="flex justify-evenly flex-wrap gap-2 ">
+                <Badge variant="secondary"> ROLE</Badge>
+                  <Button className="hover:bg-purple-700" variant="ghost">
+                    View more
+                  </Button>
+                 
+             
+                </CardFooter>
+              </Card>
+            );
+          })}
+      </div></main>
   )
 }
 
