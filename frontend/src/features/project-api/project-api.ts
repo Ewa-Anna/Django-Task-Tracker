@@ -10,3 +10,12 @@ export const getProjects = async()=>{
     return response.data
 }
 
+export const createProject = async(formData)=>{
+
+
+
+const response = await clientApi.post("/task/projects/",formData,{
+    xsrfHeaderName: "X-CSRFToken",
+})
+return response.data
+}
