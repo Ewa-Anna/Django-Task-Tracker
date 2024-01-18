@@ -4,6 +4,7 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_str, force_bytes
+from django_rest_passwordreset.views import ResetPasswordConfirm
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,7 +13,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
-from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer, CustomPasswordTokenSerializer
 from .models import Profile
 
 
@@ -116,10 +117,6 @@ class ActivationUserEmailView(APIView):
         try:
             uid = force_bytes(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
-            print("Token from URL:", token)
-            print("Token from URL type: ", type(token))
-            print("Is Token Valid?", default_token_generator.check_token(user, token))
-
             if default_token_generator.check_token(user, token):
                 user.is_active = True
                 user.save()
@@ -144,6 +141,21 @@ class ChangePasswordView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ChangePasswordSerializer
 
+
+class CustomPasswordTokenView(ResetPasswordConfirm, generics.GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = CustomPasswordTokenSerializer
+    permission_classes = []
+
+    def post(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
+    
 
 class DashboardView(APIView):
     permission_classes = [IsAuthenticated]
