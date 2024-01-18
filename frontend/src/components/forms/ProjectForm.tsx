@@ -29,6 +29,10 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { DatePicker } from "../ui/shared/DatePicker";
+import { useMutation } from "react-query";
+import { createProject } from "@/features/project-api/project-api";
+import { useAuthContext } from "@/contexts/AuthContext";
+
 
 type ProjectFormProps = {
   title: string;
@@ -40,11 +44,21 @@ type ProjectFormProps = {
 
 const ProjectForm = ({ project, users }: ProjectFormProps) => {
   const [formStep, setFormStep] = useState(0);
-
+  const  {showToast}=useAuthContext()
   const navigate = useNavigate()
 
 
-
+  const mutation = useMutation(createProject,{
+    onSuccess:()=>{
+      showToast({
+        message:"Project has been created",type:"SUCCESS"
+      })
+      navigate("/projects")
+    },
+    onError:(error:Error)=>{
+ showToast({message:error.message,type:"ERROR"})
+    }
+  })
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
@@ -64,10 +78,12 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
   function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.log('abcdefg');
+    mutation.mutate(values)
   }
 
-  users && console.log(users && users);
+
+
 
   return (
     <Form {...form}>
@@ -305,3 +321,5 @@ if(!tagsState.isDirty || tagsState.invalid)return;
 };
 
 export default ProjectForm;
+
+
