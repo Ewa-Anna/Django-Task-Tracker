@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
+from django_rest_passwordreset.serializers import PasswordValidateMixin, PasswordTokenSerializer
 
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
@@ -112,3 +113,26 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.set_password(validated_data["new_password"])
         instance.save()
         return instance
+
+
+class CustomPasswordTokenSerializer(PasswordValidateMixin, serializers.ModelSerializer):
+    password = serializers.CharField(label="Password", write_only=True, required=True)
+    confirm_password = serializers.CharField(label="Confirm password", write_only=True, required=True)
+    token = serializers.CharField()
+    
+    class Meta:
+        model = CustomUser
+        fields = ["password", "confirm_password", "token"]
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["confirm_password"]:
+            raise serializers.ValidationError(
+                {"password": "Passwords does not match."}
+            )
+        return attrs
+    
+
+class PasswordTokenSerializer(PasswordTokenSerializer, serializers.ModelSerializer):
+    password = serializers.CharField(label="Password", write_only=True, required=True)
+    confirm_password = serializers.CharField(label="Confirm password", write_only=True, required=True)
+    token = serializers.CharField()

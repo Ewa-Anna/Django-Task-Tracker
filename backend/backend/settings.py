@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "corsheaders",
     "rest_framework.authtoken",
+    "django_rest_passwordreset",
 ]
 
 MIDDLEWARE = [
@@ -98,7 +99,7 @@ CORS_ORIGIN_WHITELIST = "http://localhost:5173"
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
 
-CSRF_USE_SESSIONS = True
+CSRF_USE_SESSIONS = False
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_COOKIE_SAMESITE = "None"
@@ -149,6 +150,13 @@ REST_FRAMEWORK = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin@task-tracker.com"
 
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
+    "OPTIONS": {
+        "min_length": 20,
+        "max_length": 30
+    }
+}
 # DJOSER = {
 #     "USER_ID_FIELD": "username",
 #     "LOGIN_FIELD": "email",
