@@ -157,21 +157,26 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 control={form.control}
                 name="visibility"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem >
                     <FormLabel>Project Visibility</FormLabel>
                     <Select
+         
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                     
                     >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a project visibility" />
+                        <SelectTrigger
+                      
+                         className="shad-input"
+                        >
+                          <SelectValue  placeholder="Select a project visibility" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent   >
                       
-                              <SelectItem value={"public"}>Public</SelectItem>
-                              <SelectItem value={"private"}>Private</SelectItem>
+                              <SelectItem className="cursor-pointer " value={"public"}>Public</SelectItem>
+                              <SelectItem className="cursor-pointer " value={"private"}>Private</SelectItem>
                       
                        
                       </SelectContent>
@@ -195,7 +200,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger  className="shad-input">
                           <SelectValue placeholder="Select a project leader" />
                         </SelectTrigger>
                       </FormControl>
@@ -205,7 +210,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                           users?.results.map((user) => {
                           
                             return (
-                              <SelectItem value={user.email}>{user.email}</SelectItem>
+                              <SelectItem className="cursor-pointer " value={user.email}>{user.email}</SelectItem>
                             );
                           })}
                        
@@ -227,7 +232,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                     <FormLabel>Project Deadline</FormLabel>
                 
                       <FormControl>
-                    <DatePicker  onChange={(newDate) => field.onChange(newDate)}  />
+                    <DatePicker  onChange={(newDate) => field.onChange(newDate)}   />
                       </FormControl>
                     
                
