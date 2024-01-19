@@ -36,6 +36,8 @@ class Project(models.Model):
         choices=VISIBILITY,
         default="public",
     )
+    status = models.CharField(max_length=20, choices=STATUS, default="pending")
+    archive = models.BooleanField(default=False)
 
     tags = TaggableManager()
 
@@ -65,6 +67,7 @@ class Task(models.Model):
     assignees = models.ManyToManyField(
         CustomUser, related_name="assigned_tasks", blank=True
     )
+    archive = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

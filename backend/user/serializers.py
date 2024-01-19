@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from django_rest_passwordreset.serializers import PasswordValidateMixin, PasswordTokenSerializer
@@ -15,7 +16,14 @@ class ProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+    
+    def validate_birthdate(self, value):
+        today = timezone.now()
 
+        if value > today:
+            raise serializers.ValidationError("The birthdate cannot be set to a future date.")
+
+        return value
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer(read_only=True)
