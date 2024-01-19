@@ -110,7 +110,7 @@ const TicketForm = ({ ticket }: ProjectFormProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="shad-input">
                           <SelectValue placeholder="Select ticket type" />
                         </SelectTrigger>
                       </FormControl>
@@ -140,7 +140,7 @@ const TicketForm = ({ ticket }: ProjectFormProps) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="shad-input">
                           <SelectValue placeholder="Select ticket priority" />
                         </SelectTrigger>
                       </FormControl>
