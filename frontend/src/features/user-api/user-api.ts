@@ -15,7 +15,10 @@ export const createUserAccount = async (formData: RegisterFormData) => {
 export const loginUser = async (formData: SignInFormData) => {
   try {
     const response = await clientApi.post("/user/login/", formData);
+    console.log(response.headers)
     return response.data;
+    
+
   } catch (error) {
     console.error(error);
   }

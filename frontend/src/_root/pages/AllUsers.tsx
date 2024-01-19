@@ -13,11 +13,14 @@ import { useQuery } from "react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LuUsers } from "react-icons/lu";
+import Cookies from 'js-cookie';
 
 
 const AllUsers = () => {
 
+  const csrftoken= Cookies.get('sessionid')
 
+console.log(csrftoken)
 
   const {
     data: users,
