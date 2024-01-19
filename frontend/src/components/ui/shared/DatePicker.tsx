@@ -20,18 +20,19 @@ export function DatePicker({ onChange }: { onChange: (date: Date) => void }) {
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            variant={"outline"}
+            
             className={cn(
-              "w-[280px] justify-start text-left font-normal",
+              "w-[280px] justify-start text-left font-normal bg-dark-4 h-12",
               !date && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="mr-2 h-4 w-4"  />
             {date ? format(date, "PPP") : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-auto p-0 bg-dark-4"  >
           <Calendar
+          
             mode="single"
             selected={date}
             onSelect={(newDate: Date) => {
@@ -39,6 +40,7 @@ export function DatePicker({ onChange }: { onChange: (date: Date) => void }) {
                 onChange(newDate); // Dodaj tę linijkę
               }}
             initialFocus
+            
           />
         </PopoverContent>
       </Popover>
