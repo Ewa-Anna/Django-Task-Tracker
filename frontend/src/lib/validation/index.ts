@@ -34,6 +34,7 @@ confirm_password:z.string()
     leader:z.string(),
     visibility:z.string(),
     tags:z.string(),
-    deadline:z.date()
+    deadline:z.date(),
+    contributors:z.custom<string[]>()
     
   });
