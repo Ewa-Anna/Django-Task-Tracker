@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "user",
     "task",
+    "adminx",
     "taggit",
     "rest_framework",
     "drf_yasg",
@@ -152,10 +153,7 @@ DEFAULT_FROM_EMAIL = "admin@task-tracker.com"
 
 DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
-    "OPTIONS": {
-        "min_length": 20,
-        "max_length": 30
-    }
+    "OPTIONS": {"min_length": 20, "max_length": 30},
 }
 # DJOSER = {
 #     "USER_ID_FIELD": "username",

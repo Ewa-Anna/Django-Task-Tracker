@@ -3,6 +3,7 @@ from django.dispatch import receiver
 
 from .models import Project, Task
 
+
 @receiver(pre_save, sender=Project)
 def archive_related_tasks(sender, instance, **kwargs):
     if instance.archive and instance.id is not None:

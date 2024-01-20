@@ -13,7 +13,12 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
-from .serializers import UserSerializer, LoginSerializer, ChangePasswordSerializer, CustomPasswordTokenSerializer
+from .serializers import (
+    UserSerializer,
+    LoginSerializer,
+    ChangePasswordSerializer,
+    CustomPasswordTokenSerializer,
+)
 from .models import Profile
 
 
@@ -148,14 +153,16 @@ class CustomPasswordTokenView(ResetPasswordConfirm, generics.GenericAPIView):
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+        partial = kwargs.pop("partial", False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
-    
+        return Response(
+            {"message": "Password updated successfully."}, status=status.HTTP_200_OK
+        )
+
 
 class DashboardView(APIView):
     permission_classes = [IsAuthenticated]
