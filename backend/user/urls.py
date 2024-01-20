@@ -1,7 +1,11 @@
 from rest_framework.routers import DefaultRouter
 from django.urls.conf import include, path
 from django.urls import re_path
-from django_rest_passwordreset.views import reset_password_request_token, reset_password_validate_token, reset_password_confirm
+from django_rest_passwordreset.views import (
+    reset_password_request_token,
+    reset_password_validate_token,
+    reset_password_confirm,
+)
 
 from .views import (
     LoginView,
@@ -40,9 +44,15 @@ urlpatterns = [
         name="change_password",
     ),
     path("password_reset/", reset_password_request_token, name="password_reset"),
-    path("password_reset/validate_token/", reset_password_validate_token, name="password_reset_validate_token"),
+    path(
+        "password_reset/validate_token/",
+        reset_password_validate_token,
+        name="password_reset_validate_token",
+    ),
     # path("password_reset/confirm/", CustomPasswordTokenView.as_view(), name="password_reset_confirm"),
-    path("password_reset/confirm/", reset_password_confirm, name="password_reset_confirm"),
+    path(
+        "password_reset/confirm/", reset_password_confirm, name="password_reset_confirm"
+    ),
     path("register/", RegistrationView.as_view(), name="register"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
 ]

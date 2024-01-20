@@ -21,19 +21,23 @@ class ProjectSerializer(FlexFieldsModelSerializer, serializers.ModelSerializer):
         today = timezone.now()
 
         if value <= today:
-            raise serializers.ValidationError("The deadline must be set to a future date.")
+            raise serializers.ValidationError(
+                "The deadline must be set to a future date."
+            )
 
         return value
-    
-    def validate_owner(self, value):
-        if isinstance(value, CustomUser):
-            value = value.id
-        try:
-            user = CustomUser.objects.get(pk=value, is_active=True)
-        except CustomUser.DoesNotExist:
-            raise serializers.ValidationError("Invalid owner. User does not exist or is not active.")
 
-        return value
+    # def validate_owner(self, value):
+    #     if isinstance(value, CustomUser):
+    #         value = value.id
+    #     try:
+    #         user = CustomUser.objects.get(pk=value, is_active=True)
+    #     except CustomUser.DoesNotExist:
+    #         raise serializers.ValidationError(
+    #             "Invalid owner. User does not exist or is not active."
+    #         )
+
+    #     return value
 
 
 class TaskSerializer(serializers.ModelSerializer):

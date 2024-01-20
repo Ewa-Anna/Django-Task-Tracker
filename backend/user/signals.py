@@ -29,15 +29,18 @@ def password_reset_token_created(
         "first_name": reset_password_token.user.first_name,
         "email": reset_password_token.user.email,
         "reset_password_url": "{}?token={}".format(
-            instance.request.build_absolute_uri(
-                reverse("user:password_reset_confirm")
-            ),
+            instance.request.build_absolute_uri(reverse("user:password_reset_confirm")),
             reset_password_token.key,
         ),
     }
-    
+
     email_msg = f"Hello {context['first_name']}, We've received a request to reset your password. Please click on the link below to reset your password: {context['reset_password_url']}"
-    
-    msg = EmailMessage(f"BugBard: Password reset for {context['email']}", email_msg, "admin@BugBard.com", [reset_password_token.user.email])
-    
+
+    msg = EmailMessage(
+        f"BugBard: Password reset for {context['email']}",
+        email_msg,
+        "admin@BugBard.com",
+        [reset_password_token.user.email],
+    )
+
     msg.send()

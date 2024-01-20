@@ -1,7 +1,10 @@
 from django.utils import timezone
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
-from django_rest_passwordreset.serializers import PasswordValidateMixin, PasswordTokenSerializer
+from django_rest_passwordreset.serializers import (
+    PasswordValidateMixin,
+    PasswordTokenSerializer,
+)
 
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
@@ -16,14 +19,17 @@ class ProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
-    
+
     def validate_birthdate(self, value):
         today = timezone.now()
 
         if value > today:
-            raise serializers.ValidationError("The birthdate cannot be set to a future date.")
+            raise serializers.ValidationError(
+                "The birthdate cannot be set to a future date."
+            )
 
         return value
+
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer(read_only=True)
@@ -125,22 +131,24 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 class CustomPasswordTokenSerializer(PasswordValidateMixin, serializers.ModelSerializer):
     password = serializers.CharField(label="Password", write_only=True, required=True)
-    confirm_password = serializers.CharField(label="Confirm password", write_only=True, required=True)
+    confirm_password = serializers.CharField(
+        label="Confirm password", write_only=True, required=True
+    )
     token = serializers.CharField()
-    
+
     class Meta:
         model = CustomUser
         fields = ["password", "confirm_password", "token"]
 
     def validate(self, attrs):
         if attrs["password"] != attrs["confirm_password"]:
-            raise serializers.ValidationError(
-                {"password": "Passwords does not match."}
-            )
+            raise serializers.ValidationError({"password": "Passwords does not match."})
         return attrs
-    
+
 
 class PasswordTokenSerializer(PasswordTokenSerializer, serializers.ModelSerializer):
     password = serializers.CharField(label="Password", write_only=True, required=True)
-    confirm_password = serializers.CharField(label="Confirm password", write_only=True, required=True)
+    confirm_password = serializers.CharField(
+        label="Confirm password", write_only=True, required=True
+    )
     token = serializers.CharField()

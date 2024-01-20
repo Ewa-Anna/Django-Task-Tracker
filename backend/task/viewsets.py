@@ -2,6 +2,8 @@ from django.utils import timezone
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -13,6 +15,7 @@ from .serializers import (
     CommentSerializer,
     AttachmentSerializer,
 )
+# from adminx.signals import track_project_changes
 from backend.pagination import CustomPagination
 
 
@@ -117,7 +120,25 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer = ProjectSerializer(paginated_queryset, many=True)
 
         return paginator.get_paginated_response(serializer.data)
+    
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+        
+    #     if kwargs.get('using') == 'default':
+    #         headers = self.get_success_headers(serializer.data)
+    #         return Response(serializer.data, status=201, headers=headers)
 
+    #     track_project_changes.send(
+    #         sender=Project,
+    #         instance=serializer.instance,
+    #         created=True,
+    #         user=request.user,  
+    #     )
+
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=201, headers=headers)
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
