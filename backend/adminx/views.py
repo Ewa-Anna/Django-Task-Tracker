@@ -20,13 +20,6 @@ class ChangeLogView(APIView):
     authentication_classes = [SessionAuthentication]
     serializer_class = ChangeLogSerializer
     
-    # @staticmethod
-    # def get_changed_by_user(request):
-    #     if request.user.is_authenticated:
-    #         return request.user
-    #     else:
-    #         return User.objects.get(username='anonymous')
-
     def get_queryset(self):
         return ChangeLog.objects.all()
     

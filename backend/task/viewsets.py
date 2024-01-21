@@ -2,8 +2,6 @@ from django.utils import timezone
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -120,6 +118,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer = ProjectSerializer(paginated_queryset, many=True)
 
         return paginator.get_paginated_response(serializer.data)
+    
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user)
+
     
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)

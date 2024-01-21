@@ -4,11 +4,11 @@ from user.models import CustomUser
 from task.models import Project, Task, Comment
 
 
-CHANGE_TYPES = {
+CHANGE_TYPES = (
     ("create", "Create"),
     ("update", "Update"),
     ("delete", "Delete"),
-}
+)
 
 
 class ChangeLog(models.Model):
