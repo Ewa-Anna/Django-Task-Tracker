@@ -45,8 +45,10 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
   const [formStep, setFormStep] = useState(1);
   const steps = [
     "Basic Information",
-    "Projec Members",
-    "Files and Attachments",
+    "Technology",
+    "Frameworks & Libraries",
+    "Members",
+    "Attachments",
     "Summary",
   ];
   const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
@@ -66,7 +68,8 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
       showToast({ message: error.message, type: "ERROR" });
     },
   });
-
+  console.log(`left:${selectedUsersLeft}`);
+  console.log(`right:${selectedUsersRight}`);
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
@@ -100,7 +103,12 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
         >
           <div
             className={cn("flex flex-col gap-9 w-full max-w-5xl", {
-              hidden: formStep === 2 || formStep === 3 || formStep === 4,
+              hidden:
+                formStep === 2 ||
+                formStep === 3 ||
+                formStep === 4 ||
+                formStep === 5 ||
+                formStep === 6,
             })}
           >
             <FormField
@@ -163,8 +171,166 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
           {/* STEP 2  */}
           <div
+            className={cn("flex flex-col gap-9 w-full max-w-5xl", {
+              hidden:
+                formStep === 1 ||
+                formStep === 3 ||
+                formStep === 4 ||
+                formStep === 5 ||
+                formStep === 6,
+            })}
+          >
+            Select Main Stack
+          </div>
+
+          {/* STEP 3  */}
+          <div
+            className={cn("flex flex-col gap-9 w-full max-w-5xl", {
+              hidden:
+                formStep === 1 ||
+                formStep === 2 ||
+                formStep === 4 ||
+                formStep === 5 ||
+                formStep === 6,
+            })}
+          >
+            Select technologies
+          </div>
+
+          {/* step 4  */}
+          <div
+            className={cn(
+              "w-full min-h-[400px] max-h-[400px]  flex justify-between overflow-hidden",
+              {
+                hidden:
+                  formStep === 1 ||
+                  formStep === 2 ||
+                  formStep === 3 ||
+                  formStep === 5 ||
+                  formStep === 6,
+              }
+            )}
+          >
+            <div className="px-8  border-2 flex flex-col justify-center  gap-10 min-w-[200px] flex-1 overflow-y-scroll custom-scrollbar">
+              {users &&
+                users?.results
+                  .filter(
+                    (availableUser) =>
+                      !form.watch("contributors").includes(availableUser.email)
+                  )
+                  .map((user) => {
+                    return (
+                      <div className="flex items-start justify-between gap-5">
+                        <div className="w-5 h-5">
+                          <input
+                            className="h-full w-full"
+                            type="checkbox"
+                            checked={selectedUsersLeft.includes(user.email)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedUsersLeft([
+                                  ...selectedUsersLeft,
+                                  user.email,
+                                ]);
+                              } else {
+                                setSelectedUsersLeft(
+                                  selectedUsersLeft.filter(
+                                    (email) => email !== user.email
+                                  )
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+
+                        <div className="   w-full">{user?.email}</div>
+                      </div>
+                    );
+                  })}
+            </div>
+
+            <div className="flex flex-col justify-between items-center min-w-[100px]">
+              <ArrowRight
+                className={
+                  selectedUsersLeft.length === 0
+                    ? "text-slate-800 pointer-events-none"
+                    : "text-light-1"
+                }
+                onClick={() => {
+                  console.log(form.getValues("contributors"));
+                  console.log("ABCD");
+                  form.setValue("contributors", [
+                    ...form.getValues("contributors"),
+                    ...selectedUsersLeft,
+                  ]);
+                  setSelectedUsersLeft([]);
+                }}
+              />
+              <ArrowLeft
+                className={
+                  selectedUsersRight.length === 0
+                    ? "text-slate-800 pointer-events-none"
+                    : "text-light-1"
+                }
+                onClick={() => {
+                  form.setValue(
+                    "contributors",
+                    form
+                      .getValues("contributors")
+                      .filter((email) => !selectedUsersRight.includes(email))
+                  );
+                  setSelectedUsersRight([]);
+                  console.log(form.getValues("contributors"));
+                }}
+              />
+            </div>
+
+            <div className="px-8 border-2 flex flex-col gap-10 min-w-[200px] flex-1 overflow-y-scroll custom-scrollbar">
+              {form.watch("contributors").map((contributor) => {
+                return (
+                  <div
+                    key={contributor}
+                    className="flex items-center   justify-between gap-5"
+                  >
+                    <div className="w-5 h-5">
+                      <input
+                        className="h-full w-full"
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedUsersRight([
+                              ...selectedUsersRight,
+                              contributor,
+                            ]);
+                          } else {
+                            setSelectedUsersRight(
+                              selectedUsersRight.filter(
+                                (email) => email !== contributor
+                              )
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="border-2 min-w-full w-full">
+                      {contributor}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* STEP 5  */}
+
+          <div
             className={cn("flex flex-col gap-6", {
-              hidden: formStep === 1 || formStep === 3 || formStep === 4,
+              hidden:
+                formStep === 1 ||
+                formStep === 2 ||
+                formStep === 3 ||
+                formStep === 4 ||
+                formStep === 6,
             })}
           >
             <div className="flex gap-5 flex-wrap">
@@ -200,7 +366,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         </SelectContent>
                       </Select>
 
-                      <FormMessage />
+                      <FormMessage className="shad-form_message" />
                     </FormItem>
                   )}
                 />
@@ -238,7 +404,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         </SelectContent>
                       </Select>
 
-                      <FormMessage />
+                      <FormMessage className="shad-form_message" />
                     </FormItem>
                   )}
                 />
@@ -257,7 +423,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         />
                       </FormControl>
 
-                      <FormMessage />
+                      <FormMessage className="shad-form_message" />
                     </FormItem>
                   )}
                 />
@@ -281,104 +447,16 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               )}
             />
           </div>
-          {/* Step 3  */}
-          <div
-            className={cn("w-full min-h-[400px] flex justify-between gap-20", {
-              hidden: formStep === 1 || formStep === 2 || formStep === 4,
-            })}
-          >
-            <div className=" flex-1 flex flex-col gap-10 border-2  custom-scrollbar">
-              {users &&
-                users?.results
-                  .filter(
-                    (availableUser) =>
-                      !form.watch("contributors").includes(availableUser.email)
-                  )
-                  .map((user) => {
-                    return (
-                      <div className=" grid grid-cols-2 gap-2 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-2 lg:gap-6 px-22">
-                        <input
-                          type="checkbox"
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedUsersLeft([
-                                ...selectedUsersLeft,
-                                user.email,
-                              ]);
-                            } else {
-                              setSelectedUsersLeft(
-                                selectedUsersLeft.filter(
-                                  (email) => email !== user.email
-                                )
-                              );
-                            }
-                          }}
-                        />
-                        {user?.email}
-                      </div>
-                    );
-                  })}
-            </div>
-
-            <div className="flex flex-col justify-between">
-              <ArrowRight
-                onClick={() => {
-                  form.setValue("contributors", [
-                    ...form.getValues("contributors"),
-                    ...selectedUsersLeft,
-                  ]);
-                  setSelectedUsersLeft([]);
-                  console.log(form.getValues("contributors"));
-                }}
-              />
-              <ArrowLeft
-                onClick={() => {
-                  form.setValue(
-                    "contributors",
-                    form
-                      .getValues("contributors")
-                      .filter((email) => !selectedUsersRight.includes(email))
-                  );
-                  setSelectedUsersRight([]);
-                  console.log(form.getValues("contributors"));
-                }}
-              />
-            </div>
-            <div className="flex-1 border-2 flex flex-col gap-10">
-              {form.watch("contributors").map((contributor) => {
-                return (
-                  <div
-                    key={contributor}
-                    className=" grid grid-cols-2 gap-2 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-2 lg:gap-6 px-22"
-                  >
-                    <input
-                      type="checkbox"
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedUsersRight([
-                            ...selectedUsersRight,
-                            contributor,
-                          ]);
-                        } else {
-                          setSelectedUsersRight(
-                            selectedUsersRight.filter(
-                              (email) => email !== contributor
-                            )
-                          );
-                        }
-                      }}
-                    />
-                    {contributor}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
 
           {/* Summary Step */}
           <div
             className={cn({
-              hidden: formStep === 1 || formStep === 2 || formStep === 3,
+              hidden:
+                formStep === 1 ||
+                formStep === 2 ||
+                formStep === 3 ||
+                formStep === 4 ||
+                formStep === 5,
             })}
           >
             SUMMARY
@@ -390,7 +468,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               className="shad-button_dark_4"
               onClick={() => navigate(-1)}
             >
-              Cancel
+              Cancel{formStep}
             </Button>
             <Button
               // shad-button_primary
@@ -407,14 +485,24 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               // shad-button_primary
               type="submit"
               className={cn(" whitespace-nowrap ", {
-                hidden: formStep === 1 || formStep === 2 || formStep === 3,
+                hidden:
+                  formStep === 1 ||
+                  formStep === 2 ||
+                  formStep === 3 ||
+                  formStep === 4 ||
+                  formStep === 5,
               })}
             >
               Create
             </Button>
             <Button
               className={cn(" whitespace-nowrap ", {
-                hidden: formStep === 2 || formStep === 3 || formStep === 4,
+                hidden:
+                  formStep === 2 ||
+                  formStep === 3 ||
+                  formStep === 4 ||
+                  formStep === 5 ||
+                  formStep === 6,
               })}
               variant="ghost"
               onClick={() => {
@@ -440,12 +528,17 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Next step
+              Go to step 2
               <ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
             <Button
               className={cn(" whitespace-nowrap ", {
-                hidden: formStep === 1 || formStep === 3 || formStep === 4,
+                hidden:
+                  formStep === 1 ||
+                  formStep === 3 ||
+                  formStep === 4 ||
+                  formStep === 5 ||
+                  formStep === 6,
               })}
               variant="ghost"
               onClick={() => {
@@ -460,17 +553,80 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 const leaderState = form.getFieldState("leader");
                 const visibilityState = form.getFieldState("visibility");
 
-                if (!leaderState.isDirty || leaderState.invalid) return;
-                if (!visibilityState.isDirty || visibilityState.invalid) return;
+                // if (!leaderState.isDirty || leaderState.invalid) return;
+                // if (!visibilityState.isDirty || visibilityState.invalid) return;
 
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Next step <ArrowRight className="w-4 h-4 ml-2 " />
+              Go to step 3 <ArrowRight className="w-4 h-4 ml-2 " />
+            </Button>
+
+            <Button
+              className={cn(" whitespace-nowrap ", {
+                hidden:
+                  formStep === 1 ||
+                  formStep === 2 ||
+                  formStep === 4 ||
+                  formStep === 5 ||
+                  formStep === 6,
+              })}
+              variant="ghost"
+              onClick={() => {
+                form.trigger([
+                  "title",
+                  "description",
+                  "leader",
+                  "visibility",
+                  "tags",
+                ]);
+
+                const leaderState = form.getFieldState("leader");
+                const visibilityState = form.getFieldState("visibility");
+
+                // if (!leaderState.isDirty || leaderState.invalid) return;
+                // if (!visibilityState.isDirty || visibilityState.invalid) return;
+
+                setFormStep((prev) => prev + 1);
+              }}
+            >
+              Go to step 4 <ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
             <Button
               className={cn(" whitespace-nowrap ", {
-                hidden: formStep === 1 || formStep === 2 || formStep === 4,
+                hidden:
+                  formStep === 1 ||
+                  formStep === 2 ||
+                  formStep === 3 ||
+                  formStep === 5 ||
+                  formStep === 6,
+              })}
+              variant="ghost"
+              onClick={() => {
+                form.trigger([
+                  "title",
+                  "description",
+                  "leader",
+                  "visibility",
+                  "tags",
+                ]);
+
+                const leaderState = form.getFieldState("leader");
+                const visibilityState = form.getFieldState("visibility");
+
+                setFormStep((prev) => prev + 1);
+              }}
+            >
+              Go to step 5<ArrowRight className="w-4 h-4 ml-2 " />
+            </Button>
+            <Button
+              className={cn(" whitespace-nowrap ", {
+                hidden:
+                  formStep === 1 ||
+                  formStep === 2 ||
+                  formStep === 3 ||
+                  formStep === 4 ||
+                  formStep === 6,
               })}
               variant="ghost"
               onClick={() => {
@@ -491,7 +647,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Next step <ArrowRight className="w-4 h-4 ml-2 " />
+              Go to step 6<ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
           </div>
         </form>

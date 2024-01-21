@@ -22,7 +22,7 @@ const Stepper = ({steps,formStep,setFormStep}) => {
               <div className="step">{
                (i+1<formStep|| complete) ?<TiTick size ={24}/>: i+1 } 
               </div>
-              <p className="text-gray-500">{step}</p>
+              <p className="text-sm text-gray-500">{step}</p>
             </div>
           );
         })}
