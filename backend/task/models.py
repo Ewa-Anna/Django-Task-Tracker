@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from taggit.managers import TaggableManager
 
@@ -41,6 +42,9 @@ class Project(models.Model):
 
     tags = TaggableManager()
 
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='created_by_project', blank=True, null=True)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='updated_by_project', blank=True, null=True)
+    
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -50,6 +54,11 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  
+        self.modified_by = user
+        super().save(*args, **kwargs)
 
 
 class Task(models.Model):
@@ -69,6 +78,9 @@ class Task(models.Model):
     )
     archive = models.BooleanField(default=False)
 
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='created_by_task', blank=True, null=True)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='updated_by_task', blank=True, null=True)
+    
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

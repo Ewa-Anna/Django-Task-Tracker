@@ -9,7 +9,9 @@ from user.models import CustomUser
 
 class ProjectSerializer(FlexFieldsModelSerializer, serializers.ModelSerializer):
     tags = serializers.ListField(source="tags.names", required=False)
-
+    created_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)
+    updated_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)
+    
     class Meta:
         model = Project
         fields = "__all__"
