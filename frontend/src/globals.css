@@ -286,7 +286,7 @@ html {
 /* Stepper component */
 
 .step-item{
-  @apply relative flex flex-col justify-center items-center w-60;
+  @apply relative flex flex-col justify-center items-center w-36 lg:w-60;
 }
 .step-item:not(:first-child):before{
   @apply content-[''] bg-slate-200 absolute w-full h-[3px] right-2/4 top-1/3 -translate-y-2/4;

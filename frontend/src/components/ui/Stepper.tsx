@@ -9,7 +9,7 @@ const Stepper = ({steps,formStep,setFormStep}) => {
 
   return (
     <>
-      <div className="flex justify-between w-1/2 mb-20">
+      <div className="flex justify-between  mb-20">
         {steps.map((step, i) => {
           return (
             <div

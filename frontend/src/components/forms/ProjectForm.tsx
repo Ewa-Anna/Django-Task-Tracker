@@ -45,10 +45,12 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
   const [formStep, setFormStep] = useState(1);
   const steps = [
     "Basic Information",
-    "Timelines and Team",
-    "Resources and Budget",
+    "Projec Members",
+    "Files and Attachments",
     "Summary",
   ];
+  const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
+  const [selectedUsersRight, setSelectedUsersRight] = useState([]);
   const { showToast } = useAuthContext();
   const navigate = useNavigate();
 
@@ -161,7 +163,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
           {/* STEP 2  */}
           <div
-            className={cn({
+            className={cn("flex flex-col gap-6", {
               hidden: formStep === 1 || formStep === 3 || formStep === 4,
             })}
           >
@@ -281,11 +283,96 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
           </div>
           {/* Step 3  */}
           <div
-            className={cn({
+            className={cn("w-full min-h-[400px] flex justify-between gap-20", {
               hidden: formStep === 1 || formStep === 2 || formStep === 4,
             })}
           >
-            STEP 3
+            <div className=" flex-1 flex flex-col gap-10 border-2  custom-scrollbar">
+              {users &&
+                users?.results
+                  .filter(
+                    (availableUser) =>
+                      !form.watch("contributors").includes(availableUser.email)
+                  )
+                  .map((user) => {
+                    return (
+                      <div className=" grid grid-cols-2 gap-2 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-2 lg:gap-6 px-22">
+                        <input
+                          type="checkbox"
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedUsersLeft([
+                                ...selectedUsersLeft,
+                                user.email,
+                              ]);
+                            } else {
+                              setSelectedUsersLeft(
+                                selectedUsersLeft.filter(
+                                  (email) => email !== user.email
+                                )
+                              );
+                            }
+                          }}
+                        />
+                        {user?.email}
+                      </div>
+                    );
+                  })}
+            </div>
+
+            <div className="flex flex-col justify-between">
+              <ArrowRight
+                onClick={() => {
+                  form.setValue("contributors", [
+                    ...form.getValues("contributors"),
+                    ...selectedUsersLeft,
+                  ]);
+                  setSelectedUsersLeft([]);
+                  console.log(form.getValues("contributors"));
+                }}
+              />
+              <ArrowLeft
+                onClick={() => {
+                  form.setValue(
+                    "contributors",
+                    form
+                      .getValues("contributors")
+                      .filter((email) => !selectedUsersRight.includes(email))
+                  );
+                  setSelectedUsersRight([]);
+                  console.log(form.getValues("contributors"));
+                }}
+              />
+            </div>
+            <div className="flex-1 border-2 flex flex-col gap-10">
+              {form.watch("contributors").map((contributor) => {
+                return (
+                  <div
+                    key={contributor}
+                    className=" grid grid-cols-2 gap-2 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-2 lg:gap-6 px-22"
+                  >
+                    <input
+                      type="checkbox"
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedUsersRight([
+                            ...selectedUsersRight,
+                            contributor,
+                          ]);
+                        } else {
+                          setSelectedUsersRight(
+                            selectedUsersRight.filter(
+                              (email) => email !== contributor
+                            )
+                          );
+                        }
+                      }}
+                    />
+                    {contributor}
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Summary Step */}
