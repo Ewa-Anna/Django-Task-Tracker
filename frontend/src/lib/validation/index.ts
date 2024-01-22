@@ -35,7 +35,8 @@ confirm_password:z.string()
     visibility:z.string().min(1,{message:"This field is required"}),
     tags:z.string(),
     deadline:z.union([z.string().optional(), z.date()]).refine(value => value !== '', {message: "Deadline field is required"}),
-    contributors:z.custom<string[]>()
+    contributors:z.custom<string[]>(),
+    stack:z.string()
     
   })
  
