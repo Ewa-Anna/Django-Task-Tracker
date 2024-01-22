@@ -38,9 +38,12 @@ Running Docker Container
 ## Technologies and frameworks
 - Frontend
     
-    [![HTML](https://skillicons.dev/icons?i=html)](https://skillicons.dev)
-    [![CSS](https://skillicons.dev/icons?i=css)](https://skillicons.dev) 
+    [![React](https://skillicons.dev/icons?i=react)](https://skillicons.dev)
+    [![Typescript](https://skillicons.dev/icons?i=typescript)](https://skillicons.dev)
     [![JS](https://skillicons.dev/icons?i=javascript)](https://skillicons.dev)
+    [![HTML](https://skillicons.dev/icons?i=html)](https://skillicons.dev)
+    [![CSS](https://skillicons.dev/icons?i=css)](https://skillicons.dev)
+
 
 - Backend
     
