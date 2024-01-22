@@ -170,6 +170,7 @@ class DashboardView(APIView):
 
     def get(self, request):
         user = request.user
+        profile = Profile.objects.get_or_create(user=user)[0]
 
         user_data = {
             "username": user.username,
@@ -179,6 +180,35 @@ class DashboardView(APIView):
             "role": user.role,
             "join_date": user.join_date,
             "last_loggin": user.last_loggin,
+            "bio": profile.bio,
+            "photo": profile.photo,
+            "birthdate": profile.birthdate,
         }
 
         return Response(user_data)
+
+    def post(self, request):
+        user = request.user
+
+        user.first_name = request.data.get("first_name", user.first_name)
+        user.last_name = request.data.get("last_name", user.last_name)
+
+        user.save()
+   
+        profile, created = Profile.objects.get_or_create(user=user)
+
+        profile.bio = request.data.get('bio', profile.bio)
+        profile.photo = request.data.get('photo', profile.photo)
+        profile.birthdate = request.data.get('birthdate', profile.birthdate)
+        
+        profile.save()
+
+        updated_data = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "bio": profile.bio,
+            "photo": profile.photo,
+            "birthdate": profile.birthdate,
+        }
+
+        return Response(updated_data, status=status.HTTP_200_OK)

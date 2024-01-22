@@ -13,6 +13,7 @@ from .serializers import (
     CommentSerializer,
     AttachmentSerializer,
 )
+
 # from adminx.signals import track_project_changes
 from backend.pagination import CustomPagination
 
@@ -118,19 +119,18 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer = ProjectSerializer(paginated_queryset, many=True)
 
         return paginator.get_paginated_response(serializer.data)
-    
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
 
-    
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
     #     serializer.is_valid(raise_exception=True)
     #     self.perform_create(serializer)
-        
+
     #     if kwargs.get('using') == 'default':
     #         headers = self.get_success_headers(serializer.data)
     #         return Response(serializer.data, status=201, headers=headers)
@@ -139,11 +139,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
     #         sender=Project,
     #         instance=serializer.instance,
     #         created=True,
-    #         user=request.user,  
+    #         user=request.user,
     #     )
 
     #     headers = self.get_success_headers(serializer.data)
     #     return Response(serializer.data, status=201, headers=headers)
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
