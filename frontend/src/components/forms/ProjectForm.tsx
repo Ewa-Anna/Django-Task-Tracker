@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ import { ProjectValidationSchema } from "@/lib/validation";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Divide } from "lucide-react";
 import { DatePicker } from "../ui/shared/DatePicker";
 import { useMutation } from "react-query";
 import { createProject } from "@/features/project-api/project-api";
@@ -55,6 +56,8 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
   const [selectedUsersRight, setSelectedUsersRight] = useState([]);
   const { showToast } = useAuthContext();
   const navigate = useNavigate();
+  const { watch } = useForm();
+  const selectedStack = watch("stack");
 
   const mutation = useMutation(createProject, {
     onSuccess: () => {
@@ -68,8 +71,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
       showToast({ message: error.message, type: "ERROR" });
     },
   });
-  console.log(`left:${selectedUsersLeft}`);
-  console.log(`right:${selectedUsersRight}`);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
@@ -82,6 +84,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
       visibility: project ? project.visibility : "",
       deadline: project ? project.deadline : "",
       contributors: project ? project.contributors : [],
+      stack: project ? project.stac : "",
     },
   });
 
@@ -89,10 +92,10 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
   function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log("abcdefg");
+
     mutation.mutate(values);
   }
-
+  console.log(form);
   return (
     <>
       <Stepper steps={steps} formStep={formStep} setFormStep={setFormStep} />
@@ -171,16 +174,87 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
           {/* STEP 2  */}
           <div
-            className={cn("flex flex-col gap-9 w-full max-w-5xl", {
-              hidden:
-                formStep === 1 ||
-                formStep === 3 ||
-                formStep === 4 ||
-                formStep === 5 ||
-                formStep === 6,
-            })}
+            className={cn(
+              "flex justify-around  gap-9 min-h-[400px] w-full max-w-5xl flex-wrap h-full ",
+              {
+                hidden:
+                  formStep === 1 ||
+                  formStep === 3 ||
+                  formStep === 4 ||
+                  formStep === 5 ||
+                  formStep === 6,
+              }
+            )}
           >
-            Select Main Stack
+            <FormField
+              control={form.control}
+              name="stack"
+              render={({ field }) => (
+                <div className=" flex flex-1   h-full  ">
+                  <FormItem className="space-y-3  flex flex-col flex-1 h-full ">
+                    <FormLabel className="text-xl">
+                      Select Project Type
+                    </FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex  justify-between    space-y-1  w-full "
+                      >
+                        <div className="flex flex-col flex-1 mt-5  h-[100%]  gap-20 md:flex-col md:mt-20 lg:flex-row lg:md:mt-28">
+                          <div className="flex flex-1 border-2 border-dark-4  py-10 rounded-[6px]">
+                            <FormItem className="flex justify-center items-center space-x-3 space-y-0 flex-1 ">
+                              <FormLabel className="font-normal ">
+                                <div className="flex flex-col items-center  ">
+                                  <span> Frontend</span>
+                                </div>
+                                <FormControl>
+                                  <RadioGroupItem
+                                    className="hidden"
+                                    value="frontend"
+                                  />
+                                </FormControl>
+                              </FormLabel>
+                            </FormItem>
+                          </div>
+                          <div className="flex flex-1 border-2 border-dark-4  py-10 rounded-[6px]">
+                            <FormItem className="flex justify-center items-center space-x-3 space-y-0 flex-1">
+                              <FormLabel className="font-normal">
+                                <div className="flex flex-col items-center  ">
+                                  <span>Backend</span>
+                                </div>
+                                <FormControl>
+                                  <RadioGroupItem
+                                    className="hidden"
+                                    value="backend"
+                                  />
+                                </FormControl>
+                              </FormLabel>
+                            </FormItem>
+                          </div>
+                          <div className="flex flex-1 border-2 border-dark-4 py-10 rounded-[6px]">
+                            <FormItem className="flex justify-center  items-center space-x-3 space-y-0 flex-1">
+                              <FormLabel className="font-normal">
+                                <div className="flex flex-col items-center ">
+                                  <span>Fullstack</span>
+                                </div>
+                                <FormControl>
+                                  <RadioGroupItem
+                                    className="hidden"
+                                    value="fullstack"
+                                  />
+                                </FormControl>
+                              </FormLabel>
+                            </FormItem>
+                          </div>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </div>
+              )}
+            />
           </div>
 
           {/* STEP 3  */}
@@ -257,8 +331,8 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                     : "text-light-1"
                 }
                 onClick={() => {
-                  console.log(form.getValues("contributors"));
-                  console.log("ABCD");
+                  // console.log(form.getValues("contributors"));
+
                   form.setValue("contributors", [
                     ...form.getValues("contributors"),
                     ...selectedUsersLeft,
@@ -280,7 +354,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                       .filter((email) => !selectedUsersRight.includes(email))
                   );
                   setSelectedUsersRight([]);
-                  console.log(form.getValues("contributors"));
+                  // console.log(form.getValues("contributors"));
                 }}
               />
             </div>
@@ -462,7 +536,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
             SUMMARY
           </div>
 
-          <div className="flex gap-4 items-center justify-end">
+          <div className="flex gap-4 items-center justify-end mt-16">
             <Button
               type="button"
               className="shad-button_dark_4"
