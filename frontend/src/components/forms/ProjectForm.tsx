@@ -95,7 +95,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
     mutation.mutate(values);
   }
-  console.log(form);
+
   return (
     <>
       <Stepper steps={steps} formStep={formStep} setFormStep={setFormStep} />
@@ -105,7 +105,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
           className="flex flex-col gap-9 w-full max-w-5xl"
         >
           <div
-            className={cn("flex flex-col gap-9 w-full max-w-5xl", {
+            className={cn("flex flex-col gap-9 w-full max-w-5xl min-h-[500px] max-h-[500px]  ", {
               hidden:
                 formStep === 2 ||
                 formStep === 3 ||
@@ -175,7 +175,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
           {/* STEP 2  */}
           <div
             className={cn(
-              "flex justify-around  gap-9 min-h-[400px] w-full max-w-5xl flex-wrap h-full ",
+              "flex justify-around  gap-9 w-full min-h-[500px] max-h-[500px]   max-w-5xl flex-wrap h-full ",
               {
                 hidden:
                   formStep === 1 ||
@@ -192,9 +192,12 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               render={({ field }) => (
                 <div className=" flex flex-1   h-full  ">
                   <FormItem className="space-y-3  flex flex-col flex-1 h-full ">
-                    <FormLabel className="text-xl">
+                    <FormLabel className="text-xl mb-10">
                       Select Project Type
                     </FormLabel>
+                <div className=" flex justify-center shad-form_message">
+                <FormMessage />
+                </div>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
@@ -202,10 +205,10 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         className="flex  justify-between    space-y-1  w-full "
                       >
                         <div className="flex flex-col flex-1 mt-5  h-[100%]  gap-20 md:flex-col md:mt-20 lg:flex-row lg:md:mt-28">
-                          <div className="flex flex-1 border-2 border-dark-4  py-10 rounded-[6px]">
+                          <div className={`flex flex-1 border-2 border-dark-4  rounded-[6px] ${form.watch("stack")==="frontend"?"border-2 border-indigo-800":''}`}>
                             <FormItem className="flex justify-center items-center space-x-3 space-y-0 flex-1 ">
-                              <FormLabel className="font-normal ">
-                                <div className="flex flex-col items-center  ">
+                              <FormLabel className="font-normal  w-full h-full cursor-pointer  ">
+                                <div className="flex flex-col items-center  h-full justify-center  ">
                                   <span> Frontend</span>
                                 </div>
                                 <FormControl>
@@ -217,10 +220,10 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                               </FormLabel>
                             </FormItem>
                           </div>
-                          <div className="flex flex-1 border-2 border-dark-4  py-10 rounded-[6px]">
+                          <div className={`flex flex-1 border-2 border-dark-4  rounded-[6px] ${form.watch("stack")==="backend"?"border-2 border-indigo-800":''}`}>
                             <FormItem className="flex justify-center items-center space-x-3 space-y-0 flex-1">
-                              <FormLabel className="font-normal">
-                                <div className="flex flex-col items-center  ">
+                              <FormLabel className="font-normal w-full h-full cursor-pointer">
+                                <div className="flex flex-col items-center h-full justify-center   ">
                                   <span>Backend</span>
                                 </div>
                                 <FormControl>
@@ -232,10 +235,10 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                               </FormLabel>
                             </FormItem>
                           </div>
-                          <div className="flex flex-1 border-2 border-dark-4 py-10 rounded-[6px]">
+                          <div className={`flex flex-1 border-2 border-dark-4  rounded-[6px] ${form.watch("stack")==="fullstack"?"border-2 border-indigo-800":''}`}>
                             <FormItem className="flex justify-center  items-center space-x-3 space-y-0 flex-1">
-                              <FormLabel className="font-normal">
-                                <div className="flex flex-col items-center ">
+                              <FormLabel className="font-normal  w-full h-full cursor-pointer">
+                                <div className="flex flex-col items-center h-full justify-center  ">
                                   <span>Fullstack</span>
                                 </div>
                                 <FormControl>
@@ -250,7 +253,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         </div>
                       </RadioGroup>
                     </FormControl>
-                    <FormMessage />
+               
                   </FormItem>
                 </div>
               )}
@@ -259,7 +262,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
           {/* STEP 3  */}
           <div
-            className={cn("flex flex-col gap-9 w-full max-w-5xl", {
+            className={cn("flex flex-col gap-9 w-full max-w-5xl  min-h-[500px] max-h-[500px] ", {
               hidden:
                 formStep === 1 ||
                 formStep === 2 ||
@@ -274,7 +277,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
           {/* step 4  */}
           <div
             className={cn(
-              "w-full min-h-[400px] max-h-[400px]  flex justify-between overflow-hidden",
+              "w-full min-h-[500px] max-h-[500px]  flex justify-between overflow-hidden flex-col lg:flex-row",
               {
                 hidden:
                   formStep === 1 ||
@@ -285,7 +288,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               }
             )}
           >
-            <div className="px-8  border-2 flex flex-col justify-center  gap-10 min-w-[200px] flex-1 overflow-y-scroll custom-scrollbar">
+            <div className="px-8  border-2 border-dark-4 flex flex-col justify-center  gap-10 min-w-[200px] flex-1 overflow-y-scroll custom-scrollbar">
               {users &&
                 users?.results
                   .filter(
@@ -359,7 +362,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               />
             </div>
 
-            <div className="px-8 border-2 flex flex-col gap-10 min-w-[200px] flex-1 overflow-y-scroll custom-scrollbar">
+            <div className="px-8 border-2 border-dark-4 flex flex-col gap-10 min-w-[200px] flex-1 overflow-y-scroll custom-scrollbar">
               {form.watch("contributors").map((contributor) => {
                 return (
                   <div
@@ -386,7 +389,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                         }}
                       />
                     </div>
-                    <div className="border-2 min-w-full w-full">
+                    <div className=" min-w-full w-full">
                       {contributor}
                     </div>
                   </div>
@@ -626,9 +629,13 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
                 const leaderState = form.getFieldState("leader");
                 const visibilityState = form.getFieldState("visibility");
+                const stackState=  form.getFieldState("stack");
+                const state = form.getValues('stack');
+               
 
-                // if (!leaderState.isDirty || leaderState.invalid) return;
-                // if (!visibilityState.isDirty || visibilityState.invalid) return;
+
+                if (!stackState.isDirty || stackState.invalid) return;
+            
 
                 setFormStep((prev) => prev + 1);
               }}
@@ -658,6 +665,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 const leaderState = form.getFieldState("leader");
                 const visibilityState = form.getFieldState("visibility");
 
+                // if(!stackState.isDirty|| stackState.invalid)return
                 // if (!leaderState.isDirty || leaderState.invalid) return;
                 // if (!visibilityState.isDirty || visibilityState.invalid) return;
 

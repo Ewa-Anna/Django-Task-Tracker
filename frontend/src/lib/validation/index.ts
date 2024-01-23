@@ -36,7 +36,7 @@ confirm_password:z.string()
     tags:z.string(),
     deadline:z.union([z.string().optional(), z.date()]).refine(value => value !== '', {message: "Deadline field is required"}),
     contributors:z.custom<string[]>(),
-    stack:z.string()
+    stack:z.string().min(1,{message:"You have to select project type"})
     
   })
  
