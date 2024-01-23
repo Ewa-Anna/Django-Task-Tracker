@@ -47,9 +47,15 @@ class ProjectSerializer(FlexFieldsModelSerializer, serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    created_by = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault(), read_only=True
+    )
+    updated_by = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault(), read_only=True
+    )
     class Meta:
         model = Task
-        fields = ["title", "description", "priority", "status", "owner", "assignees"]
+        fields = "__all__"
 
 
 class CommentSerializer(serializers.ModelSerializer):
