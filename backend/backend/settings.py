@@ -24,7 +24,7 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "defau1t@#_1n$ecure@#_key1$%")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -175,17 +175,25 @@ PASSWORD_POSTGRES = os.getenv("PASSWORD_POSTGRES")
 HOST = os.getenv("HOST")
 PORT = os.getenv("PORT")
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": NAME,
-        "USER": USER_POSTGRES,
-        "PASSWORD": PASSWORD_POSTGRES,
-        "HOST": HOST,
-        "PORT": PORT,
-    },
-    # "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
-}
+if any(value is None for value in [NAME, USER_POSTGRES, PASSWORD_POSTGRES, HOST, PORT]):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": NAME,
+            "USER": USER_POSTGRES,
+            "PASSWORD": PASSWORD_POSTGRES,
+            "HOST": HOST,
+            "PORT": PORT,
+        },
+        # "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

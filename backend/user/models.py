@@ -71,15 +71,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
-    theme = models.CharField(
-        max_length=20, choices=THEMES, default="dark_blue", editable=False
-    )
-    role = models.CharField(
-        max_length=20, choices=ROLES, default="guest", editable=False
-    )
+    theme = models.CharField(max_length=20, choices=THEMES, default="dark_blue")
+    role = models.CharField(max_length=20, choices=ROLES, default="guest")
 
     join_date = models.DateTimeField(auto_now_add=True)
-    last_loggin = models.DateTimeField(auto_now_add=True)
+    last_loggin = models.DateTimeField(auto_now=True)
 
     objects = CustomUserManager()
 

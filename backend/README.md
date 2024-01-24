@@ -31,6 +31,9 @@ Project will run on http://127.0.0.1:8000/
 You need to rename ` .env.template ` to ` .env ` and fill all variables.
 
 ## API
-### Tasks
+All endpoints with methods are available under
+http://127.0.0.1:8000/swagger/ 
+
+<!-- ### Tasks
 `GET // `
-### User
+### User -->
