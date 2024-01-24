@@ -189,12 +189,13 @@ class TaskViewSet(viewsets.ModelViewSet):
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = TaskSerializer(paginated_queryset, many=True)
         return paginator.get_paginated_response(serializer.data)
-    
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()

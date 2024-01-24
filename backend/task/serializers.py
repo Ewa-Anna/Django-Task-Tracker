@@ -53,6 +53,7 @@ class TaskSerializer(serializers.ModelSerializer):
     updated_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )
+
     class Meta:
         model = Task
         fields = "__all__"
