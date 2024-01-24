@@ -1,5 +1,5 @@
-import ProjectForm from '@/components/forms/ProjectForm'
-import PostForm from '@/components/forms/ProjectForm'
+import ProjectForm from '@/components/forms/projectForm/ProjectForm'
+import PostForm from '@/components/forms/projectForm/ProjectForm'
 import { getUsers } from '@/features/user-api/user-api'
 import React from 'react'
 import { useQuery } from 'react-query'
