@@ -194,13 +194,13 @@ class DashboardView(APIView):
         user.last_name = request.data.get("last_name", user.last_name)
 
         user.save()
-   
+
         profile, created = Profile.objects.get_or_create(user=user)
 
-        profile.bio = request.data.get('bio', profile.bio)
-        profile.photo = request.data.get('photo', profile.photo)
-        profile.birthdate = request.data.get('birthdate', profile.birthdate)
-        
+        profile.bio = request.data.get("bio", profile.bio)
+        profile.photo = request.data.get("photo", profile.photo)
+        profile.birthdate = request.data.get("birthdate", profile.birthdate)
+
         profile.save()
 
         updated_data = {
