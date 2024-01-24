@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.tokens import default_token_generator
+from django.middleware.csrf import get_token
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -36,7 +37,6 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         login(request, user, backend="user.backends.EmailBackend")
-        # token, created = Token.objects.get_or_create(user=user)
 
         profile = Profile.objects.get_or_create(user=user)[0]
 
@@ -52,10 +52,12 @@ class LoginView(APIView):
             "bio": profile.bio,
             "photo": profile.photo,
             "birthdate": profile.birthdate,
-            # "token": token.key,
+            # "csrf_token": get_token(request),
+            "csrf_token": request.META.get('CSRF_COOKIE')
         }
-
-        return Response(response_data, status=status.HTTP_202_ACCEPTED)
+        
+        response = Response(response_data, status=status.HTTP_202_ACCEPTED)
+        return response
 
 
 class LogoutView(APIView):
@@ -110,6 +112,7 @@ class RegistrationView(generics.CreateAPIView):
 
         response_data = {
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "csrf_token": get_token(request)
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
 

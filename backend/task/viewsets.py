@@ -1,7 +1,9 @@
 from django.utils import timezone
 
-from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -13,8 +15,7 @@ from .serializers import (
     CommentSerializer,
     AttachmentSerializer,
 )
-
-# from adminx.signals import track_project_changes
+from user.permissions import CustomPermission
 from backend.pagination import CustomPagination
 
 
@@ -22,6 +23,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
+    permission_classes = [CustomPermission]
+
+    required_roles = {
+        "GET": ["guest", "member", "manager", "admin"],
+        "POST": ["manager", "admin"],
+        "PUT": ["manager", "admin"],
+        "PATCH": ["manager", "admin"],
+        "DELETE": ["admin"],
+    }
 
     @action(detail=False, methods=["get"])
     @swagger_auto_schema(
@@ -125,25 +135,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+    
+    def handle_exception(self, exc):
+        if isinstance(exc, PermissionDenied):
+            response_data = {
+                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
+            }
+            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-
-    #     if kwargs.get('using') == 'default':
-    #         headers = self.get_success_headers(serializer.data)
-    #         return Response(serializer.data, status=201, headers=headers)
-
-    #     track_project_changes.send(
-    #         sender=Project,
-    #         instance=serializer.instance,
-    #         created=True,
-    #         user=request.user,
-    #     )
-
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=201, headers=headers)
+        return super().handle_exception(exc)
 
 
 class TaskViewSet(viewsets.ModelViewSet):

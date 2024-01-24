@@ -37,7 +37,11 @@ class Project(models.Model):
         choices=VISIBILITY,
         default="public",
     )
+    assignees = models.ManyToManyField(
+        CustomUser, related_name="assigned_projects", blank=True
+    )
     status = models.CharField(max_length=20, choices=STATUS, default="pending")
+    
     archive = models.BooleanField(default=False)
 
     tags = TaggableManager()

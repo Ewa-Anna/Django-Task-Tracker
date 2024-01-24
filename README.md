@@ -39,21 +39,29 @@ Running Docker Container
 - Frontend
     
     [![React](https://skillicons.dev/icons?i=react)](https://skillicons.dev)
+    [![Tailwind](https://skillicons.dev/icons?i=tailwind)](https://skillicons.dev)
     [![Typescript](https://skillicons.dev/icons?i=typescript)](https://skillicons.dev)
     [![JS](https://skillicons.dev/icons?i=javascript)](https://skillicons.dev)
     [![HTML](https://skillicons.dev/icons?i=html)](https://skillicons.dev)
     [![CSS](https://skillicons.dev/icons?i=css)](https://skillicons.dev)
-
+    - React Query
+    - Axios
+    - Shadcn
 
 - Backend
     
     [![Python](https://skillicons.dev/icons?i=python)](https://skillicons.dev) 
     [![Django](https://skillicons.dev/icons?i=django)](https://skillicons.dev)
+    - Django Rest Framework
+    - drf-yasg
 
 - Databases
+    - For Dev
 
-    [![PostgreSQL](https://skillicons.dev/icons?i=postgres)](https://skillicons.dev)
-    [![Redis](https://skillicons.dev/icons?i=redis)](https://skillicons.dev)
+        [![SQLite](https://skillicons.dev/icons?i=sqlite)](https://skillicons.dev)
+    - For Prod
+    
+        [![PostgreSQL](https://skillicons.dev/icons?i=postgres)](https://skillicons.dev)
 
 - Other
 
