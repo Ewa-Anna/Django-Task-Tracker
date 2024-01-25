@@ -31,12 +31,12 @@ const ProjectFormStepFour = ({form,formStep,users,selectedUsersLeft,selectedUser
                   <input
                     className="h-full w-full"
                     type="checkbox"
-                    checked={selectedUsersLeft.includes(user.email)}
+                    checked={selectedUsersLeft.some((selectedUser)=>selectedUser.id===user.id)}
                     onChange={(e) => {
                       if (e.target.checked) {
                         setSelectedUsersLeft([
                           ...selectedUsersLeft,
-                          user.email,
+                          {id:user.id,email:user.email}
                         ]);
                       } else {
                         setSelectedUsersLeft(
@@ -70,6 +70,7 @@ const ProjectFormStepFour = ({form,formStep,users,selectedUsersLeft,selectedUser
             ...selectedUsersLeft,
           ]);
           setSelectedUsersLeft([]);
+          console.log("Contributors after update:", form.getValues("contributors"));
         }}
       />
       <ArrowLeft
@@ -86,7 +87,7 @@ const ProjectFormStepFour = ({form,formStep,users,selectedUsersLeft,selectedUser
               .filter((email) => !selectedUsersRight.includes(email))
           );
           setSelectedUsersRight([]);
-          // console.log(form.getValues("contributors"));
+          console.log("Contributors after update:", form.getValues("contributors"));
         }}
       />
     </div>
@@ -118,7 +119,7 @@ const ProjectFormStepFour = ({form,formStep,users,selectedUsersLeft,selectedUser
                 }}
               />
             </div>
-            <div className=" min-w-full w-full">{contributor}</div>
+            <div className=" min-w-full w-full">{contributor?.email}</div>
           </div>
         );
       })}

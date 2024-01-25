@@ -113,7 +113,7 @@ html {
   }
 
   .common-container {
-    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-24 custom-scrollbar;
+    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-20 custom-scrollbar;
   }
 
   /* All Users */
@@ -286,13 +286,13 @@ html {
 /* Stepper component */
 
 .step-item{
-  @apply relative flex flex-col justify-center items-center w-36 lg:w-44;
+  @apply relative flex flex-col justify-center items-center w-36 lg:w-40;
 }
 .step-item:not(:first-child):before{
-  @apply content-[''] bg-slate-200 absolute w-full h-[3px] right-2/4 top-1/3 -translate-y-2/4;
+  @apply content-[''] bg-slate-400 absolute w-full h-[2px] right-2/4 top-1/3 -translate-y-2/4;
 }
 .step{
-  @apply w-10 h-10 flex justify-center items-center z-10 relative bg-slate-700 rounded-full font-semibold text-white
+  @apply w-8 h-8 flex justify-center items-center z-10 relative bg-slate-700 rounded-full font-semibold text-white
 }
 .active .step{
   @apply bg-sky-900;

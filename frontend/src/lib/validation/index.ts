@@ -1,5 +1,8 @@
 import * as z from "zod"
 
+
+
+
 export const signupValidationSchema = z.object({
     first_name: z.string().min(2, {
       message: "Username must be at least 2 characters.",
@@ -32,11 +35,14 @@ confirm_password:z.string()
     description:z.string().min(15,{message:"Description must be at least 15 characters long"}).max(2200,{message:"Description cannot exceed 2200 characters."}),
     file:z.custom<File[]>(),
     leader:z.string().min(1,{message:"This field is required"}),
-    visibility:z.string().min(1,{message:"This field is required"}),
+    visibility:z.string().min(1,{message:"Please choose visibility type"}),
     tags:z.string(),
     deadline:z.union([z.string().optional(), z.date()]).refine(value => value !== '', {message: "Deadline field is required"}),
-    contributors:z.custom<string[]>(),
-    stack:z.string().min(1,{message:"You have to select project type"})
+    contributors: z.array(z.object({
+      id:z.number(),
+      email:z.string().email()
+    })),
+
     
   })
  

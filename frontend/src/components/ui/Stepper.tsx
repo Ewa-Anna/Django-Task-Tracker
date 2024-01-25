@@ -3,13 +3,13 @@ import { Button } from "./button";
 import { TiTick } from "react-icons/ti";
 
 const Stepper = ({steps,formStep,setFormStep}) => {
-//   const steps = ["Step1", "Step2", "Step3"];
+
   const [currentStep, setCurrentStep] = useState(1);
   const [complete,setComplete]=useState(false);
 
   return (
     <>
-      <div className="flex justify-between  mb-12">
+      <div className="flex justify-between  mb-8">
         {steps.map((step, i) => {
           return (
             <div
