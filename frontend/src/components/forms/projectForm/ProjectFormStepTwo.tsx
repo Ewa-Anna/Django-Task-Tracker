@@ -1,97 +1,128 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { cn } from '@/lib/utils'
-import { RadioGroup, RadioGroupItem } from '@radix-ui/react-radio-group'
-import React from 'react'
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import React from "react";
+import { DatePicker } from "@/components/ui/shared/DatePicker";
 
-const ProjectFormStepTwo = ({form,formStep}) => {
+const ProjectFormStepTwo = ({ form, formStep, users, visibilityOptions }) => {
   return (
     <div
-    className={cn(
-      "flex justify-around  gap-9 w-full min-h-[500px] max-h-[500px]   max-w-5xl flex-wrap h-full ",
-      {
-        hidden:
-          formStep === 1 ||
-          formStep === 3 ||
-          formStep === 4 ||
-          formStep === 5 ||
-          formStep === 6,
-      }
-    )}
-  >
-    <FormField
-      control={form.control}
-      name="stack"
-      render={({ field }) => (
-        <div className=" flex flex-1   h-full  ">
-          <FormItem className="space-y-3  flex flex-col flex-1 h-full ">
-            <FormLabel className="text-xl mb-10">
-              Select Project Type
-            </FormLabel>
-        <div className=" flex justify-center shad-form_message">
-        <FormMessage />
-        </div>
-            <FormControl>
-              <RadioGroup
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                className="flex  justify-between    space-y-1  w-full "
-              >
-                <div className="flex flex-col flex-1 mt-5  h-[100%]  gap-20 md:flex-col md:mt-20 lg:flex-row lg:md:mt-28">
-                  <div className={`flex flex-1 border-2 border-dark-4  rounded-[6px] ${form.watch("stack")==="frontend"?"border-2 border-indigo-800":''}`}>
-                    <FormItem className="flex justify-center items-center space-x-3 space-y-0 flex-1 ">
-                      <FormLabel className="font-normal  w-full h-full cursor-pointer  ">
-                        <div className="flex flex-col items-center  h-full justify-center  ">
-                          <span> Frontend</span>
-                        </div>
-                        <FormControl>
-                          <RadioGroupItem
-                            className="hidden"
-                            value="frontend"
-                          />
-                        </FormControl>
-                      </FormLabel>
-                    </FormItem>
-                  </div>
-                  <div className={`flex flex-1 border-2 border-dark-4  rounded-[6px] ${form.watch("stack")==="backend"?"border-2 border-indigo-800":''}`}>
-                    <FormItem className="flex justify-center items-center space-x-3 space-y-0 flex-1">
-                      <FormLabel className="font-normal w-full h-full cursor-pointer">
-                        <div className="flex flex-col items-center h-full justify-center   ">
-                          <span>Backend</span>
-                        </div>
-                        <FormControl>
-                          <RadioGroupItem
-                            className="hidden"
-                            value="backend"
-                          />
-                        </FormControl>
-                      </FormLabel>
-                    </FormItem>
-                  </div>
-                  <div className={`flex flex-1 border-2 border-dark-4  rounded-[6px] ${form.watch("stack")==="fullstack"?"border-2 border-indigo-800":''}`}>
-                    <FormItem className="flex justify-center  items-center space-x-3 space-y-0 flex-1">
-                      <FormLabel className="font-normal  w-full h-full cursor-pointer">
-                        <div className="flex flex-col items-center h-full justify-center  ">
-                          <span>Fullstack</span>
-                        </div>
-                        <FormControl>
-                          <RadioGroupItem
-                            className="hidden"
-                            value="fullstack"
-                          />
-                        </FormControl>
-                      </FormLabel>
-                    </FormItem>
-                  </div>
-                </div>
-              </RadioGroup>
-            </FormControl>
-       
-          </FormItem>
-        </div>
+      className={cn(
+        "flex flex-col gap-9 w-full max-w-5xl min-h-[500px] max-h-[500px]  ",
+        {
+          hidden:
+            formStep === 1 ||
+            formStep === 3 ||
+            formStep === 4 ||
+            formStep === 5 ||
+            formStep === 6,
+        }
       )}
-    />
-  </div>
-  )
-}
+    >
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="shad-form_label">Project Title</FormLabel>
+            <FormControl>
+              <Input type="text" className="shad-input" {...field} />
+            </FormControl>
 
-export default ProjectFormStepTwo
+            <FormMessage className="shad-form_message" />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="shad-form_label">Project overview</FormLabel>
+            <FormControl>
+              <Textarea className="shad-textarea custom-scrollbar" {...field} />
+            </FormControl>
+
+            <FormMessage className="shad-form_message" />
+          </FormItem>
+        )}
+      />
+
+      <div className=" flex gap-8 items-center ">
+        <div className="flex-1   ">
+          <FormField
+            control={form.control}
+            name="leader"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project Leader</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="shad-input">
+                      <SelectValue placeholder="" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <FormMessage className="shad-form_message" />
+                  <SelectContent>
+                    {users &&
+                      users?.results.map((user) => {
+                        return (
+                          <SelectItem
+                            className="cursor-pointer "
+                            value={user.id}
+                          >
+                            {user.email}
+                          </SelectItem>
+                        );
+                      })}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
+     
+        <div className="flex-1 flex-center ">
+          
+        <FormField
+          control={form.control}
+          name="deadline"
+          render={({ field }) => (
+            <FormItem className=' flex flex-col'>
+              <FormLabel>Project Deadline</FormLabel>
+
+              <FormControl>
+                <DatePicker
+                  onChange={(newDate) => field.onChange(newDate)}
+                />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+           
+            </FormItem>
+          )}
+        />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProjectFormStepTwo;

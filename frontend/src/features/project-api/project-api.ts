@@ -12,10 +12,17 @@ export const getProjects = async()=>{
 
 export const createProject = async(formData)=>{
 
-
-
 const response = await clientApi.post("/task/projects/",formData,{
     xsrfHeaderName: "X-CSRFToken",
 })
 return response.data
 }
+
+
+export const getVisibilityOptions = async()=>{
+
+    const response = await clientApi.get("task/dropdown-list/visibility",{
+        xsrfHeaderName: "X-CSRFToken",
+    })
+    return response.data
+    }

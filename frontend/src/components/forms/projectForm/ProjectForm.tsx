@@ -34,11 +34,12 @@ import { useMutation } from "react-query";
 import { createProject } from "@/features/project-api/project-api";
 import { useAuthContext } from "@/contexts/AuthContext";
 import Stepper from "../../ui/Stepper";
-import ProjectFormStepOne from "./ProjectFormStepOne";
 import ProjectFormStepTwo from "./ProjectFormStepTwo";
+import ProjectFormStepOne from "./ProjectFormStepOne";
 import ProjectFormStepThree from "./ProjectFormStepThree";
 import ProjectFormStepFour from "./ProjectFormStepFour";
 import ProjectFormStepFive from "./ProjectFormStepFive";
+
 
 
 type ProjectFormProps = {
@@ -48,12 +49,13 @@ type ProjectFormProps = {
   tags: string[];
 };
 
-const ProjectForm = ({ project, users }: ProjectFormProps) => {
+const ProjectForm = ({ project, users,visibilityOptions }: ProjectFormProps) => {
   const [formStep, setFormStep] = useState(1);
   const steps = [
-    "Basic Information",
-    "Members",
+    "Visibility",
+    "General info",
     "Attachments",
+    "Members",
     "Summary",
   ];
   const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
@@ -96,7 +98,8 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
   function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-
+console.log(values)
+console.log('Submitting form...', values);
     mutation.mutate(values);
   }
 
@@ -108,13 +111,13 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-9 w-full max-w-5xl"
         >
-          <ProjectFormStepOne formStep={formStep} form={form} />
+          <ProjectFormStepOne formStep={formStep} form={form} visibilityOptions={visibilityOptions&&visibilityOptions} />
 
           {/* STEP 2  */}
-          <ProjectFormStepTwo formStep={formStep} form={form} />
+          <ProjectFormStepTwo formStep={formStep} form={form} users={users&&users} visibilityOptions={visibilityOptions&&visibilityOptions}/>
 
           {/* STEP 3  */}
-          <ProjectFormStepThree formStep={formStep} form={form} />
+          <ProjectFormStepThree formStep={formStep} form={form} project ={project}  />
 
           {/* step 4  */}
           <ProjectFormStepFour
@@ -129,21 +132,10 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
 
           {/* STEP 5  */}
 
-          <ProjectFormStepFive form={form} formStep={formStep} project={project} users={users}/>
+          {/* <ProjectFormStepFive form={form} formStep={formStep} project={project} users={users}/> */}
 
           {/* Summary Step */}
-          <div
-            className={cn({
-              hidden:
-                formStep === 1 ||
-                formStep === 2 ||
-                formStep === 3 ||
-                formStep === 4 ||
-                formStep === 5,
-            })}
-          >
-            SUMMARY
-          </div>
+      <ProjectFormStepFive form={form} formStep={formStep}/>
 
           <div className="flex gap-4 items-center justify-end">
             <Button
@@ -151,11 +143,11 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
               className="shad-button_dark_4"
               onClick={() => navigate(-1)}
             >
-              Cancel{formStep}
+              Cancel
             </Button>
             <Button
               // shad-button_primary
-              type="submit"
+              // type="submit"
               className={cn(" whitespace-nowrap ", {
                 hidden: formStep === 1,
               })}
@@ -167,13 +159,14 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
             <Button
               // shad-button_primary
               type="submit"
+           
               className={cn(" whitespace-nowrap ", {
                 hidden:
                   formStep === 1 ||
                   formStep === 2 ||
                   formStep === 3 ||
-                  formStep === 4 ||
-                  formStep === 5,
+                  formStep === 4
+                  
               })}
             >
               Create
@@ -181,7 +174,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
             <Button
               className={cn(" whitespace-nowrap ", {
                 hidden:
-                  formStep === 2 ||
+                  formStep === 1 ||
                   formStep === 3 ||
                   formStep === 4 ||
                   formStep === 5 ||
@@ -200,24 +193,24 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 const descriptionState = form.getFieldState("description");
                 const leaderState = form.getFieldState("leader");
                 const visibilityState = form.getFieldState("visibility");
-                const tagsState = form.getFieldState("tags");
+                // const tagsState = form.getFieldState("tags");
 
                 if (!titleState.isDirty || titleState.invalid) return;
                 if (!descriptionState.isDirty || descriptionState.invalid)
                   return;
-                // if(!leaderState.isDirty || leaderState.invalid)return;
+                if(!leaderState.isDirty || leaderState.invalid)return;
                 // if(!visibilityState.isDirty || visibilityState.invalid)return;
-                if (!tagsState.isDirty || tagsState.invalid) return;
+                // if (!tagsState.isDirty || tagsState.invalid) return;
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Go to step 2
+              {/* Go to step 3 */} Next Step
               <ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
             <Button
               className={cn(" whitespace-nowrap ", {
                 hidden:
-                  formStep === 1 ||
+                  formStep === 2 ||
                   formStep === 3 ||
                   formStep === 4 ||
                   formStep === 5 ||
@@ -236,14 +229,14 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 const leaderState = form.getFieldState("leader");
                 const visibilityState = form.getFieldState("visibility");
                 const stackState = form.getFieldState("stack");
-                const state = form.getValues("stack");
+               
 
-                if (!stackState.isDirty || stackState.invalid) return;
+                if (!visibilityState.isDirty || visibilityState.invalid) return;
 
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Go to step 3 <ArrowRight className="w-4 h-4 ml-2 " />
+              {/* Go to step 2 */} Next Step<ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
 
             <Button
@@ -275,7 +268,7 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Go to step 4 <ArrowRight className="w-4 h-4 ml-2 " />
+            {/* Go to step 4 */} Next Step <ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
             <Button
               className={cn(" whitespace-nowrap ", {
@@ -302,38 +295,9 @@ const ProjectForm = ({ project, users }: ProjectFormProps) => {
                 setFormStep((prev) => prev + 1);
               }}
             >
-              Go to step 5<ArrowRight className="w-4 h-4 ml-2 " />
+             {/* Go to step 5 */} Next Step<ArrowRight className="w-4 h-4 ml-2 " />
             </Button>
-            <Button
-              className={cn(" whitespace-nowrap ", {
-                hidden:
-                  formStep === 1 ||
-                  formStep === 2 ||
-                  formStep === 3 ||
-                  formStep === 4 ||
-                  formStep === 6,
-              })}
-              variant="ghost"
-              onClick={() => {
-                form.trigger([
-                  "title",
-                  "description",
-                  "leader",
-                  "visibility",
-                  "tags",
-                ]);
-
-                const leaderState = form.getFieldState("leader");
-                const visibilityState = form.getFieldState("visibility");
-
-                if (!leaderState.isDirty || leaderState.invalid) return;
-                if (!visibilityState.isDirty || visibilityState.invalid) return;
-
-                setFormStep((prev) => prev + 1);
-              }}
-            >
-              Go to step 6<ArrowRight className="w-4 h-4 ml-2 " />
-            </Button>
+            
           </div>
         </form>
       </Form>
