@@ -60,9 +60,16 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    created_by = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault(), read_only=True
+    )
+    updated_by = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault(), read_only=True
+    )
+
     class Meta:
         model = Comment
-        fields = ["text", "creator"]
+        fields = "__all__"
 
 
 class AttachmentSerializer(serializers.ModelSerializer):

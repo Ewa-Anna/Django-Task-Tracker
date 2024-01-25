@@ -1,6 +1,5 @@
 from rest_framework.permissions import BasePermission
-from rest_framework.response import Response
-from rest_framework import status
+
 
 class IsGuest(BasePermission):
     def has_permission(self, request, view):

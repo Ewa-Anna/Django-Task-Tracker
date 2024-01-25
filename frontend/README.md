@@ -15,7 +15,7 @@
 
 ` npm install`
 
-5. Run the development server
+4. Run the development server
 
 ` npm run dev `
 
@@ -25,7 +25,3 @@ Project will run on http://127.0.0.1:5173/
 Inside frontend directory you need to create  ` .env `file and add backend base URL :
 `VITE_API_BASE_URL="http://127.0.0.1:8000/task-tracker/v1/"`
 
-
-<!-- ### Tasks
-`GET // `
-### User -->
