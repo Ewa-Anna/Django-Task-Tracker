@@ -1,9 +1,6 @@
 import * as z from "zod"
 
-interface Contributor {
-  id: number;
-  email: string;
-}
+
 
 
 export const signupValidationSchema = z.object({
