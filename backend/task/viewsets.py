@@ -2,6 +2,7 @@ from django.utils import timezone
 
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -23,7 +24,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
-    permission_classes = [CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -135,7 +136,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
-    
+
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
             response_data = {
@@ -144,12 +145,34 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_403_FORBIDDEN)
 
         return super().handle_exception(exc)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if request.user.is_admin:
+            return super().update(request, *args, **kwargs)
+        
+        if request.user != instance.creator:
+            return Response(
+                {"detail": "You don't have permission to edit this project."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().update(request, *args, **kwargs)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     pagination_class = CustomPagination
+    permission_classes = [IsAuthenticated, CustomPermission]
+
+    required_roles = {
+        "GET": ["guest", "member", "manager", "admin"],
+        "POST": ["member", "manager", "admin"],
+        "PUT": ["member", "manager", "admin"],
+        "PATCH": ["member", "manager", "admin"],
+        "DELETE": ["admin"],
+    }
 
     @action(detail=False, methods=["get"])
     def task(self, request):
@@ -195,12 +218,43 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+    
+    def handle_exception(self, exc):
+        if isinstance(exc, PermissionDenied):
+            response_data = {
+                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
+            }
+            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+
+        return super().handle_exception(exc)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if request.user.is_admin:
+            return super().update(request, *args, **kwargs)
+        
+        if request.user != instance.creator:
+            return Response(
+                {"detail": "You don't have permission to edit this task."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().update(request, *args, **kwargs)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = CustomPagination
+    permission_classes = [IsAuthenticated, CustomPermission]
+
+    required_roles = {
+        "GET": ["guest", "member", "manager", "admin"],
+        "POST": ["guest", "member", "manager", "admin"],
+        "PUT": ["guest", "member", "manager", "admin"],
+        "PATCH": ["guest", "member", "manager", "admin"],
+        "DELETE": ["manager", "admin"],
+    }
 
     @action(detail=False, methods=["get"])
     def comment(self, request):
@@ -223,8 +277,45 @@ class CommentViewSet(viewsets.ModelViewSet):
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = CommentSerializer(paginated_queryset, many=True)
         return paginator.get_paginated_response(serializer.data)
+    
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user)
+    
+    def handle_exception(self, exc):
+        if isinstance(exc, PermissionDenied):
+            response_data = {
+                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
+            }
+            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+
+        return super().handle_exception(exc)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if request.user.is_admin:
+            return super().update(request, *args, **kwargs)
+        
+        if request.user != instance.creator:
+            return Response(
+                {"detail": "You don't have permission to edit this comment."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().update(request, *args, **kwargs)
 
 
 class AttachmentViewSet(viewsets.ModelViewSet):
     queryset = Attachment.objects.all()
     serializer_class = AttachmentSerializer
+    permission_classes = [IsAuthenticated, CustomPermission]
+
+    required_roles = {
+        "GET": ["guest", "member", "manager", "admin"],
+        "POST": ["guest", "member", "manager", "admin"],
+        "PUT": ["guest", "member", "manager", "admin"],
+        "PATCH": ["guest", "member", "manager", "admin"],
+        "DELETE": ["admin"],
+    }

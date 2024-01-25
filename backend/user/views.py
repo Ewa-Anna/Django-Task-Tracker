@@ -53,9 +53,9 @@ class LoginView(APIView):
             "photo": profile.photo,
             "birthdate": profile.birthdate,
             # "csrf_token": get_token(request),
-            "csrf_token": request.META.get('CSRF_COOKIE')
+            "csrf_token": request.META.get("CSRF_COOKIE"),
         }
-        
+
         response = Response(response_data, status=status.HTTP_202_ACCEPTED)
         return response
 
@@ -112,7 +112,7 @@ class RegistrationView(generics.CreateAPIView):
 
         response_data = {
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "csrf_token": get_token(request)
+            "csrf_token": request.META.get("CSRF_COOKIE"),
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
 
