@@ -145,17 +145,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_403_FORBIDDEN)
 
         return super().handle_exception(exc)
-    
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        
+
         if request.user.is_admin:
             return super().update(request, *args, **kwargs)
-        
+
         if request.user != instance.creator:
             return Response(
                 {"detail": "You don't have permission to edit this project."},
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_403_FORBIDDEN,
             )
         return super().update(request, *args, **kwargs)
 
@@ -218,7 +218,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
-    
+
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
             response_data = {
@@ -227,17 +227,17 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_403_FORBIDDEN)
 
         return super().handle_exception(exc)
-    
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        
+
         if request.user.is_admin:
             return super().update(request, *args, **kwargs)
-        
+
         if request.user != instance.creator:
             return Response(
                 {"detail": "You don't have permission to edit this task."},
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_403_FORBIDDEN,
             )
         return super().update(request, *args, **kwargs)
 
@@ -277,13 +277,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = CommentSerializer(paginated_queryset, many=True)
         return paginator.get_paginated_response(serializer.data)
-    
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
-    
+
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
             response_data = {
@@ -292,17 +292,17 @@ class CommentViewSet(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_403_FORBIDDEN)
 
         return super().handle_exception(exc)
-    
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        
+
         if request.user.is_admin:
             return super().update(request, *args, **kwargs)
-        
+
         if request.user != instance.creator:
             return Response(
                 {"detail": "You don't have permission to edit this comment."},
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_403_FORBIDDEN,
             )
         return super().update(request, *args, **kwargs)
 

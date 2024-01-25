@@ -23,12 +23,12 @@ class ChangeLogView(APIView):
 
     required_roles = {
         "GET": ["manager", "admin"],
-        "POST":  ["admin"],
-        "PUT":  ["admin"],
-        "PATCH":  ["admin"],
+        "POST": ["admin"],
+        "PUT": ["admin"],
+        "PATCH": ["admin"],
         "DELETE": ["admin"],
     }
-    
+
     def get_queryset(self):
         return ChangeLog.objects.all()
 
