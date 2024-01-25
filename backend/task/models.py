@@ -44,7 +44,7 @@ class Project(models.Model):
 
     archive = models.BooleanField(default=False)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
