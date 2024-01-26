@@ -59,6 +59,15 @@ const ProjectFormStepThree = ({form,formStep,project}) => {
               type="text"
               className="shad-input"
               {...field}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                const tagsArray = inputValue
+                  .split(',')
+                  .map((tag) => tag.trim())
+                  .filter((tag) => tag !== ''); // Remove empty tags
+    
+                field.onChange(tagsArray);
+              }}
             />
           </FormControl>
 
