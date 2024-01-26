@@ -19,7 +19,7 @@ import {
 import React from "react";
 import { DatePicker } from "@/components/ui/shared/DatePicker";
 
-const ProjectFormStepTwo = ({ form, formStep, users, visibilityOptions }) => {
+const ProjectFormStepTwo = ({ form, formStep, users, }) => {
   return (
     <div
       className={cn(
@@ -34,40 +34,47 @@ const ProjectFormStepTwo = ({ form, formStep, users, visibilityOptions }) => {
         }
       )}
     >
-      <FormField
-        control={form.control}
-        name="title"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="shad-form_label">Project Title</FormLabel>
-            <FormControl>
-              <Input type="text" className="shad-input" {...field} />
-            </FormControl>
+    <FormField
+      control={form.control}
+      name="title"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="shad-form_label">
+            Project Title
+          </FormLabel>
+          <FormControl>
+            <Input type="text" className="shad-input" {...field} />
+          </FormControl>
 
-            <FormMessage className="shad-form_message" />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="description"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="shad-form_label">Project overview</FormLabel>
-            <FormControl>
-              <Textarea className="shad-textarea custom-scrollbar" {...field} />
-            </FormControl>
+          <FormMessage className="shad-form_message" />
+        </FormItem>
+      )}
+    />
+    <FormField
+      control={form.control}
+      name="description"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="shad-form_label">
+            Project overview
+          </FormLabel>
+          <FormControl>
+            <Textarea
+              className="shad-textarea custom-scrollbar"
+              {...field}
+            />
+          </FormControl>
 
-            <FormMessage className="shad-form_message" />
-          </FormItem>
-        )}
-      />
+          <FormMessage className="shad-form_message" />
+        </FormItem>
+      )}
+    />
 
       <div className=" flex gap-8 items-center ">
         <div className="flex-1   ">
           <FormField
             control={form.control}
-            name="leader"
+            name="owner"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Project Leader</FormLabel>

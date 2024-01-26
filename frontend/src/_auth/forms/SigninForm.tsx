@@ -40,7 +40,7 @@ const navigate= useNavigate()
 
 const mutation = useMutation(loginUser,{
   onSuccess:(data)=>{
-    console.log(data)
+    localStorage.setItem('token', data.csrf_token);
     navigate("/")
   },
   onError:(error)=>{

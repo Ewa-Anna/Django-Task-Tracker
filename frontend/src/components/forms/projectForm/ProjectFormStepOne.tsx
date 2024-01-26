@@ -7,11 +7,15 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
+
 import { MdPublic } from "react-icons/md";
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 
-const ProjectFormStepOne = ({ form, formStep, visibilityOptions }) => {
-  function renderIcon(visibilityType, size, color) {
+const ProjectFormStepOne = ({form,formStep, visibilityOptions,}) => {
+
+
+
+  function renderIcon(visibilityType:string, size:number, color:string) {
     if (visibilityType === "public")
       return <MdPublic size={size} color={color} />;
     else {
@@ -90,7 +94,7 @@ const ProjectFormStepOne = ({ form, formStep, visibilityOptions }) => {
               </FormItem>
             </div>
             <div className="flex justify-center mt-10 shad-form_message ">
-              <FormMessage  />
+              <FormMessage />
             </div>
           </div>
         )}
