@@ -41,10 +41,10 @@ class Project(models.Model):
         CustomUser, related_name="assigned_projects", blank=True
     )
     status = models.CharField(max_length=20, choices=STATUS, default="pending")
-    
+
     archive = models.BooleanField(default=False)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -126,7 +126,20 @@ class Comment(models.Model):
     text = models.TextField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="created_by_comment",
+        blank=True,
+        null=True,
+    )
+    updated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="updated_by_comment",
+        blank=True,
+        null=True,
+    )
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -135,7 +148,7 @@ class Comment(models.Model):
         ordering = ["-created"]
 
     def __str__(self):
-        return f"Comment by {self.creator.username}"
+        return f"Comment by {self.created_by}"
 
 
 class Attachment(models.Model):

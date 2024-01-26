@@ -9,8 +9,7 @@ from rest_framework.authentication import SessionAuthentication
 
 from .models import ChangeLog
 from .serializers import ChangeLogSerializer
-
-# from user.permissions import IsAdmin
+from user.permissions import CustomPermission
 
 
 User = get_user_model()
@@ -20,6 +19,15 @@ class ChangeLogView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [SessionAuthentication]
     serializer_class = ChangeLogSerializer
+    permission_classes = [CustomPermission]
+
+    required_roles = {
+        "GET": ["manager", "admin"],
+        "POST": ["admin"],
+        "PUT": ["admin"],
+        "PATCH": ["admin"],
+        "DELETE": ["admin"],
+    }
 
     def get_queryset(self):
         return ChangeLog.objects.all()
