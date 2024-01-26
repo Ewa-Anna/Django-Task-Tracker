@@ -63,8 +63,15 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("text", "project", "task", "created", "updated")
-    list_filter = ("project", "task",)
-    search_fields = ("text", "project", "task",)
+    list_filter = (
+        "project",
+        "task",
+    )
+    search_fields = (
+        "text",
+        "project",
+        "task",
+    )
 
 
 class AttachmentAdmin(admin.ModelAdmin):
