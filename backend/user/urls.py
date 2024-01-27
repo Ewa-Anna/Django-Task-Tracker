@@ -14,7 +14,7 @@ from .views import (
     LogoutView,
     ActivationUserEmailView,
     ChangePasswordView,
-    CustomPasswordTokenView,
+    DeactivateAccountView,
 )
 from .viewsets import UserViewSet
 
@@ -49,9 +49,13 @@ urlpatterns = [
         reset_password_validate_token,
         name="password_reset_validate_token",
     ),
-    # path("password_reset/confirm/", CustomPasswordTokenView.as_view(), name="password_reset_confirm"),
     path(
         "password_reset/confirm/", reset_password_confirm, name="password_reset_confirm"
+    ),
+    path(
+        "deactivate-account/",
+        DeactivateAccountView.as_view(),
+        name="deactivate-account",
     ),
     path("register/", RegistrationView.as_view(), name="register"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),

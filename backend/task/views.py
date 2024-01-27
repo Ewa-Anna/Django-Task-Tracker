@@ -1,17 +1,23 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import DictionaryContentSerializer, TaskSerializer
 from .models import PRIORITY, STATUS, VISIBILITY, Project
 from user.models import ROLES, THEMES
+from user.permissions import CustomPermission
 
 
 class DictionaryContentView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, dictionary_name):
+        dictionary_name = dictionary_name.lower()
         if dictionary_name == "priority":
             content = dict(PRIORITY)
         elif dictionary_name == "status":
@@ -33,15 +39,32 @@ class DictionaryContentView(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
-        serialized_data = [value for _, value in content.items()]
-
-        return Response(serialized_data, status=status.HTTP_200_OK)
+        return Response(content, status=status.HTTP_200_OK)
 
 
 class ProjectDeleteView(APIView):
+    permission_classes = [IsAuthenticated, CustomPermission]
+
+    required_roles = {
+        "GET": ["guest", "member", "manager", "admin"],
+        "POST": ["manager", "admin"],
+        "PUT": ["manager", "admin"],
+        "PATCH": ["manager", "admin"],
+        "DELETE": ["admin"],
+    }
+
+    def handle_exception(self, exc):
+        if isinstance(exc, PermissionDenied):
+            response_data = {
+                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
+            }
+            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+
+        return super().handle_exception(exc)
+
     def get(self, request, pk):
         try:
-            project = Project.objects.get(pk=pk)
+            project = get_object_or_404(Project, pk=pk)
             tasks = project.related_projects.all()
             task_serializer = TaskSerializer(tasks, many=True)
 
@@ -58,7 +81,7 @@ class ProjectDeleteView(APIView):
             project.delete()
             return Response(
                 {"message": "Project and associated tasks deleted successfully"},
-                status=status.HTTP_200_OK,
+                status=status.HTTP_204_NO_CONTENT,
             )
         except Project.DoesNotExist:
             return Response(
