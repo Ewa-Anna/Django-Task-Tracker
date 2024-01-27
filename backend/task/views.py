@@ -52,7 +52,7 @@ class ProjectDeleteView(APIView):
         "PATCH": ["manager", "admin"],
         "DELETE": ["admin"],
     }
-    
+
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
             response_data = {

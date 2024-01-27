@@ -214,3 +214,16 @@ class DashboardView(APIView):
         }
 
         return Response(updated_data, status=status.HTTP_200_OK)
+
+
+class DeactivateAccountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        user.is_active = False
+        user.save()
+
+        return Response(
+            {"message": "Account deactivated successfully."}, status=status.HTTP_200_OK
+        )
