@@ -52,7 +52,6 @@ class LoginView(APIView):
             "bio": profile.bio,
             "photo": profile.photo,
             "birthdate": profile.birthdate,
-            # "csrf_token": get_token(request),
             "csrf_token": request.META.get("CSRF_COOKIE"),
         }
 
@@ -198,7 +197,7 @@ class DashboardView(APIView):
 
         user.save()
 
-        profile, created = Profile.objects.get_or_create(user=user)
+        profile, _ = Profile.objects.get_or_create(user=user)
 
         profile.bio = request.data.get("bio", profile.bio)
         profile.photo = request.data.get("photo", profile.photo)
