@@ -41,7 +41,7 @@ confirm_password:z.string()
     assignees: z.array(z.object({
       id:z.number(),
       email:z.string().email()
-    })),
+    })).refine((value) => value.length > 0, { message: "At least one assignee is required" }),
 
     
   })
