@@ -12,6 +12,7 @@ class DictionaryContentView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, dictionary_name):
+        dictionary_name = dictionary_name.lower()
         if dictionary_name == "priority":
             content = dict(PRIORITY)
         elif dictionary_name == "status":
@@ -33,9 +34,7 @@ class DictionaryContentView(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
-        serialized_data = [value for _, value in content.items()]
-
-        return Response(serialized_data, status=status.HTTP_200_OK)
+        return Response(content, status=status.HTTP_200_OK)
 
 
 class ProjectDeleteView(APIView):
