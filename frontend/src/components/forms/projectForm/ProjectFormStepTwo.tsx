@@ -19,18 +19,18 @@ import {
 import React from "react";
 import { DatePicker } from "@/components/ui/shared/DatePicker";
 
-const ProjectFormStepTwo = ({ form, formStep, users, }) => {
+const ProjectFormStepTwo = ({ form, currentStep, users, }) => {
   return (
     <div
       className={cn(
         "flex flex-col gap-9 w-full max-w-5xl min-h-[500px] max-h-[500px]  ",
         {
           hidden:
-            formStep === 1 ||
-            formStep === 3 ||
-            formStep === 4 ||
-            formStep === 5 ||
-            formStep === 6,
+          currentStep === 0 ||
+          currentStep === 2 ||
+          currentStep === 3 ||
+          currentStep === 4 ||
+          currentStep === 5,
         }
       )}
     >
