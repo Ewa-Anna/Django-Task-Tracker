@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
+import { SubmitHandler, useForm } from "react-hook-form";
+import { GiConfirmed } from "react-icons/gi";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -33,13 +33,20 @@ const ProjectForm = ({
   users,
   visibilityOptions,
 }: ProjectFormProps) => {
-  const [formStep, setFormStep] = useState(1);
+  const [previousStep, setPreviousStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  
   const steps = [
-    "Visibility",
-    "General info",
-    "Attachments",
-    "Members",
-    "Summary",
+    { id: "step_1", name: "Project Type", fields: ["visibility"] },
+    {
+      id: "step_2",
+      name: "General Info",
+      fields: ["title", "description", "owner", "deadline"],
+    },
+    { id: "step_3", name: "Attachments", fields: ["file", "tags"] },
+    { id: "step_4", name: "Assignees", fields: ["assignees"] },
+    { id: "step_5", name: "Summary", fields: ["summary"] },
   ];
   const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
   const [selectedUsersRight, setSelectedUsersRight] = useState([]);
@@ -80,78 +87,71 @@ const ProjectForm = ({
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
-  
     // mutation.mutate(values);
   }
+  type Inputs = z.infer<typeof ProjectValidationSchema>;
+  type FieldName = keyof Inputs;
 
-  const handleNextStep = () => {
-    form.trigger([
-      "title",
-      "description",
-      "owner",
-      "deadline",
-      "assignees",
-      "file",
-      "tags",
-    ]);
+  const processForm: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    form.reset();
+  };
 
-    if (formStep === 1) {
-      const visibilityState = form.getFieldState("visibility");
-      if (!visibilityState.isDirty || visibilityState.invalid) return;
+  const handleNextStep = async () => {
+    const fields = steps[currentStep].fields;
+
+    console.log(fields);
+    const output = await form.trigger(fields as FieldName[], {
+      shouldFocus: true,
+    });
+
+    // console.log(fields)
+    console.log(output);
+    if (!output) return;
+
+    if (currentStep < steps.length - 1) {
+      if (currentStep === steps.length - 1) {
+        await form.handleSubmit(processForm)();
+      }
+      setPreviousStep(currentStep);
+      setCurrentStep((step) => step + 1);
     }
+  };
 
-    if (formStep === 2) {
-      const titleState = form.getFieldState("title");
-      const descriptionState = form.getFieldState("description");
-      const leaderState = form.getFieldState("owner");
-      const deadlineState = form.getFieldState("deadline");
-      if (!titleState.isDirty || titleState.invalid) return;
-      if (!descriptionState.isDirty || descriptionState.invalid) return;
-      if (!leaderState.isDirty || leaderState.invalid) return;
-      if (!deadlineState.isDirty || deadlineState.invalid) return;
+  const handlePrevtStep = () => {
+    if (currentStep > 0) {
+      setPreviousStep(currentStep);
+      setCurrentStep((step) => step - 1);
     }
-
-    if (formStep === 4) {
-      const asigneesState = form.getFieldState("assignees");
-      if (!asigneesState.isDirty || asigneesState.invalid) return;
-    }
-
-    setFormStep((prev) => prev + 1);
   };
 
   return (
     <>
-      <Stepper steps={steps} formStep={formStep} setFormStep={setFormStep} />
+      <Stepper steps={steps} currentStep={currentStep}  />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-9 w-full max-w-5xl"
         >
-          {/* <CSRFToken/> */}
           <ProjectFormStepOne
             form={form}
-            formStep={formStep}
+            currentStep={currentStep}
             visibilityOptions={visibilityOptions && visibilityOptions}
           />
 
-          {/* STEP 2  */}
           <ProjectFormStepTwo
-            formStep={formStep}
+            currentStep={currentStep}
             form={form}
             users={users && users}
             visibilityOptions={visibilityOptions && visibilityOptions}
           />
-
-          {/* STEP 3  */}
           <ProjectFormStepThree
-            formStep={formStep}
+            currentStep={currentStep}
             form={form}
             project={project}
           />
-
-          {/* step 4  */}
           <ProjectFormStepFour
-            formStep={formStep}
+            currentStep={currentStep}
             form={form}
             users={users}
             setSelectedUsersLeft={setSelectedUsersLeft}
@@ -159,11 +159,8 @@ const ProjectForm = ({
             selectedUsersRight={selectedUsersRight}
             setSelectedUsersRight={setSelectedUsersRight}
           />
-
-          {/* Summary Step */}
-          <ProjectFormStepFive form={form} formStep={formStep} />
-
-          <div className="flex gap-4 items-center justify-end">
+          <ProjectFormStepFive form={form} currentStep={currentStep} />
+          <div className="flex  gap-4 items-center justify-end">
             <Button
               type="button"
               className="shad-button_dark_4"
@@ -175,40 +172,25 @@ const ProjectForm = ({
               // shad-button_primary
               type="button"
               className={cn(" whitespace-nowrap ", {
-                hidden: formStep === 1,
+                hidden: currentStep === 0,
               })}
-              onClick={() => setFormStep((prev) => prev - 1)}
+              onClick={handlePrevtStep}
             >
-              <ArrowLeft />
+              <ArrowLeft className="ml-1" />
               Go back
             </Button>
-            {/* <Button
-              // shad-button_primary
-              type="submit"
-              className={cn(" whitespace-nowrap ", {
-                hidden:
-                  formStep === 1 ||
-                  formStep === 2 ||
-                  formStep === 3 ||
-                  formStep === 4,
-              })}
-            >
-              Create
-            </Button> */}
-
             <Button
-              className={cn("whitespace-nowrap", {
-                hidden: formStep === 6,
-              })}
-              type={formStep === 5 ? "submit" : ""}
-              variant="ghost"
-              onClick={() => handleNextStep()}
+              onClick={(e) => {
+                handleNextStep();
+              }}
             >
-              {formStep === 5 ? "Create" : "Next step"}
-              {formStep !== 5 && <ArrowRight className="w-4 h-4 ml-2" />}
+             {currentStep < 4 ? "Next Step" : "Confirm"} 
+             {currentStep < 4 && <ArrowRight className="ml-1" />}
+             {currentStep ===4 && <GiConfirmed  className="ml-1" />}
             </Button>
           </div>
         </form>
+        {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
       </Form>
     </>
   );

@@ -13,16 +13,16 @@ import {
 import FileUploader from '@/components/ui/shared/FileUploader'
 
 
-const ProjectFormStepThree = ({form,formStep,project}) => {
+const ProjectFormStepThree = ({form,currentStep,project}) => {
   return (
     <div
     className={cn("flex flex-col gap-9 w-full max-w-5xl  min-h-[500px] max-h-[500px]  ", {
       hidden:
-        formStep === 1 ||
-        formStep === 2 ||
-        formStep === 4 ||
-        formStep === 5 ||
-        formStep === 6,
+      currentStep === 0 ||
+      currentStep ===  1||
+      currentStep === 3 ||
+      currentStep === 4 ||
+      currentStep === 5,
     })}
   >
 
