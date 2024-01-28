@@ -28,12 +28,22 @@ import { TicketValidationSchema } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import { Value } from "@radix-ui/react-select";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
+import { createTicket } from "@/features/ticket-api/ticket-api";
 
 type ProjectFormProps = {
   title: string;
   description: string;
   file: string[];
   tags: string[];
+};
+
+export type INewTicket = {
+  title: string;
+  description: string;
+  type: string;
+  priority: string;
+  file: File[];
 };
 
 const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
@@ -49,11 +59,18 @@ const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
     },
   });
 
+  const mutation = useMutation(createTicket, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError:(error:Error)=>console.log(error.message)
+  });
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof TicketValidationSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+
     console.log(values);
+    mutation.mutate(values)
   }
 
   return (
@@ -151,7 +168,7 @@ const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.entries(priorityOptions).map(([key, value]) => {
+                      {priorityOptions&&Object.entries(priorityOptions).map(([key, value]) => {
                         return (
                           <SelectItem className="cursor-pointer" value={key}>
                             {value}
