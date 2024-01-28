@@ -59,5 +59,5 @@ export const TicketValidationSchema=z.object({
   description: z.string().min(15, { message: "Description must be at least 15 characters long" }).max(2200, { message: "Description cannot exceed 2200 characters." }),
   type:z.string().min(1,{message:"Please select ticket type"}),
   priority:z.string().min(1,{message:"Please select ticket priority"}),
-  file:z.custom<File>()
+  file:z.custom<File[]>()
 })
