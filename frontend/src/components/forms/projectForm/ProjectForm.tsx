@@ -46,10 +46,12 @@ const ProjectForm = ({
     },
     { id: "step_3", name: "Attachments", fields: ["file", "tags"] },
     { id: "step_4", name: "Assignees", fields: ["assignees"] },
-    { id: "step_5", name: "Summary", fields: ["summary"] },
+
+  
   ];
   const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
   const [selectedUsersRight, setSelectedUsersRight] = useState([]);
+  const [isSubmiting,setIsSubmiting]=useState(false)
   const { showToast } = useAuthContext();
   const navigate = useNavigate();
 
@@ -59,6 +61,7 @@ const ProjectForm = ({
 
   const mutation = useMutation(createProject, {
     onSuccess: () => {
+      form.reset();
       showToast({
         message: "Project has been created",
         type: "SUCCESS",
@@ -93,8 +96,9 @@ const ProjectForm = ({
   type FieldName = keyof Inputs;
 
   const processForm: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-    form.reset();
+    mutation.mutate(data);
+    
+  
   };
 
   const handleNextStep = async () => {
@@ -105,18 +109,17 @@ const ProjectForm = ({
       shouldFocus: true,
     });
 
-    // console.log(fields)
     console.log(output);
     if (!output) return;
 
     if (currentStep < steps.length - 1) {
-      if (currentStep === steps.length - 1) {
-        await form.handleSubmit(processForm)();
+      if (currentStep === steps.length - 2) {
+        await form.handleSubmit(processForm)()
       }
-      setPreviousStep(currentStep);
-      setCurrentStep((step) => step + 1);
+      setPreviousStep(currentStep)
+      setCurrentStep(step => step + 1)
     }
-  };
+  }
 
   const handlePrevtStep = () => {
     if (currentStep > 0) {
@@ -130,7 +133,7 @@ const ProjectForm = ({
       <Stepper steps={steps} currentStep={currentStep}  />
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(processForm)}
           className="flex flex-col gap-9 w-full max-w-5xl"
         >
           <ProjectFormStepOne
@@ -167,6 +170,7 @@ const ProjectForm = ({
               onClick={() => navigate(-1)}
             >
               Cancel
+            
             </Button>
             <Button
               // shad-button_primary
@@ -180,7 +184,8 @@ const ProjectForm = ({
               Go back
             </Button>
             <Button
-              onClick={(e) => {
+         
+              onClick={() => {
                 handleNextStep();
               }}
             >
