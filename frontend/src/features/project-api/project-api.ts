@@ -22,7 +22,7 @@ return response.data
 export const getVisibilityOptions = async()=>{
 
     const response = await clientApi.get("task/dropdown-list/visibility",{
-        xsrfHeaderName: "X-CSRFToken",
+        // xsrfHeaderName: "X-CSRFToken",
     })
     return response.data
     }
