@@ -21,6 +21,8 @@ from .serializers import (
     CustomPasswordTokenSerializer,
 )
 from .models import Profile
+from task.models import Project, Task
+from task.serializers import ProjectSerializer, TaskSerializer
 
 
 User = get_user_model()
@@ -186,6 +188,22 @@ class DashboardView(APIView):
             "photo": profile.photo,
             "birthdate": profile.birthdate,
         }
+        
+        projects = Project.objects.filter(owner=user)
+        project_serializer = ProjectSerializer(projects, many=True)
+        user_data["projects"] = project_serializer.data
+
+        tasks = Task.objects.filter(owner=user)
+        task_serializer = TaskSerializer(tasks, many=True)
+        user_data["tasks"] = task_serializer.data
+       
+        assigned_projects = Project.objects.filter(assignees=user)
+        assigned_project_serializer = ProjectSerializer(assigned_projects, many=True)
+        user_data["assigned_projects"] = assigned_project_serializer.data
+ 
+        assigned_tasks = Task.objects.filter(assignees=user)
+        assigned_task_serializer = TaskSerializer(assigned_tasks, many=True)
+        user_data["assigned_tasks"] = assigned_task_serializer.data
 
         return Response(user_data)
 
