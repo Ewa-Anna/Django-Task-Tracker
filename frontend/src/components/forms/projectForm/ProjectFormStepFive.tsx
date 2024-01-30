@@ -1,59 +1,80 @@
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { DatePicker } from "@/components/ui/shared/DatePicker";
-import FileUploader from "@/components/ui/shared/FileUploader";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useAppState } from "@/contexts/formContext";
+import { createProject } from "@/features/project-api/project-api";
 import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@radix-ui/react-select";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
-const ProjectFormStepFive = ({ form, currentStep }) => {
+const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
 
-
-  const renderFormValue = (fieldName) => {
-    const value = form.getValues(fieldName);
   
-   return <div className="border-2 flex">
-<span className="flex-1">
-{fieldName}
-</span>
-<span className="flex-1">
-{value}
-</span>
-   </div>
-  }
+  const [state, setState] = useAppState();
+  const { showToast } = useAuthContext();
+  const navigate = useNavigate();
+  const form = useForm();
+  const mutation = useMutation(createProject, {
+    onSuccess: () => {
+      // form.reset();
+
+      showToast({
+        message: "Project has been created",
+        type: "SUCCESS",
+      });
+      setCurrentStep(0);
+      navigate("/projects");
+    },
+    onError: (error: Error) => {
+      showToast({ message: error.message, type: "ERROR" });
+    },
+  });
+
+  const handleCreateProject = (formData) => {
+    mutation.mutate(formData);
+    console.log(formData)
+  };
 
   return (
     <div
-      className={cn("w-full min-h-[500px] border-2 flex justify-between overflow-hidden flex-col lg:flex-row", {
-        hidden:
-          currentStep === 0 ||
-          currentStep === 1 ||
-          currentStep === 2 ||
-          currentStep === 3
-   
-      })}
+      className={cn(
+        "flex flex-col justify-around  gap-9 w-full min-h-[510px] max-h-[900px]   max-w-5xl flex-wrap h-full ",
+        {
+          hidden:
+            currentStep === 0 ||
+            currentStep === 1 ||
+            currentStep === 2 ||
+            currentStep === 3 ||
+            currentStep === 0,
+        }
+      )}
     >
-      <div className=" flex flex-col w-full">
-
-     { renderFormValue("title")}
-     { renderFormValue("description")}
-     { renderFormValue("visibility")}
-
-</div>
-</div>)
-  
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(()=>handleCreateProject(state))}>
+          <div className="flex justify-end border-2">
+            <Button
+              type="button"
+              onClick={() => {
+                setCurrentStep((prev) => prev - 1);
+              }}
+              className={cn(" whitespace-nowrap  ", {
+                hidden: currentStep === 0,
+              })}
+            >
+              <ArrowLeft className="mr-1" />
+              Go Back
+            </Button>
+            <Button className="shad-button_primary">
+              Confirm
+              <ArrowRight className="ml-1" />
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
 };
-
 
 export default ProjectFormStepFive;
