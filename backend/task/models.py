@@ -87,7 +87,7 @@ class Task(models.Model):
         Project, on_delete=models.CASCADE, related_name="related_projects"
     )
     owner = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="owned_tasks"
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="owned_tasks", null=True
     )
     assignees = models.ManyToManyField(
         CustomUser, related_name="assigned_tasks", blank=True
