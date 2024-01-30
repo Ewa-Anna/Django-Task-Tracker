@@ -138,7 +138,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
                             return (
                               <SelectItem
                                 className="cursor-pointer "
-                                value={user.id}
+                                value={user.id.toString()}
                               >
                                 {user.email}
                               </SelectItem>
