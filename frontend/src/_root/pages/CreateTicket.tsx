@@ -3,12 +3,13 @@ import { ImTicket } from "react-icons/im";
 import React from 'react'
 import { useQuery } from 'react-query';
 import { getTicketPriorityOptions } from '@/features/ticket-api/ticket-api';
+import { getProjects } from '@/features/project-api/project-api';
 
 const CreateTicket = () => {
 
 
 const {data:priorityOptions}=useQuery(["priorityOptions"],()=>getTicketPriorityOptions())
-
+const {data:projects}=useQuery(["projects"],()=>getProjects())
 
 console.log(priorityOptions&&priorityOptions)
 
@@ -21,7 +22,7 @@ console.log(priorityOptions&&priorityOptions)
 <ImTicket className="w-10 h-10" />
   <h2 className='h3-bold md:h2-bold text-left w-full'>Create Ticket</h2>
 </div>
-<TicketForm priorityOptions={priorityOptions} />
+<TicketForm priorityOptions={priorityOptions} projects={projects} />
 </div>
 
     </div>
