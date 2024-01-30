@@ -67,6 +67,7 @@ export const ProjectStepFourValidation = z.object({
 
 
 export const TicketValidationSchema = z.object({
+  project:z.string().min(1,{message:"Please select project before continue."}),
   title: z
     .string()
     .min(5, { message: "Title must be at least 5 characters long" })
