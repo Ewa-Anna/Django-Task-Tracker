@@ -75,7 +75,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
         <form 
           
         onSubmit={form.handleSubmit(processForm)}
-        className="flex flex-col gap-9 w-full max-w-5xl min-h-[600px] max-h-[500px] flex flex-col justify-evenly ">
+        className="flex flex-col gap-9 w-full max-w-5xl min-h-[600px] max-h-[500px] justify-evenly ">
           <FormField
             control={form.control}
             name="title"
