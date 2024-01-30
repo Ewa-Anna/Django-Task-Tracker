@@ -1,7 +1,6 @@
 from django.utils import timezone
 
 from rest_framework import serializers
-from rest_flex_fields import FlexFieldsModelSerializer
 
 from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
@@ -12,7 +11,7 @@ class AssigneeSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
 
-class ProjectSerializer(FlexFieldsModelSerializer, serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     assignees = AssigneeSerializer(many=True, required=False)
     tags = serializers.ListField(source="tags.names", required=False)
     created_by = serializers.StringRelatedField(
@@ -25,9 +24,6 @@ class ProjectSerializer(FlexFieldsModelSerializer, serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = "__all__"
-        # expandable_fields = {
-        #     'owner': (UserSerializer, {'many': True})
-        # }
 
     def validate_deadline(self, value):
         today = timezone.now()
@@ -73,7 +69,10 @@ class ProjectSerializer(FlexFieldsModelSerializer, serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    assignees = AssigneeSerializer(many=True, required=False)
+    assignees = AssigneeSerializer(many=True, required=False)  
+    owner = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault()
+    )
     created_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )

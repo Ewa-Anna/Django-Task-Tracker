@@ -214,7 +214,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         return paginator.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        serializer.save(owner=self.request.user, created_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
