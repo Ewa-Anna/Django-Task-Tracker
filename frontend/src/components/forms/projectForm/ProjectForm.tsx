@@ -55,6 +55,7 @@ const ProjectForm = ({
     },
     { id: "step_3", name: "Attachments", fields: ["file", "tags"] },
     { id: "step_4", name: "Assignees", fields: ["assignees"] },
+    {id:"step_5",name:"Summary"}
   ];
   const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
   const [selectedUsersRight, setSelectedUsersRight] = useState([]);
@@ -122,6 +123,7 @@ const ProjectForm = ({
   return (
     <ProjectFormProvider>
       <>
+      <Stepper steps={steps} currentStep={currentStep}/>
         <ProjectFormStepOne
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}

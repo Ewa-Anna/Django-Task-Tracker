@@ -9,7 +9,7 @@ const Stepper = ({steps,currentStep,}) => {
 
   return (
     <>
-      <div className="flex justify-between  mb-8">
+      <div className=" flex justify-between  mb-8 md:flex ">
         {steps.map((step, i) => {
           return (
             <div
@@ -22,7 +22,7 @@ const Stepper = ({steps,currentStep,}) => {
               <div className="step">{
                (i<currentStep|| complete) ?<TiTick size ={24}/>: i+1 } 
               </div>
-              <p className="text-sm text-gray-500">{step.name}</p>
+              <p className=" hidden text-sm text-gray-500 md:flex lg:flex">{step.name}</p>
             </div>
           );
         })}

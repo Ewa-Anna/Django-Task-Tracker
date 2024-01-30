@@ -18,8 +18,6 @@ import { useQuery } from "react-query";
 import { Link, NavLink } from "react-router-dom";
 
 const Projects = () => {
-
-
   const {
     data: projects,
     isError,
@@ -54,15 +52,14 @@ const Projects = () => {
                 </CardHeader>
                 {/* <CardContent className="break-words border-b"></CardContent> */}
                 <CardFooter className="flex justify-evenly flex-wrap gap-2  ">
-                  <div className="flex items-center gap-1">
-                    {" "}
+                  <div className="flex items-center gap-1 font-semibold">
                     <MdPublic />
-                    Public
+                    {project?.visibility}
                   </div>
-              <div className="flex items-center gap-1">
-              <MdAccessTime />
-                  {formatTimestamp(project.created)}
-              </div>
+                  <div className="flex items-center gap-1">
+                    <MdAccessTime />
+                    {formatTimestamp(project.created)}
+                  </div>
                   <Button className="shad-button_primary" variant="ghost">
                     View more
                   </Button>
