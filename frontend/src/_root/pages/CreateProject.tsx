@@ -20,7 +20,9 @@ const {data:visibilityOptions}=useQuery(["visibilityOptions"],()=>getVisibilityO
   <img src="/assets/icons/add-post.svg" alt="add" width={36} height={36}/>
   <h2 className='h3-bold  md:h2-bold  w-full'>Create Project</h2>
 </div>
+
 <ProjectForm users={users} visibilityOptions={visibilityOptions} />
+
 </div>
 
     </div>
