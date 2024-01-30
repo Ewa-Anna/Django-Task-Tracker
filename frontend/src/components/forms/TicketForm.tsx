@@ -30,6 +30,7 @@ import { Value } from "@radix-ui/react-select";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { createTicket } from "@/features/ticket-api/ticket-api";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 type ProjectFormProps = {
   title: string;
@@ -46,12 +47,14 @@ export type INewTicket = {
   file: File[];
 };
 
-const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
+const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => {
   const navigate = useNavigate();
+  const { showToast } = useAuthContext();
   // 1. Define your form.
   const form = useForm<z.infer<typeof TicketValidationSchema>>({
     resolver: zodResolver(TicketValidationSchema),
     defaultValues: {
+      project:"",
       title: ticket ? ticket.title : "",
       description: ticket ? ticket.description : "",
       type: ticket ? ticket.type : "",
@@ -61,9 +64,18 @@ const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
 
   const mutation = useMutation(createTicket, {
     onSuccess: (data) => {
-      console.log(data);
+      showToast({
+        message: "Project has been created",
+        type: "SUCCESS",
+      });
+      navigate(-1);
     },
-    onError:(error:Error)=>console.log(error.message)
+    onError:(data)=>{
+      showToast({
+        message: "Something went wrong, please try again later.",
+        type: "ERROR",
+      });
+    }
   });
 
   // 2. Define a submit handler.
@@ -79,6 +91,36 @@ const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
+               <FormField
+              control={form.control}
+              name="project"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select Project</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="shad-input">
+                        <SelectValue placeholder="Select ticket priority" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {projects&&projects?.results.map((project)=>{ 
+                        return (
+                          <SelectItem className="cursor-pointer" value={project?.id.toLocaleString()}>
+                            {project?.title}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage className="shad-form_message" />
+                </FormItem>
+              )}
+            />
         <FormField
           control={form.control}
           name="title"
@@ -131,17 +173,20 @@ const TicketForm = ({ ticket, priorityOptions }: ProjectFormProps) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem className="cursor-pointer " value={"public"}>
+                    <SelectItem className="cursor-pointer " value={"bug"}>
                         <span className="flex gap-2">
-                          <MdOutlinePublic />
-                          Public{" "}
-                        </span>{" "}
+                    Bug
+                        </span>
                       </SelectItem>
-                      <SelectItem className="cursor-pointer " value={"private"}>
+                      <SelectItem className="cursor-pointer " value={"feature"}>
                         <span className="flex gap-2">
-                          <MdPrivateConnectivity />
-                          Private{" "}
-                        </span>{" "}
+                     Feature
+                        </span>
+                      </SelectItem>
+                      <SelectItem className="cursor-pointer " value={"question"}>
+                        <span className="flex gap-2">
+                     Question
+                        </span>
                       </SelectItem>
                     </SelectContent>
                   </Select>

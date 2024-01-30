@@ -28,8 +28,10 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
       navigate("/projects");
     },
     onError: (error: Error) => {
+      console.log(error.response.data.title)
       showToast({ message: error.message, type: "ERROR" });
     },
+    
   });
 
   const handleCreateProject = (formData) => {
