@@ -44,9 +44,11 @@ const  {showToast}=useAuthContext()
   });
 
   const mutation = useMutation(createUserAccount,{
-    onSuccess:()=>{
+    onSuccess:(data)=>{
+      localStorage.setItem('token', data.csrf_token);
       showToast({
         message:"Registration Sucess",type:"SUCCESS"
+        
       })
       navigate("/")
     },
