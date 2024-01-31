@@ -3,13 +3,13 @@ import { ImTicket } from "react-icons/im";
 import React from 'react'
 import { useQuery } from 'react-query';
 import { getTicketPriorityOptions } from '@/features/ticket-api/ticket-api';
-import { getProjects } from '@/features/project-api/project-api';
+import { getProjects, getUserProjects } from '@/features/project-api/project-api';
 
 const CreateTicket = () => {
 
 
 const {data:priorityOptions}=useQuery(["priorityOptions"],()=>getTicketPriorityOptions())
-const {data:projects}=useQuery(["projects"],()=>getProjects())
+const {data:projects}=useQuery(["projects"],()=>getUserProjects())
 
 console.log(priorityOptions&&priorityOptions)
 

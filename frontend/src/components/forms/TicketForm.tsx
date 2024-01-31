@@ -107,7 +107,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {projects&&projects?.results.map((project)=>{ 
+                      {projects&&projects?.map((project)=>{ 
                         return (
                           <SelectItem className="cursor-pointer" value={project?.id.toLocaleString()}>
                             {project?.title}
