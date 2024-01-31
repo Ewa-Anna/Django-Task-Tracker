@@ -69,10 +69,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    assignees = AssigneeSerializer(many=True, required=False)  
-    owner = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault()
-    )
+    assignees = AssigneeSerializer(many=True, required=False)
+    owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
     created_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )

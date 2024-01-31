@@ -5,4 +5,4 @@ class CustomPagination(LimitOffsetPagination):
     default_limit = 10
     limit_query_param = "limit"
     offset_query_param = "offset"
-    max_limit = 100
+    max_limit = 1000
