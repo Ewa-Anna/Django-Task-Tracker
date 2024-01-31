@@ -8,7 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import DictionaryContentSerializer, TaskSerializer, ProjectSerializer
-from .models import PRIORITY, STATUS, VISIBILITY, Project
+from .models import PRIORITY, STATUS, VISIBILITY, Project, TYPE
 from user.models import ROLES, THEMES
 from user.permissions import CustomPermission
 
@@ -28,6 +28,8 @@ class DictionaryContentView(APIView):
             content = dict(ROLES)
         elif dictionary_name == "themes":
             content = dict(THEMES)
+        elif dictionary_name == "type":
+            content = dict(TYPE)
         else:
             return Response(
                 {"error": f"Dictionary with name {dictionary_name} not found"},
