@@ -8,7 +8,7 @@ class CustomPermission(BasePermission):
 
         if not IsAuthenticated().has_permission(request, view):
             return False
-        
+
         if user.role in required_roles.get(request.method, []):
             return True
         else:

@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import DictionaryContentSerializer, TaskSerializer
+from .serializers import DictionaryContentSerializer, TaskSerializer, ProjectSerializer
 from .models import PRIORITY, STATUS, VISIBILITY, Project
 from user.models import ROLES, THEMES
 from user.permissions import CustomPermission
@@ -41,6 +41,14 @@ class DictionaryContentView(APIView):
 
         return Response(content, status=status.HTTP_200_OK)
 
+
+class ProjectOwnerList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        owned_projects = Project.objects.filter(owner=request.user)
+        serializer = ProjectSerializer(owned_projects, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ProjectDeleteView(APIView):
     permission_classes = [IsAuthenticated, CustomPermission]

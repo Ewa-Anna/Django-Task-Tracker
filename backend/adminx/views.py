@@ -52,7 +52,7 @@ class ContactFormView(APIView):
         "PATCH": ["admin"],
         "DELETE": ["admin"],
     }
-    
+
     def get_queryset(self):
         return ContactForm.objects.all()
 
@@ -70,25 +70,24 @@ class ContactFormView(APIView):
     def create(self, request, *args, **kwargs):
         serializer = ContactFormSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save() 
+        serializer.save()
 
         self.send_email_notification(serializer.validated_data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    
     def send_email_notification(self, data):
         subject = f"Thank You for Contacting BugBard - Confirmation"
         message = f"We received your message as follows:\n\nName: {data['name']}\nEmail: {data['email']}\nMessage: {data['message']}\n\nSomeone will contact you shortly.\n\nBest regards,\nBugBard Administration"
-        
+
         try:
-            email = EmailMessage(subject, message, to=[data['email']])
+            email = EmailMessage(subject, message, to=[data["email"]])
             email.send()
 
         except Exception as e:
             print(f"Error sending email: {e}")
 
     def get_permissions(self):
-        if self.request.method == 'POST':
+        if self.request.method == "POST":
             return [AllowAny()]
         return super().get_permissions()
