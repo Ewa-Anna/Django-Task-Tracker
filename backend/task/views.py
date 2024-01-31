@@ -52,6 +52,16 @@ class ProjectOwnerList(APIView):
         serializer = ProjectSerializer(owned_projects, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class ProjectAssigneeList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        assigned_tasks = Project.objects.filter(assignees=request.user)
+        serializer = ProjectSerializer(assigned_tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ProjectDeleteView(APIView):
     permission_classes = [IsAuthenticated, CustomPermission]
 
