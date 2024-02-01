@@ -32,6 +32,12 @@ export const logoutUser = async () => {
   }
 };
 
+
+
+export const validateToken = async()=>{
+  
+}
+
 export const getUsers = async () => {
   try {
     const response = await clientApi.get("user/users/");
