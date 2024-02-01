@@ -1,8 +1,10 @@
+import { useAuthContext } from "@/contexts/AuthContext";
+
 import { Outlet, Navigate,useLocation  } from "react-router-dom";
 
 const AuthLayout = () => {
   const { pathname } = useLocation();
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAuthContext();
 
  
   return (

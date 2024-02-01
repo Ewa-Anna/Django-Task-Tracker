@@ -1,17 +1,27 @@
 import { sidebarLinks } from "@/constants";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { INavLink } from "types";
 import { Button } from "../button";
 import { LuScroll } from "react-icons/lu";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 const LeftSidebar = () => {
   const { pathname } = useLocation();
-  const user = {
-    id: 1,
-    name: "Adam",
-    role: "Admin",
-    imageUrl: "",
-  };
+  // const user = {
+  //   id: 1,
+  //   name: "Adam",
+  //   role: "Admin",
+  //   imageUrl: "",
+  // };
+
+const navigate = useNavigate()
+  const {user}= useAuthContext()
+
+const logout = ()=>{
+  localStorage.removeItem("token")
+  navigate("/sign-in")
+}
+
 
   return (
     <nav className="leftsidebar">
@@ -32,7 +42,7 @@ const LeftSidebar = () => {
             className="h-14 w-14 rounder-full"
           />
           <div className="flex flex-col">
-            <p className="body-bold">{user.name}</p>
+            <p className="body-bold">{user.first_name}</p>
             <p className="small-regular text-light-3">{user.role}</p>
           </div>
         </Link>
