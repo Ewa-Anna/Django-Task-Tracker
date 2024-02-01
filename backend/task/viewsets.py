@@ -146,6 +146,21 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         return super().handle_exception(exc)
 
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(created_by=request.user)
+            response_data = {
+                "success": True,
+                "message": "Project created successfully.",
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            response_data = {"success": False, "message": "Error creating project."}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
 
@@ -180,6 +195,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         description = request.query_params.get("description")
         priority = request.query_params.get("priority")
         status = request.query_params.get("status")
+        type = request.query_params.get("type")
         project = request.query_params.get("project")
         owner = request.query_params.get("owner")
         assignees = request.query_params.get("assignees")
@@ -197,6 +213,9 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         if status:
             queryset = queryset.filter(status=status)
+
+        if type:
+            queryset = queryset.filter(type=type)
 
         if project:
             queryset = queryset.filter(project=project)
@@ -227,6 +246,18 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_403_FORBIDDEN)
 
         return super().handle_exception(exc)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(owner=request.user, created_by=request.user)
+            response_data = {"success": True, "message": "Task created successfully."}
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            response_data = {"success": False, "message": "Error creating ticket."}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
