@@ -19,6 +19,12 @@ return response.data
 }
 
 
+export const getUserProjects = async()=>{
+const response = await clientApi.get("/task/list_of_prj_owned/")
+return response.data
+
+}
+
 export const getVisibilityOptions = async()=>{
 
     const response = await clientApi.get("task/dropdown-list/visibility",{
