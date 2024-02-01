@@ -29,11 +29,29 @@ const Tickets = () => {
           </Button>
         </div>
       </div>
-
+<div className="flex flex-col gap-1">
       {tickets &&
         tickets?.results.map((ticket) => {
-          return <div>{ticket.title}</div>;
+          return <div className=" border-2 border-dark-4 rounded-[8px] py-1 flex">
+<div className="flex-1 px-2 flex items-center">
+{ticket.title}
+</div>
+<div className=" flex-1 px-2 flex items-center">
+{ticket.title}
+</div>
+<div className="flex-2 px-2 flex items-center">
+{ticket.status}
+</div>
+<div className=" flex-1 px-2 flex items-center">
+{ticket.created_by}
+</div>
+<div className="flex-2 px-2 flex items-center">
+<Button>View</Button>
+</div>
+
+          </div>;
         })}
+        </div>
     </main>
   );
 };

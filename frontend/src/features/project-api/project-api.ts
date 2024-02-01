@@ -20,7 +20,7 @@ return response.data
 
 
 export const getUserProjects = async()=>{
-const response = await clientApi.get("/task/list_of_prj_owned/")
+const response = await clientApi.get("/task/list_of_prj_assignee/")
 return response.data
 
 }

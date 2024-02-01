@@ -19,6 +19,7 @@ import { Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { createUserAccount, loginUser } from "@/features/user-api/user-api";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 
 
@@ -26,7 +27,7 @@ const SigninForm = () => {
 const toast = useToast()
 const isLoading = false;
 const navigate= useNavigate()
-
+const {asignUser}=useAuthContext()
 
   // 1. Define form
   const form = useForm<z.infer<typeof signinValidationSchema>>({
@@ -41,6 +42,8 @@ const navigate= useNavigate()
 const mutation = useMutation(loginUser,{
   onSuccess:(data)=>{
     localStorage.setItem('token', data.csrf_token);
+    asignUser(data)
+    
     navigate("/")
   },
   onError:(error)=>{
