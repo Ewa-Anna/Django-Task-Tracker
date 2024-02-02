@@ -5,6 +5,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework import serializers
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -12,6 +13,7 @@ from drf_yasg import openapi
 from .models import Project, Task, Comment, Attachment
 from .serializers import (
     ProjectSerializer,
+    ProjectCreateSerializer,
     TaskSerializer,
     CommentSerializer,
     AttachmentSerializer,
@@ -33,7 +35,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         "PATCH": ["manager", "admin"],
         "DELETE": ["admin"],
     }
-
+    
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ProjectCreateSerializer
+        return ProjectSerializer
+    
     @action(detail=False, methods=["get"])
     @swagger_auto_schema(
         manual_parameters=[
@@ -131,9 +138,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         return paginator.get_paginated_response(serializer.data)
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
-
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
 
@@ -150,16 +154,25 @@ class ProjectViewSet(viewsets.ModelViewSet):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(created_by=request.user)
+
+            tags_data = serializer.validated_data.pop('tags', [])
+            project = serializer.save(created_by=self.request.user)
+            project.tags.set(tags_data)
+
             response_data = {
                 "success": True,
                 "message": "Project created successfully.",
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
-
-        except Exception as e:
-            response_data = {"success": False, "message": "Error creating project."}
+        
+        except serializers.ValidationError as e:
+            response_data = {"success": False, "message": e.detail}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            response_data = {"success": False, "message": f"Error creating project: {e}"}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+        
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
