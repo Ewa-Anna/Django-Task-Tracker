@@ -7,6 +7,8 @@ from .views import (
     ProjectDeleteView,
     ProjectOwnerList,
     ProjectAssigneeList,
+    TaskOwnerList,
+    TaskAssigneeList,
 )
 from .viewsets import ProjectViewSet, TaskViewSet, CommentViewSet, AttachmentViewSet
 
@@ -55,6 +57,12 @@ urlpatterns = [
         "list_of_prj_assignee/",
         ProjectAssigneeList.as_view(),
         name="project-assignee-list",
+    ),
+    path("list_of_tsk_owned/", TaskOwnerList.as_view(), name="task-owner-list"),
+    path(
+        "list_of_tsk_assignee/",
+        TaskAssigneeList.as_view(),
+        name="task-assignee-list",
     ),
     path(
         "dropdown-list/<str:dictionary_name>",
