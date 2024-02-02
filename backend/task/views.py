@@ -8,7 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import DictionaryContentSerializer, TaskSerializer, ProjectSerializer
-from .models import PRIORITY, STATUS, VISIBILITY, Project, TYPE
+from .models import PRIORITY, STATUS, VISIBILITY, Project, TYPE, Task
 from user.models import ROLES, THEMES
 from user.permissions import CustomPermission
 
@@ -57,8 +57,26 @@ class ProjectAssigneeList(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        assigned_tasks = Project.objects.filter(assignees=request.user)
-        serializer = ProjectSerializer(assigned_tasks, many=True)
+        assigned_projects = Project.objects.filter(assignees=request.user)
+        serializer = ProjectSerializer(assigned_projects, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TaskOwnerList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        owned_tasks = Task.objects.filter(owner=request.user)
+        serializer = TaskSerializer(owned_tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TaskAssigneeList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        assigned_tasks = Task.objects.filter(assignees=request.user)
+        serializer = TaskSerializer(assigned_tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
