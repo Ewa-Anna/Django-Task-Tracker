@@ -15,10 +15,11 @@ const LeftSidebar = () => {
   // };
 
 const navigate = useNavigate()
-  const {user}= useAuthContext()
+  const {dispatch,user}= useAuthContext()
 
 const logout = ()=>{
-  localStorage.removeItem("token")
+  localStorage.removeItem("token");
+  dispatch({type:"LOGOUT",payload:null})
   navigate("/sign-in")
 }
 
@@ -35,15 +36,15 @@ const logout = ()=>{
           />
           <p className="font-semibold ml-1 text-base">BugBard</p>
         </Link>
-        <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
+        <Link to={`/profile/${user?.id}`} className="flex gap-3 items-center">
           <img
-            src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
+            src={user?.imageUrl || "/assets/icons/profile-placeholder.svg"}
             alt="profile"
             className="h-14 w-14 rounder-full"
           />
           <div className="flex flex-col">
-            <p className="body-bold">{user.first_name}</p>
-            <p className="small-regular text-light-3">{user.role}</p>
+            <p className="body-bold">{user?.first_name}</p>
+            <p className="small-regular text-light-3">{user?.role}</p>
           </div>
         </Link>
         <ul className="flex flex-col gap-6">

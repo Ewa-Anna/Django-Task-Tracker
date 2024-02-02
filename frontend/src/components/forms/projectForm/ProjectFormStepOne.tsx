@@ -74,7 +74,7 @@ const ProjectFormStepOne = ({
                 <div className=" flex flex-1 h-full  ">
                   <FormItem className="space-y-3  flex flex-col flex-1 h-full ">
                     <FormLabel className="text-xl  mb-8">
-                      Select Project Type
+                      Select Type
                     </FormLabel>
 
                     <FormControl>

@@ -81,7 +81,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="shad-form_label">Project Title</FormLabel>
+                <FormLabel className="shad-form_label">Title</FormLabel>
                 <FormControl>
                   <Input type="text" className="shad-input" {...field} />
                 </FormControl>
@@ -96,7 +96,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="shad-form_label">
-                  Project overview
+                  Overview
                 </FormLabel>
                 <FormControl>
                   <Textarea
@@ -117,7 +117,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
                 name="owner"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project Leader</FormLabel>
+                    <FormLabel>Leader</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -139,6 +139,8 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
                               <SelectItem
                                 className="cursor-pointer "
                                 value={user.id.toString()}
+
+                                
                               >
                                 {user.email}
                               </SelectItem>
@@ -158,7 +160,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
                 name="deadline"
                 render={({ field }) => (
                   <FormItem className=" flex flex-col">
-                    <FormLabel>Project Deadline</FormLabel>
+                    <FormLabel>Deadline</FormLabel>
 
                     <FormControl>
                       <DatePicker

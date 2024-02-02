@@ -13,6 +13,7 @@ import { LuGitCompare } from "react-icons/lu";
 
 import { MdPublic } from "react-icons/md";
 import { MdAccessTime } from "react-icons/md";
+import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 
 import { useQuery } from "react-query";
 import { Link, NavLink } from "react-router-dom";
@@ -53,7 +54,9 @@ const Projects = () => {
                 {/* <CardContent className="break-words border-b"></CardContent> */}
                 <CardFooter className="flex justify-evenly flex-wrap gap-2  ">
                   <div className="flex items-center gap-1 font-semibold">
-                    <MdPublic />
+                
+                   
+                    {project?.visibility==='public'?    <MdPublic />: <RiGitRepositoryPrivateLine/>}
                     {project?.visibility}
                   </div>
                   <div className="flex items-center gap-1">

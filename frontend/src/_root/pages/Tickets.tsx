@@ -5,6 +5,10 @@ import { LuGitCompare } from "react-icons/lu";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { ImTicket } from "react-icons/im";
+import { DataTable } from "@/components/ui/data-table";
+import { LuInspect } from "react-icons/lu";
+import { cn } from "@/lib/utils";
+
 
 const Tickets = () => {
   const {
@@ -12,6 +16,53 @@ const Tickets = () => {
     error,
     isLoading,
   } = useQuery(["tickets"], () => getTickets());
+
+
+
+  const columns = [
+    {
+      accessorKey: "title",
+      header: "Title",
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+    },
+    {
+      accessorKey: "priority",
+      cell:({row})=>{
+        const ticket = row?.original
+  
+    
+        return(
+          <div className={cn("border-2 w-[56px] flex justify-center border-dark-4 items-center rounded-[7px]",{
+            
+            "bg-priority-low border-2 border-priority-low text-blue-150": ticket.priority === "low",
+            "bg-priority-medium border-2 border-priority-medium text-green-150": ticket.priority === "medium",
+            "bg-priority-high border-2 border-priority-high text-orange-150": ticket.priority === "high",
+            "bg-priority-critical border-2 border-priority-critical text-slate-250": ticket.priority === "critical",
+
+          })}>{ticket.priority}</div>
+        )
+      }
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+    },
+    {
+      accessorKey: "action",
+      cell: ({row})=>{
+        const ticket = row?.original
+        return(
+       <Link className="hover:text-violet-400 transition-all cursor-pointer" to={`task/projects/${ticket.id}/`}>
+       <LuInspect  size={21} />
+       </Link>
+        )
+      }
+    }
+  ]
+
 
   return (
     <main className="w-full h-full py-5 px-16 mx-auto my-12 custom-scrollbar overflow-scroll pb-20">
@@ -29,29 +80,11 @@ const Tickets = () => {
           </Button>
         </div>
       </div>
-<div className="flex flex-col gap-1">
-      {tickets &&
-        tickets?.results.map((ticket) => {
-          return <div className=" border-2 border-dark-4 rounded-[8px] py-1 flex">
-<div className="flex-1 px-2 flex items-center">
-{ticket.title}
-</div>
-<div className=" flex-1 px-2 flex items-center">
-{ticket.title}
-</div>
-<div className="flex-2 px-2 flex items-center">
-{ticket.status}
-</div>
-<div className=" flex-1 px-2 flex items-center">
-{ticket.created_by}
-</div>
-<div className="flex-2 px-2 flex items-center">
-<Button>View</Button>
-</div>
+{/* TABLE */}
 
-          </div>;
-        })}
-        </div>
+{tickets&&<DataTable  columns={columns} data={tickets?.results} />}
+
+{/* TABLE */}
     </main>
   );
 };

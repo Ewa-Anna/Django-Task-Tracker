@@ -65,7 +65,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
   const mutation = useMutation(createTicket, {
     onSuccess: (data) => {
       showToast({
-        message: "Project has been created",
+        message: data.message,
         type: "SUCCESS",
       });
       navigate(-1);
@@ -96,14 +96,14 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
               name="project"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Select Project</FormLabel>
+                  <FormLabel>Project</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className="shad-input">
-                        <SelectValue placeholder="Select ticket priority" />
+                        <SelectValue placeholder="Select project" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -126,7 +126,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="shad-form_label">Ticket Title</FormLabel>
+              <FormLabel className="shad-form_label">Title</FormLabel>
               <FormControl>
                 <Input type="text" className="shad-input" {...field} />
               </FormControl>
@@ -141,7 +141,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
           render={({ field }) => (
             <FormItem>
               <FormLabel className="shad-form_label">
-                Ticket Description
+                 Description
               </FormLabel>
               <FormControl>
                 <Textarea
@@ -162,7 +162,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ticket Type</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -202,7 +202,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
               name="priority"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ticket Priority</FormLabel>
+                  <FormLabel>Priority</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -234,7 +234,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="shad-form_label">Add files</FormLabel>
+              <FormLabel className="shad-form_label">Files</FormLabel>
               <FormControl>
                 <FileUploader
                   fieldChange={field.onChange}
@@ -250,14 +250,14 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
         <div className="flex gap-4 items-center justify-end">
           <Button
             type="button"
-            className="shad-button_dark_4"
+            className="hover:bg-slate-700"
             onClick={() => navigate(-1)}
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            className="shad-button_primary whitespace-nowrap"
+            className="hover:bg-violet-600 whitespace-nowrap"
           >
             Create
           </Button>

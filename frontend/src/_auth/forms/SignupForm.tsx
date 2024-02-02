@@ -25,9 +25,9 @@ import { useAuthContext } from "@/contexts/AuthContext";
 const SignupForm = () => {
   const navigate = useNavigate()
 const toast = useToast()
-const isLoading = false;
-const  {showToast}=useAuthContext()
 
+const  {showToast}=useAuthContext()
+const {dispatch}=useAuthContext()
 
 
   // 1. Define form
@@ -50,7 +50,7 @@ const  {showToast}=useAuthContext()
         message:"Registration Sucess",type:"SUCCESS"
         
       })
-      navigate("/")
+      dispatch({type:"LOGIN",payload:data})
     },
     onError:(error:Error)=>{
  showToast({message:error.message,type:"ERROR"})
@@ -157,7 +157,7 @@ mutation.mutate(values)
           />
   
           <Button className="shad-button_primary" type="submit">
-            {isLoading?(<div className="flex-center gap-3"><Loader/>Loading...</div>):("Sign up")}
+            {mutation.isLoading?(<div className="flex-center gap-3"><Loader/>Loading...</div>):("Sign up")}
           </Button>
           <p className="text-small-regular text-light-2 text-center mt-2">Already have an account?
           <Link className="text-primary-500 text-small-semibold ml-1" to="/sign-in">Log in</Link>

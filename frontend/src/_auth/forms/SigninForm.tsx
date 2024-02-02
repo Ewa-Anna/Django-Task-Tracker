@@ -25,9 +25,8 @@ import { useAuthContext } from "@/contexts/AuthContext";
 
 const SigninForm = () => {
 const toast = useToast()
-const isLoading = false;
 const navigate= useNavigate()
-const {asignUser}=useAuthContext()
+const {dispatch}=useAuthContext()
 
   // 1. Define form
   const form = useForm<z.infer<typeof signinValidationSchema>>({
@@ -42,9 +41,9 @@ const {asignUser}=useAuthContext()
 const mutation = useMutation(loginUser,{
   onSuccess:(data)=>{
     localStorage.setItem('token', data.csrf_token);
-    asignUser(data)
+dispatch({type:"LOGIN",payload:data})
     
-    navigate("/")
+    // navigate("/")
   },
   onError:(error)=>{
 console.log(error)
@@ -106,7 +105,7 @@ console.log(error)
           />
   
           <Button className="shad-button_primary" type="submit">
-            {isLoading?(<div className="flex-center gap-3"><Loader/>Loading...</div>):("Sign up")}
+            {mutation.isLoading?(<div className="flex-center gap-3"><Loader/>Loading...</div>):("Login")}
           </Button>
           <p className="text-small-regular text-light-2 text-center mt-2">Don't have an account?
           <Link className="text-primary-500 text-small-semibold ml-1" to="/sign-up">Sign up</Link>

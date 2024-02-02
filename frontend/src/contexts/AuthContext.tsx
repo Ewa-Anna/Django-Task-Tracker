@@ -1,6 +1,7 @@
 import Toast from "@/components/ui/shared/Toast";
 import clientApi from "@/features/axios/axios";
-import React, { useEffect, useState } from "react";
+import { authReducer } from "@/reducers/authReducer";
+import React, { useEffect, useReducer, useState } from "react";
 import { useContext } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -22,26 +23,29 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [toast, setToast] = useState<ToastMessage | undefined>(undefined);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user,setUser]=useState({})
-  const navigate = useNavigate();
-  // const {isError}=useQuery("validateToken",clientApi)
+  const navigate=useNavigate()
+  const [state,dispatch]=useReducer(authReducer,{user:null})
+  const checkUserToken = () => {
+    const userToken = localStorage.getItem("token");
+
+    if (userToken) {
+      dispatch({ type: "LOGIN", payload: { userToken} });
+    }
+else if(!userToken|| userToken==="null"|| userToken==="undefined"){
+  dispatch({type:"LOGOUT",payload:{user:null}})
+  navigate("/sign-in")
+}
+
+ 
+  };
 
   useEffect(() => {
-    const notSignedIn = localStorage.getItem("token") === null;
-
-    if (notSignedIn) {
-      setIsAuthenticated(false)
-      navigate("/sign-in");
-    }
-
-    else{
-      setIsAuthenticated(true)
-      navigate('/')
-    }
-
+    checkUserToken();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+
 
   return (
     <AuthContext.Provider
@@ -49,11 +53,7 @@ export const AuthContextProvider = ({
         showToast: (toastMessage) => {
           setToast(toastMessage);
         },
-        isAuthenticated,
-        user,
-        asignUser:(loggedUser)=>{
-          setUser(loggedUser)
-        }
+        ...state,dispatch
       }}
     >
       {toast && (
