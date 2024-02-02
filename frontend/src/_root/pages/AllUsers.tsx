@@ -54,7 +54,7 @@ console.log(csrftoken)
                     alt="avatar"
                     className="rounded-full w-16 h-16 md:w-10 h10"
                   />
-             <Badge variant="secondary"> ROLE</Badge>
+          
              </div>
                
                        <div>
