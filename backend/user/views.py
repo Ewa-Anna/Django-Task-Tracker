@@ -1,4 +1,7 @@
+from datetime import timedelta, datetime
+
 from django.contrib.auth import get_user_model, login, logout
+from django.utils import timezone
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
@@ -37,6 +40,7 @@ class LoginView(APIView):
         )
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
+
         login(request, user, backend="user.backends.EmailBackend")
 
         profile = Profile.objects.get_or_create(user=user)[0]
@@ -243,4 +247,14 @@ class DeactivateAccountView(APIView):
 
         return Response(
             {"message": "Account deactivated successfully."}, status=status.HTTP_200_OK
+        )
+
+
+class SessionValidationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(
+            {"success": True, "message": "Session is valid"},
+            status=status.HTTP_200_OK,
         )

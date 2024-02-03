@@ -100,8 +100,15 @@ CORS_ORIGIN_WHITELIST = "http://localhost:5173"
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
 
+# Setting time for sessionid
+SESSION_COOKIE_AGE = 1800  # 1800s = 30min
+
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_SECURE = True
+
+# Setting time for csrftoken
+CSRF_COOKIE_AGE = 1800  # 1800s = 30min
+
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_COOKIE_SAMESITE = "None"
 

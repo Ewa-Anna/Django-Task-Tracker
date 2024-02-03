@@ -35,6 +35,8 @@ class UserSerializer(ModelSerializer):
     profile = ProfileSerializer(read_only=True)
     password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
+    theme = serializers.CharField(default="dark_blue")
+    role = serializers.CharField(default="guest")
 
     class Meta:
         model = CustomUser
@@ -46,8 +48,14 @@ class UserSerializer(ModelSerializer):
             "password",
             "confirm_password",
             "profile",
+            "theme",
+            "role",
         ]
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "theme": {"required": False},
+            "role": {"required": False},
+        }
 
     def create(self, validated_data):
         password = validated_data.pop("password", None)
