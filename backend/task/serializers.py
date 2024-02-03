@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
+from user.serializers import ProfileSerializer
 
 
 class AssigneeSerializer(serializers.Serializer):
@@ -11,7 +12,39 @@ class AssigneeSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
 
+class OwnerSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ["id", "first_name", "last_name", "email", "profile"]
+        extra_kwargs = {
+            "first_name": {"required": False},
+            "last_name": {"required": False},
+            "email": {"required": False},
+        }
+
+
+class ProjectCreateSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(write_only=True, required=False)
+
+    class Meta:
+        model = Project
+        fields = [
+            "assignees",
+            "tags",
+            "title",
+            "description",
+            "deadline",
+            "visibility",
+            "status",
+            "archive",
+            "owner",
+        ]
+
+
 class ProjectSerializer(serializers.ModelSerializer):
+    owner = OwnerSerializer(read_only=True)
     assignees = AssigneeSerializer(many=True, required=False)
     tags = serializers.ListField(source="tags.names", required=False)
     created_by = serializers.StringRelatedField(
@@ -69,6 +102,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    owner = OwnerSerializer(read_only=True, source="owner")
     assignees = AssigneeSerializer(many=True, required=False)
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
     created_by = serializers.StringRelatedField(
@@ -101,6 +135,11 @@ class TaskSerializer(serializers.ModelSerializer):
                 assignees.append(assignee_serializer.save())
 
         task.assignees.set(assignees)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['owner'] = OwnerSerializer(instance.owner).data
+        return representation
 
 
 class CommentSerializer(serializers.ModelSerializer):
