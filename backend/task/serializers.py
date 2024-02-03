@@ -102,7 +102,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    owner = OwnerSerializer(read_only=True)
+    owner = OwnerSerializer(read_only=True, source="owner")
     assignees = AssigneeSerializer(many=True, required=False)
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
     created_by = serializers.StringRelatedField(
@@ -135,6 +135,11 @@ class TaskSerializer(serializers.ModelSerializer):
                 assignees.append(assignee_serializer.save())
 
         task.assignees.set(assignees)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['owner'] = OwnerSerializer(instance.owner).data
+        return representation
 
 
 class CommentSerializer(serializers.ModelSerializer):
