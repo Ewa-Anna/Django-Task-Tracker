@@ -19,6 +19,13 @@ return response.data
 }
 
 
+export const getProject= async(id:string | undefined)=>{
+
+    const response  = await clientApi.get(`/task/projects/${id}`)
+    return response.data
+}
+
+
 export const getUserProjects = async()=>{
 const response = await clientApi.get("/task/list_of_prj_assignee/")
 return response.data
