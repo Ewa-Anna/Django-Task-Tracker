@@ -17,12 +17,12 @@ class OwnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "email", "profile"
-                  ]
-        extra_kwargs = {"first_name": {"required": False},
-                        "last_name": {"required": False},
-                        "email": {"required": False},
-                        }
+        fields = ["id", "first_name", "last_name", "email", "profile"]
+        extra_kwargs = {
+            "first_name": {"required": False},
+            "last_name": {"required": False},
+            "email": {"required": False},
+        }
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
@@ -30,8 +30,17 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ["assignees", "tags", "title", "description", "deadline",
-                  "visibility", "status", "archive", "owner"]
+        fields = [
+            "assignees",
+            "tags",
+            "title",
+            "description",
+            "deadline",
+            "visibility",
+            "status",
+            "archive",
+            "owner",
+        ]
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -95,8 +104,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True)
     assignees = AssigneeSerializer(many=True, required=False)
-    owner = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault())
+    owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
     created_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )

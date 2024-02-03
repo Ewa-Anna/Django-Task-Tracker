@@ -35,12 +35,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         "PATCH": ["manager", "admin"],
         "DELETE": ["admin"],
     }
-    
+
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == "create":
             return ProjectCreateSerializer
         return ProjectSerializer
-    
+
     @action(detail=False, methods=["get"])
     @swagger_auto_schema(
         manual_parameters=[
@@ -155,7 +155,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            tags_data = serializer.validated_data.pop('tags', [])
+            tags_data = serializer.validated_data.pop("tags", [])
             project = serializer.save(created_by=self.request.user)
             project.tags.set(tags_data)
 
@@ -164,15 +164,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 "message": "Project created successfully.",
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
-        
+
         except serializers.ValidationError as e:
             response_data = {"success": False, "message": e.detail}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
-        
+
         except Exception as e:
-            response_data = {"success": False, "message": f"Error creating project: {e}"}
+            response_data = {
+                "success": False,
+                "message": f"Error creating project: {e}",
+            }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
-        
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

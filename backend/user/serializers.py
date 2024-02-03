@@ -51,9 +51,10 @@ class UserSerializer(ModelSerializer):
             "theme",
             "role",
         ]
-        extra_kwargs = {"password": {"write_only": True},
-                        "theme": {"required": False},
-                        "role": {"required": False}
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "theme": {"required": False},
+            "role": {"required": False},
         }
 
     def create(self, validated_data):
