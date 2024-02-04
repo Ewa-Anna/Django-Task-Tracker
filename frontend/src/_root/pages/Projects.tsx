@@ -16,7 +16,7 @@ import { MdAccessTime } from "react-icons/md";
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 
 import { useQuery } from "react-query";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 const Projects = () => {
   const {
@@ -25,6 +25,11 @@ const Projects = () => {
     isLoading,
     isFetching,
   } = useQuery("users", () => getProjects());
+
+
+const location = useLocation()
+const currentLocation = location.pathname
+
   return (
     <main className="w-full h-full py-5 px-16 mx-auto my-12 custom-scrollbar overflow-scroll pb-20">
       <div className="flex flex-col gap-6 md:gap-0 ">
@@ -63,9 +68,12 @@ const Projects = () => {
                     <MdAccessTime />
                     {formatTimestamp(project.created)}
                   </div>
-                  <Button className="shad-button_primary" variant="ghost">
-                    View more
-                  </Button>
+                  <Link 
+                  to={`${currentLocation}/project/${project.id}`}
+                 
+                  className="shad-button_primary" variant="ghost">
+                 view
+                  </Link>
                 </CardFooter>
               </Card>
             );
