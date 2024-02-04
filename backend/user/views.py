@@ -1,15 +1,13 @@
-from datetime import timedelta, datetime
-
 from django.contrib.auth import get_user_model, login, logout
-from django.utils import timezone
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_str, force_bytes
+from django.utils.encoding import force_bytes
 from django_rest_passwordreset.views import ResetPasswordConfirm
 
 from rest_framework.response import Response
+from rest_framework import serializers
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -38,7 +36,13 @@ class LoginView(APIView):
         serializer = LoginSerializer(
             data=request.data, context={"request": self.request}
         )
-        serializer.is_valid(raise_exception=True)
+        
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError as e:
+            error_message = e.detail.get("non_field_errors", ["Unknown error"])[0]
+            return Response({"success": False, "message": error_message}, status=status.HTTP_400_BAD_REQUEST)
+
         user = serializer.validated_data["user"]
 
         login(request, user, backend="user.backends.EmailBackend")
@@ -107,7 +111,16 @@ class RegistrationView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError as e:
+            error_message = {field: messages[0] for field, messages in e.detail.items()}
+            if "Passwords do not match" in error_message:
+                return Response({"success": False, "message": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({"success": False, "message": error_message}, status=status.HTTP_400_BAD_REQUEST)
+        
         user = serializer.save()
 
         # self.perform_create(serializer)

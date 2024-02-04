@@ -65,7 +65,7 @@ class UserSerializer(ModelSerializer):
         username = validated_data.get("username", email)
 
         if password != confirm_password:
-            raise serializers.ValidationError("Passwords do not match")
+            raise serializers.ValidationError({"success": False, "message": "Passwords do not match"})
 
         user = CustomUser(username=username, **validated_data)
         user.set_password(password)
@@ -119,7 +119,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs["new_password"] != attrs["new_password_confirm"]:
             raise serializers.ValidationError(
-                {"new_password": "Passwords does not match."}
+                {"new_password": "Passwords do not match."}
             )
         return attrs
 
@@ -150,7 +150,7 @@ class CustomPasswordTokenSerializer(PasswordValidateMixin, serializers.ModelSeri
 
     def validate(self, attrs):
         if attrs["password"] != attrs["confirm_password"]:
-            raise serializers.ValidationError({"password": "Passwords does not match."})
+            raise serializers.ValidationError({"password": "Passwords do not match."})
         return attrs
 
 
