@@ -8,6 +8,8 @@ venv
 # Django and Python files
 __pycache__
 *.pyc
+backend/pylint/
+backend/media/
 
 # Logs
 logs
