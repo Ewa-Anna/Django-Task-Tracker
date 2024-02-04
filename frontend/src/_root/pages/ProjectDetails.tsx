@@ -22,16 +22,26 @@ const ProjectDetails = () => {
   });
 
   return (
-    <div className=" h-full w-full gap-12 flex flex-col   overflow-scroll py-10 px-6 md:px-7 md:py-20 lg:p-36 custom-scrollbar ">
+    <div className=" h-full w-full gap-12 flex flex-col    overflow-scroll py-10 px-6 md:px-7 md:py-20 lg:p-36 custom-scrollbar ">
       <div className="  h-auto flex flex-col gap-40   ">
-        <div className="flex flex-col   lg:flex-row">
-          <div className=" h-auto flex flex-1  flex-col gap-4 break-words ">
-      
-       <h1 className="text-2xl break-words w-auto ">
-            {/* {project?.title} */}
-            asdasfgdgdfgdfgdfgdfg
-            </h1>
-      
+        <div className="flex flex-col   lg:flex-row ">
+          <div className=" h-auto flex flex-1  flex-col gap-4  break-words ">
+            <div className="grid grid-rows-1 gird-cols-2 items-center py-2 border-b border-gray-200 md:grid-cols-60-40 ">
+              <h1 className=" order-2 text-xl md:order-1 md:text-2xl lg:text-3xl xl:text-3xl font-bold overflow-hidden overflow-ellipsis ">
+                {project?.title}
+              </h1>
+          <div className="order-1 flex justify-end gap-6">
+          <button className=" justify-self-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Edit
+              </button>
+              <button className=" order-1 justify-self-end bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Delete
+              </button>
+          </div>
+              
+            </div>
+
+            <div className="grid grid-rows-1 gird-cols-40-60 items-center py-2 lg:grid-cols-40-60    ">
             <div className="flex gap-2 flex-wrap text-sm ">
               <div className="w-auto flex items-center bg-blue-400 rounded-[5px]">
                 <span className="px-2">React</span>
@@ -49,101 +59,33 @@ const ProjectDetails = () => {
                 <span className="px-2">Django</span>
               </div>
             </div>
+              <div className="flex flex-col gap-4 justify-evenly mt-14 lg:flex-row lg:mt-0 ">
+              <div className="border-2 py-3  rounded-[10px] border-dark-3  flex flex-col items-center min-w-[90px] md:py-0  md:min-w-[40px] lg:min-w-[160px]">
+                  <p>Visibility</p>
+                  <p>{project?.visibility}</p>
+                </div>
+                <div className="border-2 py-3 rounded-[10px] border-dark-3  flex flex-col items-center min-w-[90px] md:py-0 md:text-sm md:min-w[0px] lg:min-w-[160px]">
+                  <p>Created</p>
+                  <p>{formatTimestamp(project?.created)}</p>
+                </div>
+                <div className="border-2 py-3  rounded-[10px] border-dark-3  flex flex-col items-center min-w-[90px] md:py-0 md:min-w-[40px] lg:min-w-[160px]">
+                  <p>Deadline</p>
+                  <p>{formatTimestamp(project?.deadline)}</p>
+                </div>
+             
+              </div>
+            </div>
+            <div className="grid grid-rows-1 gird-cols-2 items-center py-2 gap-8 md:grid-cols-60-40 md:gap-6 lg:gap-10 xl:gap-14  ">
+              <div className="order-2 text-base md:order-1 md:text-2xl lg:text-base xl:text-base font-bold overflow-hidden overflow-ellipsis ">
+      <h3>Overview</h3>
+      <p>        {project?.description}</p>
+              </div>
+              <div className="order-1 text-lg sm:text-xl md:order-1 md:text-2xl lg:text-3xl xl:text-4xl font-bold overflow-hidden overflow-ellipsis ">
+             asdsa
+              </div>
+            </div>
           </div>
-    
         </div>
-        <div className="flex flex-col gap-5 h-full   lg:flex-row  ">
-          <div className="w-100%  flex-col md:w-[100%] lg:w-[45%]   ">
-            <div className="h-full px-2 flex flex-col gap-5  ">
-              <h2 className="text-xl">Overall</h2>
-              <span className="text-justify text-base">
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi saepe nesciunt ut porro. Illo sit doloribus, enim fugit sed dolor dolorem neque? Non nemo, obcaecati eos nam natus inventore necessitatibus?
-Laborum voluptatem magni eos modi corrupti itaque eius maiores vel dignissimos, maxime assumenda reprehenderit consequatur magnam illum libero. Est et beatae error molestias ex magni labore aliquam quae quis voluptatem.
-Aliquid vitaptatibus quae deserunt! Ducimus pariatur, iste aut modi ut cumque placeat quam possimus, rem, excepturi eveniet tenetur!Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi saepe nesciunt ut porro. Illo sit doloribus, enim fugit sed dolor dolorem neque? Non nemo, obcaecati eos nam natus inventore necessitatibus?
-Laborum voluptatem magni eos modi corrupti itaque eius maiores vel dignissimos, maxime assumenda reprehenderit consequatur magnam illum libero. Est et beatae error molestias ex magni labore aliquam quae quis voluptatem.
-Aliquid vitaptatibus quae deserunt! Ducimus pariatur, iste aut modi ut cumque placeat quam possimus, rem, excepturi eveniet tenetur!Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi saepe nesciunt ut porro. Illo sit doloribus, enim fugit sed dolor dolorem neque? Non nemo, obcaecati eos nam natus inventore necessitatibus?
-Laborum voluptatem magni eos modi corrupti itaque eius maiores vel dignissimos, maxime assumenda reprehenderit consequatur magnam illum libero. Est et beatae error molestias ex magni labore aliquam quae quis voluptatem.
-Aliquid vitaptatibus quae deserunt! Ducimus pariatur, iste aut modi ut cumque placeat quam possimus, rem, excepturi eveniet tenetur!Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi saepe nesciunt ut porro. Illo sit doloribus, enim fugit sed dolor dolorem neque? Non nemo, obcaecati eos nam natus inventore necessitatibus?
-Laborum voluptatem magni eos modi corrupti itaque eius maiores vel dignissimos, maxime assumenda reprehenderit consequatur magnam illum libero. Est et beatae error molestias ex magni labore aliquam quae quis voluptatem.
-Aliquid vitaptatibus quae deserunt! Ducimus pariatur, iste aut modi ut cumque placeat quam possimus, rem, excepturi eveniet tenetur!Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi saepe nesciunt ut porro. Illo sit doloribus, enim fugit sed dolor dolorem neque? Non nemo, obcaecati eos nam natus inventore necessitatibus?
-Laborum voluptatem magni eos modi corrupti itaque eius maiores vel dignissimos, maxime assumenda reprehenderit consequatur magnam illum libero. Est et beatae error molestias ex magni labore aliquam quae quis voluptatem.
-Aliquid vitaptatibus quae deserunt! Ducimus pariatur, iste aut modi ut cumque placeat quam possimus, rem, excepturi eveniet tenetur!Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi saepe nesciunt ut porro. Illo sit doloribus, enim fugit sed dolor dolorem neque? Non nemo, obcaecati eos nam natus inventore necessitatibus?
-Laborum voluptatem magni eos modi corrupti itaque eius maiores vel dignissimos, maxime assumenda reprehenderit consequatur magnam illum libero. Est et beatae error molestias ex magni labore aliquam quae quis voluptatem.
-Aliquid vitaptatibus quae deserunt! Ducimus pariatur, iste aut modi ut cumque placeat quam possimus, rem, excepturi eveniet tenetur!
-              </span>
-            </div>
-            <div>a</div>
-          </div>
-          <div className=" w-full h-auto flex-col md:flex  lg:flex-col px-6   lg:w-[55%] border-2  ">
-
-
-
-         <div className="border-2 border-dark-4 flex flex-col bg-orange-600">
-         <div className=" flex flex-col gap-3 px-2 ">
-            <div className=" flex justify-center gap-2 w-full lg:justify-start ">
-            <div className=" flex items-center">
-              <MdOutlinePublic size={24}/>
-            </div>
-         <div >
-         <h3>{project?.visibility.toUpperCase()}</h3>
-          
-         </div>
-              </div>
-              <div className=" flex justify-center gap-2 lg:justify-start">
-            <div className=" flex items-center">
-              <CiClock1 size={24}/>
-            </div>
-         <div >
-         <h3>Created</h3>
-                <span>{formatTimestamp(project?.created)}</span>
-         </div>
-              </div>
-              <div className=" flex justify-center gap-2 lg:justify-start">
-            <div className=" flex items-center">
-              <LuAlarmClock size={24}/>
-            </div>
-         <div className="">
-         <h3>Deadline</h3>
-                <span>{formatTimestamp(project?.created)}</span>
-         </div>
-              </div>
-            </div>
-            <div className=" h-auto  py-3  ">
-       
-              <div className=" flex gap-2">
-         
-         <div >
-         <h3>Leader</h3>
-                <span>{"John Doe"}</span>
-         </div>
-              </div>
-            </div>
-         </div>
-            
-
-
-            <div className="flex-1  mt-5 flex flex-col gap-4 justify-center">
-              <h4 className="text-basic font-semibold">Contributors</h4>
-{project&&project.assignees.map((member)=>{
-  return(
-    <div className="flex items-center gap-2">
-  
-   <div>
-   {member.email}
-   </div>
-    </div>
-  )
-})}
-     </div>
-
-
-
-
-
-          </div>
-          
-        </div>
-        
       </div>
     </div>
   );
