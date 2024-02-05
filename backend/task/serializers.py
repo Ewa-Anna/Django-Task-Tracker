@@ -4,12 +4,8 @@ from rest_framework import serializers
 
 from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
-from user.serializers import ProfileSerializer
+from user.serializers import ProfileSerializer, UserSerializer
 
-
-class AssigneeSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    email = serializers.EmailField()
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -17,12 +13,20 @@ class OwnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "email", "profile"]
+        fields = ["id", "first_name", "last_name", "email", "role", "profile"]
         extra_kwargs = {
             "first_name": {"required": False},
             "last_name": {"required": False},
             "email": {"required": False},
         }
+
+class AssigneeSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    email = serializers.EmailField()
+    role = serializers.CharField(required=False)
+    profile = ProfileSerializer(read_only=True)
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
