@@ -68,12 +68,14 @@ const currentLocation = location.pathname
                     <MdAccessTime />
                     {formatTimestamp(project.created)}
                   </div>
+                  <Button  className="shad-button_primary" variant="ghost">
                   <Link 
                   to={`${currentLocation}/project/${project.id}`}
                  
-                  className="shad-button_primary" variant="ghost">
+                 >
                  view
                   </Link>
+                  </Button>
                 </CardFooter>
               </Card>
             );
