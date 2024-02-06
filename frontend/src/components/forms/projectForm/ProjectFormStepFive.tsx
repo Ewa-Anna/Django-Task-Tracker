@@ -10,8 +10,6 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
-
-  
   const [state, setState] = useAppState();
   const { showToast } = useAuthContext();
   const navigate = useNavigate();
@@ -28,20 +26,25 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
       navigate("/projects");
     },
     onError: (error: Error) => {
-      console.log(error.response.data.title)
+      console.log(error.response.data.title);
       showToast({ message: error.message, type: "ERROR" });
     },
-    
   });
 
+
   const handleCreateProject = (formData) => {
-    mutation.mutate(formData);
-    console.log(formData)
+    const transformedFormData = {
+      ...formData,
+      assignees: state.assignees.map(({ id }) => {
+        return id;
+      })
+    };
+
+    mutation.mutate(transformedFormData);
+    console.log(transformedFormData);
   };
 
-
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-
+  const options = { year: "numeric", month: "long", day: "numeric" };
 
   return (
     <div
@@ -58,60 +61,56 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
       )}
     >
       <Form {...form}>
-        <form 
-        className="flex flex-col gap-9 w-full max-w-5xl min-h-[600px] max-h-[500px] justify-evenly"
-        onSubmit={form.handleSubmit(()=>handleCreateProject(state))}>
+        <form
+          className="flex flex-col gap-9 w-full max-w-5xl min-h-[600px] max-h-[500px] justify-evenly"
+          onSubmit={form.handleSubmit(() => handleCreateProject(state))}
+        >
           <div className=" h-full flex flex-col gap-2 ">
+            {/* Start */}
+            <div className="border-2 rounded-md  border-dark-4 px-5 py-4">
+              <div className="flex justify-between">
+                <div>Step 1</div>
+                <div>
+                  <Button>Edit</Button>
+                </div>
+              </div>
+              <p>Visibility</p>
+              <p>{state.visibility}</p>
+            </div>
 
-  {/* Start */}
-<div className="border-2 rounded-md  border-dark-4 px-5 py-4">
-<div className="flex justify-between">
-  <div>
-Step 1
-  </div>
-  <div>
-<Button>Edit</Button>
-</div>
-</div>
-<p>Visibility</p>
-<p>{state.visibility}</p>
-</div>
-
-
-<div className="border-2 border-dark-4  rounded-md  px-5 py-4 ">
-<div className="flex justify-between items-center">
- <span>Step 2</span>
-<Button className="hover:bg-violet-900" variant={"ghost"}>Edit</Button>
-</div>
-<div className="flex flex-col">
-<div className="flex flex-wrap">
-<div className="flex-1">
-  <p>Title</p>
-{state.title}
-</div>
-<div className="flex-1">
-<p>Description</p>
-{state.description}
-</div>
-</div>
-<div className="flex flex-wrap">
-<div className="flex-1">
-  <p>Leader</p>
-{state.owner}
-</div>
-<div className="flex-1">
-<p>Deadline</p>
-<p>{state.deadline&& state.deadline.toLocaleString('en-EN', options)}</p>
-</div>
-</div>
-</div>
-
-
-
-
-
-
-</div>
+            <div className="border-2 border-dark-4  rounded-md  px-5 py-4 ">
+              <div className="flex justify-between items-center">
+                <span>Step 2</span>
+                <Button className="hover:bg-violet-900" variant={"ghost"}>
+                  Edit
+                </Button>
+              </div>
+              <div className="flex flex-col">
+                <div className="flex flex-wrap">
+                  <div className="flex-1">
+                    <p>Title</p>
+                    {state.title}
+                  </div>
+                  <div className="flex-1">
+                    <p>Description</p>
+                    {state.description}
+                  </div>
+                </div>
+                <div className="flex flex-wrap">
+                  <div className="flex-1">
+                    <p>Leader</p>
+                    {state.owner}
+                  </div>
+                  <div className="flex-1">
+                    <p>Deadline</p>
+                    <p>
+                      {state.deadline &&
+                        state.deadline.toLocaleString("en-EN", options)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="flex justify-end border-2 flex-1">
             <Button
