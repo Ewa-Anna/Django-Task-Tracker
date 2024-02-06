@@ -38,7 +38,7 @@ function App() {
           <Route path="edit-project:/id" element={<EditProject />} />
           <Route path="edit-ticket/:id" element={<EditTicket />} />
           <Route path="projects/project/:projectId" element={<ProjectDetails />} />
-          <Route path="ticket/:id" element={<TicketDetails />} />
+          <Route path="tickets/ticket/:id" element={<TicketDetails />} />
           <Route path="profile/:id" element={<Profile />} />
           <Route path="all-users" element={<AllUsers />} />
           <Route path="tickets" element={<Tickets />} />
