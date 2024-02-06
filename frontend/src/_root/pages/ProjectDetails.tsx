@@ -65,40 +65,40 @@ const ProjectDetails = () => {
             <div className=" mt-8  grid grid-cols-1  items-center py-2  border-gray-200 md:grid-cols-60-40 lg:grid-cols-60-40 xl:grid-cols-60-40">
               {/* column left */}
 
-              <div className=" pr-3  h-full order-2 overflow-hidden overflow-ellipsis   ">
+              <div className="   h-full order-2 overflow-hidden overflow-ellipsis  pr-8   ">
                 <h2 className="mb-8 text-xl">Overview</h2>
                 <p>{project?.description}</p>
               </div>
 
               {/* column right */}
 
-              <div className=" h-full flex flex-col  order-1 md:order-2  ">
+              <div className=" h-full flex flex-col  order-1 md:order-2 border-2 border-dark-2  bg-dark-2 rounded-[5px] ">
                 <div className="flex flex-col gap-1">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 text-sm">
-                    <div className="flex flex-col items-center gap-2  py-4 border-2 border-dark-2 rounded-[12px]">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 text-sm">
+                    <div className="flex flex-col items-center gap-2  py-4 bg-dark-2 ">
                       <MdPublic size={20} />
 
                       <p className="text-base text-slate-300 font-bold">{project?.visibility}</p>
                       <p className="text-xs text-slate-400 font-semibold">Visibility</p>
                     </div>
-                    <div className=" flex flex-col items-center gap-2 py-4 border-2 border-dark-2 rounded-[12px]">
+                    <div className=" flex flex-col items-center gap-2 py-4 bg-dark-2">
                       <MdPublic size={20}/>
                       <p className="text-base text-slate-300  font-bold">{project?.status}</p>
                       <p className="text-xs text-slate-400 font-semibold">Status</p>
                     </div>
-                    <div className=" flex flex-col items-center gap-2 py-4 border-2 border-dark-2 rounded-[12px]">
+                    <div className=" flex flex-col items-center gap-2 py-4 bg-dark-2">
                       <MdPublic size={20} />
                       <p className="text-base text-slate-300  font-bold">{formatTimestamp(project?.created)}</p>
                       <p className="text-xs text-slate-400 font-semibold">Created</p>
                     </div>
-                    <div className=" flex text-slate-300 flex-col items-center gap-2 py-4 border-2 border-dark-2 rounded-[10px]">
+                    <div className=" flex text-slate-300 flex-col items-center gap-2 py-4 bg-dark-2 ">
                       <MdPublic size={20}  />
                       <p className="text-base text-slate-300  font-bold">{formatTimestamp(project?.deadline)}</p>
                       <p className="text-xs text-slate-400 font-semibold">Deadline</p>
                     </div>
                   </div>
 
-                  <div className=" flex flex-col gap-5 border-2 border-dark-2 p-4 rounded-[10px]">
+                  <div className=" flex flex-col gap-5  p-4 rounded-[10px]">
                     <h3 className="text-xl">Leader</h3>
                     <div className="flex ">
                       <img
@@ -120,11 +120,11 @@ const ProjectDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 p-4 text-slate-300">
+                <div className="grid grid-cols-1 p-4 text-slate-300    border-t border-dark-2">
                   <h3 className="text-xl">Members</h3>
 {project?.assignees.map((member)=>{
   return(
-    <div className="flex gap-4 items-center py-2">
+    <div className="flex gap-4 items-center py-2 ">
       <img src="/assets/icons/profile-placeholder.svg" alt="avatar" height={40} width={40} />
       <p className="text-sm">{member?.email}</p>
     </div>
