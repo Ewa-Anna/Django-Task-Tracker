@@ -30,7 +30,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border border-dark-3 mt-6">
+    <div className="hidden xl:flex rounded-md border border-dark-3 mt-6">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className=" hover:bg-zinc-950 border-t-2 border-dark-4  text-slate-300"
+                className=" hover:bg-zinc-950 border-t-2 border-dark-4  text-slate-300 "
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
