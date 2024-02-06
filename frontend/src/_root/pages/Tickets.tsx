@@ -3,7 +3,7 @@ import { getTickets } from "@/features/ticket-api/ticket-api";
 import React from "react";
 import { LuGitCompare } from "react-icons/lu";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ImTicket } from "react-icons/im";
 import { DataTable } from "@/components/ui/data-table";
 import { LuInspect } from "react-icons/lu";
@@ -17,7 +17,8 @@ const Tickets = () => {
     isLoading,
   } = useQuery(["tickets"], () => getTickets());
 
-
+  const location = useLocation();
+  const currentLocation = location.pathname;
 
   const columns = [
     {
@@ -55,7 +56,7 @@ const Tickets = () => {
       cell: ({row})=>{
         const ticket = row?.original
         return(
-       <Link className="hover:text-violet-400 transition-all cursor-pointer" to={`task/projects/${ticket.id}/`}>
+       <Link className="hover:text-violet-400 transition-all cursor-pointer" to={`${currentLocation}/ticket/${ticket.id}`}>
        <LuInspect  size={21} />
        </Link>
         )
