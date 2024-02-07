@@ -187,7 +187,7 @@ class Attachment(models.Model):
         blank=True,
     )
 
-    file = models.FileField(upload_to="documents/attachments/%Y/%m/%d/")
+    file = models.FileField(upload_to="attachments/%Y/%m/%d/")
     uploader = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
