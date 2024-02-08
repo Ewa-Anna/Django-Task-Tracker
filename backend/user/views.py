@@ -36,12 +36,15 @@ class LoginView(APIView):
         serializer = LoginSerializer(
             data=request.data, context={"request": self.request}
         )
-        
+
         try:
             serializer.is_valid(raise_exception=True)
         except serializers.ValidationError as e:
             error_message = e.detail.get("non_field_errors", ["Unknown error"])[0]
-            return Response({"success": False, "message": error_message}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"success": False, "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         user = serializer.validated_data["user"]
 
@@ -111,16 +114,22 @@ class RegistrationView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        
+
         try:
             serializer.is_valid(raise_exception=True)
         except serializers.ValidationError as e:
             error_message = {field: messages[0] for field, messages in e.detail.items()}
             if "Passwords do not match" in error_message:
-                return Response({"success": False, "message": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"success": False, "message": "Passwords do not match"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-            return Response({"success": False, "message": error_message}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"success": False, "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         user = serializer.save()
 
         # self.perform_create(serializer)

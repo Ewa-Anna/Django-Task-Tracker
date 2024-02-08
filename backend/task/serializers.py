@@ -4,8 +4,7 @@ from rest_framework import serializers
 
 from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
-from user.serializers import ProfileSerializer, UserSerializer
-
+from user.serializers import ProfileSerializer
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -19,6 +18,7 @@ class OwnerSerializer(serializers.ModelSerializer):
             "last_name": {"required": False},
             "email": {"required": False},
         }
+
 
 class AssigneeSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -142,7 +142,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['owner'] = OwnerSerializer(instance.owner).data
+        representation["owner"] = OwnerSerializer(instance.owner).data
         return representation
 
 

@@ -1,9 +1,8 @@
 from django.db import models
 from django.conf import settings
 
-from taggit.managers import TaggableManager
-
 from user.models import CustomUser
+from tags.models import CustomTags
 
 
 PRIORITY = [
@@ -53,7 +52,7 @@ class Project(models.Model):
 
     archive = models.BooleanField(default=False)
 
-    tags = TaggableManager(blank=True)
+    tags = models.ManyToManyField(CustomTags, blank=True)
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
