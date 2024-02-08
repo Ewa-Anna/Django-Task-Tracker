@@ -44,4 +44,5 @@ urlpatterns = [
     path("task-tracker/v1/", include("backend.api")),
     path("task-tracker/v1/task/", include("task.urls")),
     path("task-tracker/v1/adminx/", include("adminx.urls")),
+    path("task-tracker/v1/tags/", include("tags.urls")),
 ]

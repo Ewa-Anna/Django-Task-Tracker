@@ -10,6 +10,7 @@ __pycache__
 *.pyc
 backend/pylint/
 backend/media/
+db.txt
 
 # Logs
 logs

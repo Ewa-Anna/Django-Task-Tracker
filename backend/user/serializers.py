@@ -65,7 +65,9 @@ class UserSerializer(ModelSerializer):
         username = validated_data.get("username", email)
 
         if password != confirm_password:
-            raise serializers.ValidationError({"success": False, "message": "Passwords do not match"})
+            raise serializers.ValidationError(
+                {"success": False, "message": "Passwords do not match"}
+            )
 
         user = CustomUser(username=username, **validated_data)
         user.set_password(password)
