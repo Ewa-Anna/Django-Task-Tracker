@@ -39,3 +39,10 @@ export const getVisibilityOptions = async()=>{
     })
     return response.data
     }
+
+
+    export const getTags= async()=>{
+
+        const response = await clientApi.get("/tags")
+        return response.data
+    }

@@ -35,6 +35,7 @@ type ProjectFormProps = {
 };
 
 const ProjectForm = ({
+  tags,
   project,
   users,
   visibilityOptions,
@@ -136,6 +137,7 @@ const ProjectForm = ({
         />
 
         <ProjectFormStepThree
+        tags={tags}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
