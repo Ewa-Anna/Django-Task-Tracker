@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "channels",
     "daphne",
-
     # Apps
     "tags",
     "user",
@@ -54,7 +53,6 @@ INSTALLED_APPS = [
     "adminx",
     "taggit",
     "notifications",
-
     # Django
     "django.contrib.admin",
     "django.contrib.auth",
