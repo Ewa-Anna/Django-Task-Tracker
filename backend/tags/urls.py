@@ -9,6 +9,4 @@ tags_router = DefaultRouter()
 
 tags_router.register(r"", CustomTagViewSet)
 
-urlpatterns = [
-    re_path(r"", include(tags_router.urls))
-]
+urlpatterns = [re_path(r"", include(tags_router.urls))]
