@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {cn} from "../../../lib/utils"
 type SelectOption = {
   name: string;
@@ -15,10 +15,27 @@ type SelectProps = {
 
 const MultiSelect = ({ value, onChange, options }: SelectProps) => {
 const [isOpen,setIsOpen]=useState(false)
+const [highlightedIndex,setHighlightedIndex]=useState(0)
 
 const clearOptions=()=>{
     onChange(undefined)
 }
+
+const selectOption=(option:SelectOption)=>{
+    if(option!==value) onChange(option)
+}
+
+const isOptionSelected=(option:SelectOption)=>{
+return option===value
+}
+
+const checkHighlightedIndex=(index:number)=>{
+return index=== highlightedIndex
+}
+
+useEffect(()=>{
+setHighlightedIndex(0)
+},[isOpen])
 
   return (
     <div
@@ -42,10 +59,20 @@ const clearOptions=()=>{
       <ul className={cn("m-0 p-0 list-none border-2 rounded-[0.25em] border-[#777] max-h-[15em] overflow-auto w-full left-0 top-[calc(100%+0.25em)] absolute bg-dark-2 z-50 custom-scrollbar ",{
         hidden:isOpen===false
       })}>
-        {options&&options.map((option) => {
+        {options&&options.map((option,index) => {
           return (
             <li
-              className="py-[0.25em] px-[0.5em] cursor-pointer"
+
+            onMouseEnter={()=>setHighlightedIndex(index)}
+            onClick={(e)=>{
+                e.stopPropagation()
+                selectOption(option)
+                setIsOpen(false)
+            }}
+              className={cn("py-[0.25em] px-[0.5em] cursor-pointer",{
+                "bg-violet-500": isOptionSelected(option),
+                "bg-violet-900":checkHighlightedIndex(index)
+              })}
               key={option.label}
             >
               {option.name}
