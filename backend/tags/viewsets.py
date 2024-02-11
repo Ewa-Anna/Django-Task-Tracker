@@ -24,14 +24,29 @@ class CustomTagViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"success": True, "messege": "Tag created successfully"}, status=status.HTTP_201_CREATED)
-        return Response({"success": False, "messege": f"Something went wrong: {serializer.errors['name'][0]}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"success": True, "messege": "Tag created successfully"},
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(
+            {
+                "success": False,
+                "messege": f"Something went wrong: {serializer.errors['name'][0]}",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+        partial = kwargs.pop("partial", False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         if serializer.is_valid():
             serializer.save()
             return Response({"success": True, "messege": "Tag updated successfully"})
-        return Response({"success": False, "messege": f"Something went wrong: {serializer.errors['name'][0]}"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                "success": False,
+                "messege": f"Something went wrong: {serializer.errors['name'][0]}",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )

@@ -36,17 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "tags",
-    "user",
-    "task",
-    "adminx",
-    "taggit",
+    # Libraries
     "rest_framework",
     "drf_yasg",
     "corsheaders",
@@ -54,6 +44,22 @@ INSTALLED_APPS = [
     "django_rest_passwordreset",
     "cloudinary",
     "cloudinary_storage",
+    "channels",
+    "daphne",
+    # Apps
+    "tags",
+    "user",
+    "task",
+    "adminx",
+    "taggit",
+    "notifications",
+    # Django
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
 MIDDLEWARE = [
@@ -129,7 +135,7 @@ AUTH_USER_MODEL = "user.CustomUser"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -142,7 +148,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "backend.wsgi.application"
+# WSGI_APPLICATION = "backend.wsgi.application"
+ASGI_APPLICATION = "backend.asgi.application"
+
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
