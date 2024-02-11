@@ -5,6 +5,7 @@ import { FaUsers } from "react-icons/fa";
 import { FaScroll } from "react-icons/fa";
 import { formatTimestamp } from "@/lib/utils";
 import { CiClock1 } from "react-icons/ci";
+import {Link} from "react-router-dom"
 import { LuAlarmClock } from "react-icons/lu";
 import { MdOutlinePublic } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
@@ -81,7 +82,11 @@ const ProjectDetails = () => {
       <span className="flex-1">{member.first_name}</span>
       <span className="flex-1">{member.last_name}</span>
       <span className="flex-1">{member.role}</span>
-    <Button>View</Button>
+      <Link to={`/profile/${member?.id}`}>
+             <Button className="hover:bg-violet-600 mt-1" variant={"ghost"}>
+                  View
+                </Button>
+             </Link>
     </div>
   )
 })}
@@ -95,7 +100,7 @@ const ProjectDetails = () => {
         {/* LEFT */}
 
         {/* RIGHT */}
-        <div className="hidden xl:flex flex-col gap-5 h-auto max-h-[400px]    border-2 w-1/3 border-dark-4 p-5 sticky top-4 mt-32 ">
+        <div className="hidden xl:flex flex-col gap-5 h-auto max-h-[422px]    border-2 w-1/3 border-dark-4 p-5 sticky top-4 mt-32 ">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Project Details</h3>
      
@@ -157,17 +162,19 @@ const ProjectDetails = () => {
                 src="https://images.pexels.com/photos/720327/pexels-photo-720327.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt="userAvatar"
               />
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col h-full ">
                 <span>{`${project?.owner?.first_name} ${project?.owner?.last_name}`}</span>
 
-                <div className="flex items-center gap-1">
-                  <span className="w-[14px] h-[14px]">
+                <div className="flex items-center gap-1 justify-center">
+                  <span className="text-center ">
                     {project?.owner?.role}
                   </span>
                 </div>
-                <Button className="hover:bg-slate-600" variant={"ghost"}>
+             <Link to={`/profile/${project?.owner?.id}`}>
+             <Button className="hover:bg-violet-600 mt-1" variant={"ghost"}>
                   View
                 </Button>
+             </Link>
               </div>
             </div>
         </div>
