@@ -47,9 +47,9 @@ const ProjectFormStepFour = ({
         hidden:
           currentStep === 0 ||
           currentStep === 1 ||
-          currentStep === 2 ||
-          currentStep === 4 ||
-          currentStep === 5,
+          currentStep === 3
+       
+         
       })}
     >
       <Form {...form}>

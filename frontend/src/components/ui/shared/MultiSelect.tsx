@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { IoMdArrowDropdown } from "react-icons/io";
 import { cn } from "../../../lib/utils";
 export type SelectOption = {
   name: string;
@@ -97,7 +98,7 @@ const MultiSelect = ({ multiple, value, onChange, options }: SelectProps) => {
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
       tabIndex={0}
-      className="relative w-[20em]   border-2 border-[#777] rounded-[0.25em] flex min-h-[1.5em] items-center gap-[0.5em] p-[0.5em] outline-none focus:border-[hsl(200,100%,50%)] "
+      className="relative w-full bg-dark-4 cursor-pointer   rounded-[0.25em] flex min-h-[1.5em] items-center gap-[0.5em] p-[0.5em] outline-none focus:border-[hsl(200,100%,50%)]r "
     >
       <span className="grow  flex flex-wrap gap-0.5">
         {multiple
@@ -128,7 +129,7 @@ const MultiSelect = ({ multiple, value, onChange, options }: SelectProps) => {
         &times;
       </button>
       <div className="bg-[#777] w-[0.1em] self-stretch "></div>
-      <div className=" border-transparent border-2  border-t-[#777] "></div>
+      <div ><IoMdArrowDropdown/></div>
 
       <ul
         className={cn(

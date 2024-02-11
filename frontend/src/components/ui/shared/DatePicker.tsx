@@ -22,7 +22,7 @@ export function DatePicker({ onChange }: { onChange: (date: Date) => void }) {
           <Button
             
             className={cn(
-              "w-[280px] justify-start text-left font-normal bg-dark-4 h-12",
+              "w-full justify-start text-left font-normal bg-dark-4 h-12",
               !date && "text-muted-foreground"
             )}
           >
