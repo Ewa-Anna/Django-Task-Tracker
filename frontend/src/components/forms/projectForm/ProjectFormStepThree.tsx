@@ -29,10 +29,11 @@ import { useQuery } from "react-query";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import MultiSelect, { SelectOption } from "@/components/ui/shared/MultiSelect";
 
 const ProjectFormStepThree = ({ currentStep, setCurrentStep, tags }) => {
   const [state, setState] = useAppState();
-  const [selectedTags,setSelectedTags]=useState([])
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const form = useForm<z.infer<typeof ProjectStepThreeValidation>>({
     resolver: zodResolver(ProjectStepThreeValidation),
@@ -50,8 +51,10 @@ const ProjectFormStepThree = ({ currentStep, setCurrentStep, tags }) => {
     setCurrentStep((prev) => prev + 1);
   };
 
-  console.log(tags && tags);
-
+  const [value, setValue] = useState<SelectOption[]>([tags?.results[1]]);
+  const [value2, setValue2] = useState<SelectOption | undefined>(
+    tags?.results[1]
+  );
   return (
     <div
       className={cn(
@@ -88,8 +91,8 @@ const ProjectFormStepThree = ({ currentStep, setCurrentStep, tags }) => {
             />
 
             {/* aas */}
-           
-            <div className="flex-1   ">
+
+            {/* <div className="flex-1   ">
               <FormField
                 control={form.control}
                 name="tags"
@@ -130,8 +133,15 @@ const ProjectFormStepThree = ({ currentStep, setCurrentStep, tags }) => {
                   </FormItem>
                 )}
               />
-            </div>
+            </div> */}
 
+            <MultiSelect
+              multiple
+              options={tags?.results}
+              value={value}
+              onChange={(o) => setValue(o)}
+            />
+        
             {/* sad */}
           </div>
           <div className="flex justify-end ">
