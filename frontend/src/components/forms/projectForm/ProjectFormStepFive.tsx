@@ -37,6 +37,9 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
       ...formData,
       assignees: state.assignees.map(({ id }) => {
         return id;
+      }),
+      tags:state.tags.map(({id})=>{
+        return id
       })
     };
 
@@ -55,7 +58,7 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
             currentStep === 0 ||
             currentStep === 1 ||
             currentStep === 2 ||
-            currentStep === 3 ||
+          
             currentStep === 0,
         }
       )}

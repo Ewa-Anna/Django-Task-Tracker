@@ -54,9 +54,9 @@ const ProjectForm = ({
       name: "General Info",
       fields: ["title", "description", "owner", "deadline"],
     },
-    { id: "step_3", name: "Attachments", fields: ["file", "tags"] },
-    { id: "step_4", name: "Assignees", fields: ["assignees"] },
-    {id:"step_5",name:"Summary"}
+
+    { id: "step_3", name: "Assignees", fields: ["assignees"] },
+    {id:"step_4",name:"Summary"}
   ];
   const [selectedUsersLeft, setSelectedUsersLeft] = useState([]);
   const [selectedUsersRight, setSelectedUsersRight] = useState([]);
@@ -130,18 +130,15 @@ const ProjectForm = ({
           setCurrentStep={setCurrentStep}
           visibilityOptions={visibilityOptions && visibilityOptions}
         />
+   
         <ProjectFormStepTwo
+         tags={tags}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           users={users && users}
         />
 
-        <ProjectFormStepThree
-        tags={tags}
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-          currentStep={currentStep}
-        />
+
         <ProjectFormStepFour
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}

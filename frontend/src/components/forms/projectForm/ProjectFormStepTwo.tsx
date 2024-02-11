@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import React, { useState } from "react";
 import { DatePicker } from "@/components/ui/shared/DatePicker";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,14 +26,11 @@ import { ProjectStepTwoValidation } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useAppState } from "@/contexts/formContext";
+import FileUploader from "@/components/ui/shared/FileUploader";
+import MultiSelect, { SelectOption } from "@/components/ui/shared/MultiSelect";
 
-const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
-
-
-
-
+const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
   const [state, setState] = useAppState();
-
 
   const form = useForm<z.infer<typeof ProjectStepTwoValidation>>({
     resolver: zodResolver(ProjectStepTwoValidation),
@@ -44,38 +41,31 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
       deadline: "",
     },
   });
-  console.log(form.watch('owner'))
 
+  const [value, setValue] = useState<SelectOption[]>([]);
 
   const processForm = (data) => {
-    setState({ ...state, ...data });
-    
-    setCurrentStep(prev=>prev+1)
-  
+    setState({ ...state, ...data, tags:value});
+
+    setCurrentStep((prev) => prev + 1);
   };
-
-
-
 
   return (
     <div
-      className={cn(
-        "flex flex-col gap-9 w-full max-w-5xl min-h-[510px] max-h-[500px] mt-12  ",
-        {
-          hidden:
-            currentStep === 0 ||
-            currentStep === 2 ||
-            currentStep === 3 ||
-            currentStep === 4 ||
-            currentStep === 5,
-        }
-      )}
+      className={cn("flex flex-col gap-9 w-full max-w-5xl   mt-12  ", {
+        hidden:
+          currentStep === 0 ||
+          currentStep === 2 ||
+          currentStep === 3 ||
+          currentStep === 4 ||
+          currentStep === 5,
+      })}
     >
       <Form {...form}>
-        <form 
-          
-        onSubmit={form.handleSubmit(processForm)}
-        className="flex flex-col gap-9 w-full max-w-5xl min-h-[600px] max-h-[500px] justify-evenly ">
+        <form
+          onSubmit={form.handleSubmit(processForm)}
+          className="flex flex-col gap-9 w-full max-w-5xl  justify-evenly "
+        >
           <FormField
             control={form.control}
             name="title"
@@ -95,9 +85,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="shad-form_label">
-                  Overview
-                </FormLabel>
+                <FormLabel className="shad-form_label">Overview</FormLabel>
                 <FormControl>
                   <Textarea
                     className="shad-textarea custom-scrollbar"
@@ -110,7 +98,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
             )}
           />
 
-          <div className=" flex gap-8 items-center ">
+          <div className=" flex gap-8 items-center  ">
             <div className="flex-1   ">
               <FormField
                 control={form.control}
@@ -124,29 +112,25 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
                     >
                       <FormControl>
                         <SelectTrigger className="shad-input">
-                          <SelectValue 
-                   
-                          placeholder={form.watch("owner")} />
+                          <SelectValue placeholder={form.watch("owner")} />
                         </SelectTrigger>
                       </FormControl>
                       <FormMessage className="shad-form_message" />
-                   
-                      <SelectContent>
-                      <SelectGroup>
-                        {users &&
-                          users?.results.map((user) => {
-                            return (
-                              <SelectItem
-                                className="cursor-pointer "
-                                value={user.id.toString()}
 
-                                
-                              >
-                                {user.email}
-                              </SelectItem>
-                            );
-                          })}
-                                </SelectGroup>  
+                      <SelectContent>
+                        <SelectGroup>
+                          {users &&
+                            users?.results.map((user) => {
+                              return (
+                                <SelectItem
+                                  className="cursor-pointer "
+                                  value={user.id.toString()}
+                                >
+                                  {user.email}
+                                </SelectItem>
+                              );
+                            })}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -159,7 +143,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
                 control={form.control}
                 name="deadline"
                 render={({ field }) => (
-                  <FormItem className=" flex flex-col">
+                  <FormItem className=" flex flex-col gap-2 flex-1">
                     <FormLabel>Deadline</FormLabel>
 
                     <FormControl>
@@ -173,13 +157,49 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep }) => {
               />
             </div>
           </div>
+          <div className="flex-1 flex flex-col gap-2 ">
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      multiple
+                      options={tags?.results}
+                      value={value}
+                      onChange={(o) => setValue(o)}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-10 ">
+            <FormField
+              control={form.control}
+              name="file"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="shad-form_label">Add files</FormLabel>
+                  <FormControl>
+                    <FileUploader fieldChange={field.onChange} mediaUrl="" />
+                  </FormControl>
+
+                  <FormMessage className="shad-form_message" />
+                </FormItem>
+              )}
+            />
+
+            {/* sad */}
+          </div>
           <div className="flex justify-end">
             <Button
               type="button"
-onClick={()=>{
-  setCurrentStep(prev=>prev-1)
-}}
-
+              onClick={() => {
+                setCurrentStep((prev) => prev - 1);
+              }}
               className={cn(" whitespace-nowrap  hover:bg-slate-800   ", {
                 hidden: currentStep === 0,
               })}
