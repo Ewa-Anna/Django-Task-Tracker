@@ -5,6 +5,7 @@ from rest_framework import serializers
 from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
 from user.serializers import ProfileSerializer
+from tags.serializers import CustomTagSerializer
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -50,7 +51,7 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True)
     assignees = AssigneeSerializer(many=True, required=False)
-    tags = serializers.ListField(source="tags.names", required=False)
+    tags = CustomTagSerializer(many=True, read_only=True)  
     created_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )

@@ -6,4 +6,4 @@ from .models import CustomTags
 class CustomTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomTags
-        fields = "__all__"
+        fields = "id", "name"

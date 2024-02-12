@@ -54,6 +54,7 @@ Running Docker Container
     [![Django](https://skillicons.dev/icons?i=django)](https://skillicons.dev)
     - Django Rest Framework
     - drf-yasg
+    - django-channels
 
 - Databases
     - For Dev
