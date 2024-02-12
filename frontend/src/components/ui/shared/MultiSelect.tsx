@@ -120,6 +120,7 @@ const MultiSelect = ({ multiple, value, onChange, options }: SelectProps) => {
           : value?.name}
       </span>
       <button
+      type="button"
         onClick={(e) => {
           e.stopPropagation();
           clearOptions();
