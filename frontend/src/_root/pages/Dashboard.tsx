@@ -3,7 +3,7 @@ import { MdCallMissedOutgoing } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import { IoEye } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import Chart from "@/components/ui/shared/Chart";
+import DonutChart from "@/components/ui/shared/DonutChart";
 
 const Dashboard = () => {
   const [sort, setSort] = useState("all");
@@ -380,7 +380,7 @@ const containerRef= useRef<HTMLDivElement>(null)
         </div>
         <div>Right
 
-       <Chart />
+       <DonutChart />
         </div>
       </div>
     </div>

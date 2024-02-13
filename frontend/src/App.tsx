@@ -16,6 +16,7 @@ import TicketDetails from "./_root/pages/TicketDetails";
 import Profile from "./_root/pages/Profile";
 import Tickets from "./_root/pages/Tickets";
 import Projects from "./_root/pages/Projects";
+import Dashboard from "./_root/pages/Dashboard";
 
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
         {/* private routes */}
 
         <Route element={<RootLayout />}>
-          <Route index element={<Home />} />
+          <Route index element={<Dashboard />} />
           <Route path="create-project" element={<CreateProject />} />
           <Route path="create-ticket" element={<CreateTicket />} />
           <Route path="edit-project:/id" element={<EditProject />} />

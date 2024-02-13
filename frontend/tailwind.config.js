@@ -23,8 +23,8 @@ module.exports = {
       gridTemplateColumns: {
         // Dodaj tę linię do zdefiniowania niestandardowych szerokości kolumn
         '60-40': '6fr 4fr',
-        '40-60':'4fr 5fr'
-        
+        '40-60':'4fr 5fr',
+        '65-35':'5fr 3fr'
       },
       
       colors: {
