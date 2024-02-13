@@ -56,7 +56,7 @@ const Projects = () => {
       header: "Status",
     },
     {
-      accessorKey: "action",
+      accessorKey: "View",
       cell: ({ row }) => {
         const project = row?.original;
         return (
