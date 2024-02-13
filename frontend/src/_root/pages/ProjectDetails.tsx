@@ -70,7 +70,7 @@ const ProjectDetails = () => {
                 </div>
                 <div className="w-[300px] flex flex-col gap-2 mb-5">
                   <span className="font-normal">Created By</span>
-                  <span className="desc">{project?.created_by}</span>
+                  <span className="desc">{`${project?.created_by?.first_name} ${project?.created_by?.last_name}`}</span>
                 </div>
                 <div className="w-[300px] flex flex-col gap-2 mb-5">
                   <span className="font-normal">Languages</span>
