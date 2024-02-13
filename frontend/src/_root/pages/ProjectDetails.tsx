@@ -3,15 +3,19 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 import { FaScroll } from "react-icons/fa";
-import { formatTimestamp } from "@/lib/utils";
+import { formatTimestamp, timeUntilDeadline } from "@/lib/utils";
 import { CiClock1 } from "react-icons/ci";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
+import { MdOutlinePending } from "react-icons/md";
 import { LuAlarmClock } from "react-icons/lu";
 import { MdOutlinePublic } from "react-icons/md";
 import { BsPersonLinesFill } from "react-icons/bs";
+import { GoClockFill } from "react-icons/go";
 import { MdPublic } from "react-icons/md";
-import { MdOutlinePending } from "react-icons/md";
+
 import { Button } from "@/components/ui/button";
+import { RiGitRepositoryPrivateFill } from "react-icons/ri";
+import { Accessibility } from "lucide-react";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -33,22 +37,22 @@ const ProjectDetails = () => {
           <h1 className="text-2xl">{project?.title}</h1>
 
           <div className="flex items-center  gap-2 flex-wrap">
-          <div className="border-2 py-0.5 px-1 ">React</div>
-            <div className="border-2 py-0.5 px-1 ">Django</div>
-            <div className="border-2 py-0.5 px-1 ">React</div>
-            <div className="border-2 py-0.5 px-1 ">React</div>
-            <div className="border-2 py-0.5 px-1 ">React</div>
+            {project?.tags.map((tag) => {
+              return (
+                <div className="border-[0.5px] border-dark-1 bg-blue-500 text-slate-50 py-0.5 px-1 rounded-[0.25em] ">
+                  {tag.name}
+                </div>
+              );
+            })}
           </div>
 
           <h2>About Project</h2>
           <p>{project?.description}</p>
-          
+
           {/* seeller */}
           <div className="mt-12 flex flex-col gap-5">
-      
-
             <div className=" border-2 border-dark-4 rounded-[5px] p-5 mt-5 ">
-            <h3 className="font-semibold text-xl mb-6">Total members</h3>
+              <h3 className="font-semibold text-xl mb-6">Total members</h3>
               <div className="flex justify-between flex-wrap text-slate-300">
                 <div className="w-[300px] flex flex-col gap-3 mb-5">
                   <span className="font-normal">Total members</span>
@@ -74,109 +78,104 @@ const ProjectDetails = () => {
                 </div>
               </div>
               <hr className="h-[0px] border-dark-4 mb-5" />
- 
-<h4 className="mb-10 text-xl font-semibold">Members</h4>
-{project?.assignees.map((member)=>{
-  return(
-    <div className=" flex justify-evenly text-slate-300">
-      <span className="flex-1">{member.first_name}</span>
-      <span className="flex-1">{member.last_name}</span>
-      <span className="flex-1">{member.role}</span>
-      <Link to={`/profile/${member?.id}`}>
-             <Button className="hover:bg-violet-600 mt-1" variant={"ghost"}>
-                  View
-                </Button>
-             </Link>
-    </div>
-  )
-})}
 
-
-
+              <h4 className="mb-10 text-xl font-semibold">Members</h4>
+              {project?.assignees.map((member) => {
+                return (
+                  <div className=" flex justify-evenly text-slate-300">
+                    <span className="flex-1 flex items-center">
+                      {member.first_name}
+                    </span>
+                    <span className="flex-1 flex items-center">
+                      {member.last_name}
+                    </span>
+                    <span className="flex-1 flex items-center">
+                      {member.role}
+                    </span>
+                    <Link to={`/profile/${member?.id}`}>
+                      <div className="flex-1 flex items-center">
+                        <Button
+                          className="hover:bg-violet-600 mt-1 "
+                          variant={"ghost"}
+                        >
+                          View
+                        </Button>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
-  
           </div>
         </div>
         {/* LEFT */}
 
         {/* RIGHT */}
-        <div className="hidden xl:flex flex-col gap-5 h-auto max-h-[422px]    border-2 w-1/3 border-dark-4 p-5 sticky top-4 mt-32 ">
+        <div className="hidden xl:flex flex-col gap-5 h-auto max-h-[430px]    border-2 w-1/3 border-dark-4 p-5 sticky top-4 mt-32 rounded-[0.35em] ">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Project Details</h3>
-     
           </div>
-          <div className="features">
-            
-            <div className="flex items-center gap-2 font-normal text-slate-400 mb-1">
-            <span className="text-sm">Visibility</span>
-              <img
-                src="/assets/images/greencheck.png"
-                alt="checkmark"
-                className="w-[14px]"
-              />
-              <span>{project?.visibility}</span>
-            </div>
-            <div className="flex items-center gap-2 font-normal text-slate-400 mb-1">
-            <span className="text-sm">Status</span>
-              <img
-                src="/assets/images/greencheck.png"
-                alt="checkmark"
-                className="w-[14px]"
-              />
-              <span>{project?.status}</span>
-            </div>
-            <div className="flex items-center gap-2 font-normal text-slate-400 mb-1">
-            <span className="text-sm">Due time</span>
-              <img
-                src="/assets/images/greencheck.png"
-                alt="checkmark"
-                className="w-[14px]"
-              />
-              <span>{formatTimestamp(project?.deadline)}</span>
-            </div>
-            <div className="flex items-center gap-2 font-normal text-slate-400 mb-1">
-              <img
-                src="/assets/images/greencheck.png"
-                alt="checkmark"
-                className="w-[14px]"
-              />
-              <span>Prompt writing</span>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-base">
-            <div className="flex items-center gap-2">
-              <img
-                src="/assets/images/clock.png"
-                alt="clock"
-                className="w-[20px]"
-              />
-    
-            </div>
-        {/* HR */}
-          </div>
-    
-          <h2>Project Leader</h2>
-            <div className="flex items-center gap-5">
-              <img
-                className="w-[100px] h-[100px] rounded-[15%] object-cover"
-                src="https://images.pexels.com/photos/720327/pexels-photo-720327.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="userAvatar"
-              />
-              <div className="flex flex-col h-full ">
-                <span>{`${project?.owner?.first_name} ${project?.owner?.last_name}`}</span>
-
-                <div className="flex items-center gap-1 justify-center">
-                  <span className="text-center ">
-                    {project?.owner?.role}
-                  </span>
-                </div>
-             <Link to={`/profile/${project?.owner?.id}`}>
-             <Button className="hover:bg-violet-600 mt-1" variant={"ghost"}>
-                  View
-                </Button>
-             </Link>
+          <div className="flex flex-col gap-2">
+            <div className=" grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1 ">
+              <div className="p-2">
+                <span className="text-sm">Visibility</span>
+              </div>
+              <div className=" flex items-center gap-2 border-2 p-2 border-dark-4 rounded-[10px] bg-green-900 text-slate-200">
+                {project?.visibility === "public" ? (
+                  <MdPublic />
+                ) : (
+                  <RiGitRepositoryPrivateFill />
+                )}
+                <span>{project?.visibility}</span>
               </div>
             </div>
+            <div className="grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1">
+              <div className="p-2">
+                <span className="text-sm">Status</span>
+              </div>
+              <div className="flex items-center gap-2 border-2 p-2 border-dark-4 rounded-[10px] bg-green-900 text-slate-200">
+                {project?.status === "pending" ? (
+                  <MdOutlinePending />
+                ) : (
+                  <MdOutlinePending />
+                )}
+                <span>{project?.status}</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1">
+              <div className="p-2">
+                <span className="text-sm">Due time</span>
+              </div>
+              <div className="flex items-center gap-2 border-2 p-2 border-dark-4 rounded-[10px] bg-green-900 text-slate-200">
+                <GoClockFill />
+                <span>{timeUntilDeadline(project?.deadline)}</span>
+              </div>
+            </div>
+          </div>
+
+          <h2>Project Leader</h2>
+          <div className="flex items-center gap-5">
+            <img
+              className="w-[100px] h-[100px] rounded-[15%] object-cover"
+              src="https://images.pexels.com/photos/720327/pexels-photo-720327.jpeg?auto=compress&cs=tinysrgb&w=1600"
+              alt="userAvatar"
+            />
+            <div className="flex flex-col h-full ">
+              <span>{`${project?.owner?.first_name} ${project?.owner?.last_name}`}</span>
+
+              <div className="flex items-center gap-1 justify-center">
+                <span className="text-center ">{project?.owner?.role}</span>
+              </div>
+              <Link to={`/profile/${project?.owner?.id}`}>
+                <Button
+                  className="hover:bg-violet-600 mt-1  w-full"
+                  variant={"ghost"}
+                >
+                  View
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
         {/* RIGHT */}
       </div>
