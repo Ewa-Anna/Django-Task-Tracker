@@ -48,13 +48,26 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
         ]
 
 
+class CustomCreatedBySerializer(serializers.StringRelatedField):
+    def to_representation(self, value):
+        if value:
+            return {
+                "first_name": value.first_name,
+                "last_name": value.last_name,
+                "email": value.email,
+                "photo": value.profile.photo,
+            }
+        return None
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True)
     assignees = AssigneeSerializer(many=True, required=False)
-    tags = CustomTagSerializer(many=True, read_only=True)  
-    created_by = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault(), read_only=True
+    tags = CustomTagSerializer(many=True, read_only=True)
+    created_by = CustomCreatedBySerializer(
+        read_only=True, default=serializers.CurrentUserDefault()
     )
+
     updated_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )
@@ -110,8 +123,8 @@ class TaskSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True, source="owner")
     assignees = AssigneeSerializer(many=True, required=False)
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
-    created_by = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault(), read_only=True
+    created_by = CustomCreatedBySerializer(
+        read_only=True, default=serializers.CurrentUserDefault()
     )
     updated_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
@@ -148,8 +161,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    created_by = serializers.StringRelatedField(
-        default=serializers.CurrentUserDefault(), read_only=True
+    created_by = CustomCreatedBySerializer(
+        read_only=True, default=serializers.CurrentUserDefault()
     )
     updated_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
