@@ -52,7 +52,7 @@ const ProjectDetails = () => {
           {/* seeller */}
           <div className="mt-12 flex flex-col gap-5">
             <div className=" border-2 border-dark-4 rounded-[5px] p-5 mt-5 ">
-              <h3 className="font-semibold text-xl mb-6">Total members</h3>
+              <h3 className="font-semibold text-xl mb-6">Overall</h3>
               <div className="flex justify-between flex-wrap text-slate-300">
                 <div className="w-[300px] flex flex-col gap-3 mb-5">
                   <span className="font-normal">Total members</span>
