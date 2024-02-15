@@ -27,15 +27,7 @@ const logout = ()=>{
   return (
     <nav className="leftsidebar">
       <div className="flex flex-col gap-11">
-        <Link to="/" className="flex gap-3 items-center">
-          <img
-            src="/assets/images/logo_4.svg"
-            alt="loto"
-            width={45}
-            height={45}
-          />
-          <p className="font-semibold ml-1 text-base">BugBard</p>
-        </Link>
+
         <Link to={`/profile/${user?.id}`} className="flex gap-3 items-center">
           <img
             src={user?.imageUrl || "/assets/icons/profile-placeholder.svg"}

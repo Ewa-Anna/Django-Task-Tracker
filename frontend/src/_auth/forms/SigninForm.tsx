@@ -37,18 +37,20 @@ const {dispatch}=useAuthContext()
     },
   });
 
+  const mutation = useMutation(loginUser,{
+    onSuccess:(data)=>{
+      localStorage.setItem('user', JSON.stringify(data))
+      localStorage.setItem('token', data.csrf_token)
 
-const mutation = useMutation(loginUser,{
-  onSuccess:(data)=>{
-    localStorage.setItem('token', data.csrf_token);
-dispatch({type:"LOGIN",payload:data})
-    
-    // navigate("/")
-  },
-  onError:(error)=>{
-console.log(error)
-  }
-})
+  dispatch({type:"LOGIN",payload:data})
+
+      
+      // navigate("/")
+    },
+    onError:(error)=>{
+  console.log(error)
+    }
+  })
 
   // 2. Define a submit handler.
    function onSubmit(values: z.infer) {
