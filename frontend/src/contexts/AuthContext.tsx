@@ -1,5 +1,5 @@
 import Toast from "@/components/ui/shared/Toast";
-import clientApi from "@/features/axios/axios";
+import clientApi, { cookiesMap } from "@/features/axios/axios";
 import { authReducer } from "@/reducers/authReducer";
 import React, { useEffect, useReducer, useState } from "react";
 import { useContext } from "react";
@@ -26,12 +26,17 @@ export const AuthContextProvider = ({
   const navigate=useNavigate()
   const [state,dispatch]=useReducer(authReducer,{user:null})
   const checkUserToken = () => {
-    const userToken = localStorage.getItem("token");
+    const userString = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
 
-    if (userToken) {
-      dispatch({ type: "LOGIN", payload: { userToken} });
+
+    if (userString && token) {
+      const user = JSON.parse(userString);
+
+      dispatch({ type: "LOGIN", payload: { user} });
+
     }
-else if(!userToken|| userToken==="null"|| userToken==="undefined"){
+else if(!userString|| userString==="null"|| userString==="undefined"){
   dispatch({type:"LOGOUT",payload:{user:null}})
   navigate("/sign-in")
 }
