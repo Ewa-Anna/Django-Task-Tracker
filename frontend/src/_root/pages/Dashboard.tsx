@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   return (
-    <div className=" w-full px-14 pt-4 mt-12 h-full overflow-scroll custom-scrollbar ">
+    <div className=" w-full px-14 pt-4 mt-6 h-full overflow-scroll custom-scrollbar ">
       <div className="w-full h-auto grid grid-cols-60-40  ">
         <div className="flex flex-col border-r border-dark-3 pr-12  ">
           <h2 className="text-2xl mb-6">Dashboard</h2>
@@ -96,7 +96,7 @@ const Dashboard = () => {
           {/* BOTTOm */}
           <div className="flex justify-between mb-7 mt-14  ">
             <div className="flex gap-8 items-center">
-              <h3 className="text-3xl font-semibold">Last Reports</h3>
+              <h3 className="text-3xl font-semibold">Latest Reports</h3>
               <span className="text-sm">View More</span>
             </div>
 
@@ -435,14 +435,14 @@ const Dashboard = () => {
 
           {/* BOTTOM END */}
         </div>
-        <div className="px-6">
+        <div className="px-5">
           <DonutChart header={"Report statistics"} />
 
           <div className="h-3/5 py-2 px-3 mt-2">
             <div className="">
               <h3 className="text-2xl">Activity</h3>
             </div>
-            <p className="mt-1">Recent activity across all projects</p>
+            <p className="mt-1">Latest activity across all projects</p>
             <div className=" flex flex-col gap-1 mt-3">
               <div className="border-2 border-dark-3 rounded-[6px] py-3 flex justify-between">
                 <div className="w-1/4 flex items-center justify-center text-slate-300">

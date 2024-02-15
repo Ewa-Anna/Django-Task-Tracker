@@ -25,20 +25,10 @@ const logout = ()=>{
 
 
   return (
-    <nav className="leftsidebar">
+    <nav className="mobile_leftsidebar">
       <div className="flex flex-col gap-11">
 
-        <Link to={`/profile/${user?.id}`} className="flex gap-3 items-center">
-          <img
-            src={user?.imageUrl || "/assets/icons/profile-placeholder.svg"}
-            alt="profile"
-            className="h-14 w-14 rounder-full"
-          />
-          <div className="flex flex-col">
-            <p className="body-bold">{user?.first_name}</p>
-            <p className="small-regular text-light-3">{user?.role}</p>
-          </div>
-        </Link>
+ 
         <ul className="flex flex-col gap-6">
           {sidebarLinks.map((link: INavLink) => {
             const isActive = pathname === link.route;
@@ -55,15 +45,15 @@ const logout = ()=>{
                   className="flex gap-4 items-center p-4"
                 >
                   <img
-                  width={22}
-                  height={22}
+                  width={28}
+                  height={28}
                     src={link.imgURL}
                     alt="link-label"
                     className={`group-hover:invert-white ${
                       isActive && "invert-white"
                     }`}
                   />
-                  {link.label}
+                 
              
                 </NavLink>
               </li>
@@ -77,8 +67,9 @@ const logout = ()=>{
         onClick={() => logout()}
       >
         <img src="/assets/icons/logout.svg" alt="logout" />
-        <p className="small-medium">Logout</p>
+        
       </Button>
+     x
     </nav>
   );
 };

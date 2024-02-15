@@ -112,7 +112,7 @@ html {
   }
 
   .common-container {
-    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-20 custom-scrollbar;
+    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-20 px-5 md:px-8 lg:p-20 custom-scrollbar;
   }
 
   /* All Users */
@@ -222,7 +222,11 @@ html {
 
   /* Left sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2;
+    @apply hidden md:flex px-6 pt-10 pb-28 flex-col justify-between min-w-[270px] bg-dark-2;
+  }
+
+  .mobile_leftsidebar {
+    @apply flex md:hidden px-1 py-10 flex-col justify-between min-w-[50px] bg-dark-2;
   }
 
   .leftsidebar-link {
@@ -240,7 +244,7 @@ html {
 
   /* Topbar */
   .topbar {
-    @apply sticky top-0 z-50 md:hidden bg-dark-2 w-full;
+    @apply sticky top-0 z-50  bg-dark-2 w-full ;
   }
 
   /* User card */
