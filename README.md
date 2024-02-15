@@ -32,6 +32,11 @@ Running Docker Container
 ` docker-compose up -d `
 
 
+## Tests
+Backend
+
+` pytest backend/ --import-mode=importlib `
+
 ## Features
 
 
