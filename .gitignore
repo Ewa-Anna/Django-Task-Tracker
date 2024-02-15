@@ -12,6 +12,8 @@ backend/pylint/
 backend/media/
 db.txt
 
+.pytest_cache
+
 # Logs
 logs
 *.log
