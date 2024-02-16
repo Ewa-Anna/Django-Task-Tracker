@@ -33,6 +33,25 @@ class AssigneeSerializer(serializers.Serializer):
 class ProjectCreateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(write_only=True, required=False)
 
+    def validate_assignees(self, value):
+        max_assignees = 10
+
+        if len(value) > max_assignees:
+            raise serializers.ValidationError(
+                f"Maximum {max_assignees} assignees allowed for the project.")
+
+        return value
+
+    def validate_deadline(self, value):
+        today = timezone.now()
+
+        if value <= today:
+            raise serializers.ValidationError(
+                "The deadline must be set to a future date."
+            )
+
+        return value
+
     class Meta:
         model = Project
         fields = [
@@ -76,16 +95,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = "__all__"
 
-    def validate_deadline(self, value):
-        today = timezone.now()
-
-        if value <= today:
-            raise serializers.ValidationError(
-                "The deadline must be set to a future date."
-            )
-
-        return value
-
     def create(self, validated_data):
         assignees_data = validated_data.pop("assignees", [])
         project = Project.objects.create(**validated_data)
@@ -118,6 +127,30 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     #     return value
 
+
+class TaskCreateSerializer(serializers.ModelSerializer):
+    
+    def validate_assignees(self, value):
+        max_assignees = 10
+
+        if len(value) > max_assignees:
+            raise serializers.ValidationError(
+                f"Maximum {max_assignees} assignees allowed for the task.")
+
+        return value
+
+    class Meta:
+        model = Task
+        fields = [
+            "assignees",
+            "title",
+            "description",
+            "priority",
+            "status",
+            "type",
+            "project",
+            "archive",
+        ]
 
 class TaskSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True, source="owner")
@@ -154,10 +187,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
         task.assignees.set(assignees)
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["owner"] = OwnerSerializer(instance.owner).data
-        return representation
 
 
 class CommentSerializer(serializers.ModelSerializer):

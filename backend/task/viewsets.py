@@ -15,6 +15,7 @@ from .serializers import (
     ProjectSerializer,
     ProjectCreateSerializer,
     TaskSerializer,
+    TaskCreateSerializer,
     CommentSerializer,
     AttachmentSerializer,
 )
@@ -203,7 +204,12 @@ class TaskViewSet(viewsets.ModelViewSet):
         "PATCH": ["member", "manager", "admin"],
         "DELETE": ["admin"],
     }
-
+    
+    def get_serializer_class(self):
+        if self.action == "create":
+            return TaskCreateSerializer
+        return TaskSerializer
+    
     @action(detail=False, methods=["get"])
     def task(self, request):
         title = request.query_params.get("title")
@@ -267,7 +273,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
             return Response(response_data, status=status.HTTP_201_CREATED)
         except Exception as e:
-            response_data = {"success": False, "message": "Error creating ticket."}
+            response_data = {"success": False, "message": f"Error creating ticket: {e}."}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):

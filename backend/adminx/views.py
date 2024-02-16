@@ -109,7 +109,7 @@ class LastActivity(ListAPIView):
 
     def get_queryset(self):
         newest_tasks = Task.objects.order_by("-created")[:2]
-        newest_projects = Project.objects.order_by("-created")[:2]
+        newest_projects = Project.objects.filter(visibility="public").order_by("-created")[:2]
 
         queryset = list(chain(newest_tasks, newest_projects))
 
