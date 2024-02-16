@@ -47,12 +47,14 @@ def adminuser_data():
         "role": "admin",
     }
 
+
 @pytest.fixture
 def admin_authenticated_api_client(api_client, adminuser_data):
     admin = CustomUser.objects.create_user(**adminuser_data)
     api_client.force_authenticate(user=admin)
     yield api_client
     api_client.force_authenticate(user=None)
+
 
 @pytest.fixture
 def cleanup_database():

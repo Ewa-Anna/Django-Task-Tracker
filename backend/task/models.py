@@ -119,9 +119,7 @@ class Task(models.Model):
 
     class Meta:
         ordering = ["-created", "priority", "status"]
-        indexes = [
-            models.Index(fields=["title", "project", "priority", "status"])
-        ]
+        indexes = [models.Index(fields=["title", "project", "priority", "status"])]
 
     def __str__(self):
         return f"{self.title} for {self.project}"

@@ -20,6 +20,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
 class LastActivitySerializer(serializers.ModelSerializer):
     task = TaskSerializer(read_only=True)
     project = ProjectSerializer(read_only=True)
+
     class Meta:
         model = Task
         fields = "__all__"

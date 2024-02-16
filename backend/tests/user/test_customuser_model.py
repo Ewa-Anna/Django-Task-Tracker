@@ -36,7 +36,9 @@ def test_create_user(admin_authenticated_api_client):
         "role": "guest",
     }
     json_data = json.dumps(user2)
-    response = admin_authenticated_api_client.post(f"/task-tracker/v1/user/users/", json_data, content_type="application/json")
+    response = admin_authenticated_api_client.post(
+        f"/task-tracker/v1/user/users/", json_data, content_type="application/json"
+    )
     assert response.status_code == status.HTTP_201_CREATED
     assert CustomUser.objects.count() == 1
 
