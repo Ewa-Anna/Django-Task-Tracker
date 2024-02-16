@@ -13,11 +13,9 @@ PRIORITY = [
 ]
 
 STATUS = [
-    ("blocked", "Blocked"),
     ("pending", "Pending"),
-    ("assigned", "Assigned"),
-    ("in_progress", "In Progress"),
-    ("completed", "Completed"),
+    ("open", "Open"),
+    ("closed", "Closed"),
     ("cancelled", "Cancelled"),
 ]
 
@@ -95,12 +93,7 @@ class Task(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, related_name="related_projects"
     )
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        related_name="owned_tasks",
-        null=True,
-    )
+
     assignees = models.ManyToManyField(
         CustomUser, related_name="assigned_tasks", blank=True
     )
@@ -126,9 +119,7 @@ class Task(models.Model):
 
     class Meta:
         ordering = ["-created", "priority", "status"]
-        indexes = [
-            models.Index(fields=["title", "owner", "project", "priority", "status"])
-        ]
+        indexes = [models.Index(fields=["title", "project", "priority", "status"])]
 
     def __str__(self):
         return f"{self.title} for {self.project}"

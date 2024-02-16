@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import status
 
+
 CustomUser = get_user_model()
 
 
@@ -20,6 +21,26 @@ def test_get_user(authenticated_api_client, user_data):
     assert response.data["email"] == user.email
     assert response.data["first_name"] == "Test"
     assert "profile" in response.data
+
+
+@pytest.mark.django_db
+@pytest.mark.xfail
+def test_create_user(admin_authenticated_api_client):
+    user2 = {
+        "username": "test2@example.com",
+        "first_name": "Test2",
+        "last_name": "User2",
+        "email": "test2@example.com",
+        "password": "password123",
+        "theme": "dark_blue",
+        "role": "guest",
+    }
+    json_data = json.dumps(user2)
+    response = admin_authenticated_api_client.post(
+        f"/task-tracker/v1/user/users/", json_data, content_type="application/json"
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    assert CustomUser.objects.count() == 1
 
 
 @pytest.mark.django_db

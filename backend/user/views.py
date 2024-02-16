@@ -64,6 +64,7 @@ class LoginView(APIView):
             "bio": profile.bio,
             "photo": profile.photo,
             "birthdate": profile.birthdate,
+            "gender": profile.gender,
             "csrf_token": request.META.get("CSRF_COOKIE"),
         }
 
@@ -212,6 +213,7 @@ class DashboardView(APIView):
             "bio": profile.bio,
             "photo": profile.photo,
             "birthdate": profile.birthdate,
+            "gender": profile.gender,
         }
 
         projects = Project.objects.filter(owner=user)
@@ -245,6 +247,7 @@ class DashboardView(APIView):
         profile.bio = request.data.get("bio", profile.bio)
         profile.photo = request.data.get("photo", profile.photo)
         profile.birthdate = request.data.get("birthdate", profile.birthdate)
+        profile.gender = request.data.get("gender", profile.gender)
 
         profile.save()
 
@@ -254,6 +257,7 @@ class DashboardView(APIView):
             "bio": profile.bio,
             "photo": profile.photo,
             "birthdate": profile.birthdate,
+            "gender": profile.gender,
         }
 
         return Response(updated_data, status=status.HTTP_200_OK)

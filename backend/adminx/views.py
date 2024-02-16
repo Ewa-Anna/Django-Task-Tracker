@@ -1,14 +1,24 @@
+from itertools import chain
+
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
+from django.db.models import Count
 
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import SessionAuthentication
 
 from .models import ChangeLog, ContactForm
-from .serializers import ChangeLogSerializer, ContactFormSerializer
+from .serializers import (
+    ChangeLogSerializer,
+    ContactFormSerializer,
+    LastActivitySerializer,
+)
+from task.serializers import TaskSerializer
+from task.models import Task, Project
 from user.permissions import CustomPermission
 
 
@@ -91,3 +101,35 @@ class ContactFormView(APIView):
         if self.request.method == "POST":
             return [AllowAny()]
         return super().get_permissions()
+
+
+class LastActivity(ListAPIView):
+    serializer_class = LastActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        newest_tasks = Task.objects.order_by("-created")[:2]
+        newest_projects = Project.objects.order_by("-created")[:2]
+
+        queryset = list(chain(newest_tasks, newest_projects))
+
+        queryset.sort(key=lambda x: x.created, reverse=True)
+
+        return queryset
+
+
+class TaskStatistics(ListAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        all_tasks = Task.objects.all()
+        user_tasks = Task.objects.filter(assignees=self.request.user)
+
+        all_tasks_counts = all_tasks.values("type").annotate(count=Count("type"))
+        user_tasks_counts = user_tasks.values("type").annotate(count=Count("type"))
+
+        all_tasks_data = {task["type"]: task["count"] for task in all_tasks_counts}
+        user_tasks_data = {task["type"]: task["count"] for task in user_tasks_counts}
+
+        return Response({"AllTasks": all_tasks_data, "UserTasks": user_tasks_data})
