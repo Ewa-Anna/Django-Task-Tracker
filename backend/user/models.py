@@ -18,6 +18,12 @@ THEMES = [
     ("light_blue", "Light Blue"),
 ]
 
+GENDER = [
+    ("male", "Male"),
+    ("female", "Female"),
+    ("empty", "Prefer not to say"),
+]
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -91,6 +97,7 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     photo = models.URLField(blank=True)
     birthdate = models.DateField(blank=True, null=True, verbose_name="Date of Birth")
+    gender = models.CharField(max_length=20, choices=GENDER, blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

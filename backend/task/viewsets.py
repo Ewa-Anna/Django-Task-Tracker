@@ -212,7 +212,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         status = request.query_params.get("status")
         type = request.query_params.get("type")
         project = request.query_params.get("project")
-        owner = request.query_params.get("owner")
         assignees = request.query_params.get("assignees")
 
         queryset = Task.objects.all()
@@ -235,9 +234,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         if project:
             queryset = queryset.filter(project=project)
 
-        if owner:
-            queryset = queryset.filter(owner__username=owner)
-
         if assignees:
             assignee_list = assignees.split(",")
             queryset = queryset.filter(assignees__username__in=assignee_list)
@@ -248,7 +244,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         return paginator.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user, created_by=self.request.user)
+        serializer.save(created_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
@@ -266,7 +262,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(owner=request.user, created_by=request.user)
+            serializer.save(created_by=request.user)
             response_data = {"success": True, "message": "Task created successfully."}
 
             return Response(response_data, status=status.HTTP_201_CREATED)

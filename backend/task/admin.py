@@ -8,7 +8,6 @@ class TaskAdmin(admin.ModelAdmin):
         "priority",
         "status",
         "project",
-        "owner",
         "archive",
         "created",
         "updated",
@@ -17,7 +16,6 @@ class TaskAdmin(admin.ModelAdmin):
         "priority",
         "status",
         "project",
-        "owner",
         "assignees",
         "archive",
     )
@@ -27,7 +25,6 @@ class TaskAdmin(admin.ModelAdmin):
         "priority",
         "status",
         "project",
-        "owner",
         "assignees",
         "archive",
     )

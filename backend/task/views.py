@@ -62,15 +62,6 @@ class ProjectAssigneeList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TaskOwnerList(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        owned_tasks = Task.objects.filter(owner=request.user)
-        serializer = TaskSerializer(owned_tasks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class TaskAssigneeList(APIView):
     permission_classes = [IsAuthenticated]
 
