@@ -17,3 +17,10 @@ export const getTicketPriorityOptions = async () => {
   const response = await clientApi.get("task/dropdown-list/priority");
   return response.data;
 };
+
+
+export const getReportStatistics= async()=>{
+
+const response = await clientApi.get("adminx/task-statistics/?limit=22");
+return response.data;
+}
