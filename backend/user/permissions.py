@@ -6,10 +6,6 @@ class CustomPermission(BasePermission):
         required_roles = getattr(view, "required_roles", {})
         user = request.user
 
-        if not IsAuthenticated().has_permission(request, view):
-            return False
-
-        if user.role in required_roles.get(request.method, []):
-            return True
-        else:
-            return False
+        return IsAuthenticated().has_permission(
+            request, view
+        ) and user.role in required_roles.get(request.method, [])

@@ -5,6 +5,7 @@ User = get_user_model()
 
 
 class EmailBackend(ModelBackend):
+    # pylint: disable=arguments-renamed
     def authenticate(self, request, email=None, password=None, **kwargs):
         try:
             user = User.objects.get(email=email)

@@ -106,6 +106,12 @@ class LoginSerializer(serializers.Serializer):
         attrs["user"] = user
         return attrs
 
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(write_only=True, required=True)
@@ -150,13 +156,10 @@ class CustomPasswordTokenSerializer(PasswordValidateMixin, serializers.ModelSeri
         model = CustomUser
         fields = ["password", "confirm_password", "token"]
 
-    def validate(self, attrs):
-        if attrs["password"] != attrs["confirm_password"]:
-            raise serializers.ValidationError({"password": "Passwords do not match."})
-        return attrs
 
-
-class PasswordTokenSerializer(PasswordTokenSerializer, serializers.ModelSerializer):
+class CustomPasswordActivateSerializer(
+    PasswordTokenSerializer, serializers.ModelSerializer
+):
     password = serializers.CharField(label="Password", write_only=True, required=True)
     confirm_password = serializers.CharField(
         label="Confirm password", write_only=True, required=True

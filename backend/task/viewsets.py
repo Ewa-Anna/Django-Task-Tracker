@@ -10,24 +10,36 @@ from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from user.permissions import CustomPermission
+
+# pylint: disable=import-error, no-name-in-module
+from backend.pagination import (
+    CustomPagination,
+)
+
 from .models import Project, Task, Comment, Attachment
 from .serializers import (
     ProjectSerializer,
     ProjectCreateSerializer,
     TaskSerializer,
+    TaskCreateSerializer,
     CommentSerializer,
     AttachmentSerializer,
 )
-from user.permissions import CustomPermission
-from backend.pagination import CustomPagination
+from .utils import handle_permission_denied
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for project.
+    """
+
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
     permission_classes = [IsAuthenticated, CustomPermission]
 
+    # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
         "POST": ["manager", "admin"],
@@ -143,10 +155,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 
@@ -169,6 +178,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             response_data = {"success": False, "message": e.detail}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
+        # pylint: disable=broad-except
         except Exception as e:
             response_data = {
                 "success": False,
@@ -191,6 +201,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class TaskViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for task.
+    """
+
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     pagination_class = CustomPagination
@@ -204,13 +218,18 @@ class TaskViewSet(viewsets.ModelViewSet):
         "DELETE": ["admin"],
     }
 
+    def get_serializer_class(self):
+        if self.action == "create":
+            return TaskCreateSerializer
+        return TaskSerializer
+
     @action(detail=False, methods=["get"])
     def task(self, request):
         title = request.query_params.get("title")
         description = request.query_params.get("description")
         priority = request.query_params.get("priority")
         status = request.query_params.get("status")
-        type = request.query_params.get("type")
+        task_type = request.query_params.get("type")
         project = request.query_params.get("project")
         assignees = request.query_params.get("assignees")
 
@@ -228,8 +247,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         if status:
             queryset = queryset.filter(status=status)
 
-        if type:
-            queryset = queryset.filter(type=type)
+        if task_type:
+            queryset = queryset.filter(task_type=task_type)
 
         if project:
             queryset = queryset.filter(project=project)
@@ -251,10 +270,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 
@@ -266,8 +282,13 @@ class TaskViewSet(viewsets.ModelViewSet):
             response_data = {"success": True, "message": "Task created successfully."}
 
             return Response(response_data, status=status.HTTP_201_CREATED)
+
+        # pylint: disable=broad-except
         except Exception as e:
-            response_data = {"success": False, "message": "Error creating ticket."}
+            response_data = {
+                "success": False,
+                "message": f"Error creating ticket: {e}.",
+            }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
@@ -285,6 +306,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for comment.
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = CustomPagination
@@ -328,10 +353,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 
@@ -350,6 +372,10 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class AttachmentViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for attachement.
+    """
+
     queryset = Attachment.objects.all()
     serializer_class = AttachmentSerializer
     permission_classes = [IsAuthenticated, CustomPermission]

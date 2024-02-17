@@ -8,10 +8,16 @@ from .serializers import CustomTagSerializer
 
 
 class CustomTagViewSet(viewsets.ModelViewSet):
+    """
+    This viewset allows to add new tags and get a list of already existing ones.
+    Also allows to return tag with given id, to update one or to delete it.
+    """
+
     queryset = CustomTags.objects.all()
     serializer_class = CustomTagSerializer
     permission_classes = [IsAuthenticated, CustomPermission]
 
+    # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
         "POST": ["admin"],

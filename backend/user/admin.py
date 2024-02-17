@@ -10,6 +10,7 @@ admin.site.unregister(Group)
 
 class CustomUserAdmin(UserAdmin):
     list_display = (
+        "id",
         "username",
         "email",
         "first_name",

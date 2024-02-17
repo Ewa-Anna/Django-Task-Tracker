@@ -61,6 +61,8 @@ def cleanup_database():
     yield
     with connection.cursor() as cursor:
         cursor.execute("SET CONSTRAINTS ALL DEFERRED;")
+
+        # pylint: disable=consider-using-f-string
         cursor.execute(
             "TRUNCATE TABLE {};".format(
                 ", ".join(

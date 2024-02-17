@@ -2,10 +2,11 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
-from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
 from user.serializers import ProfileSerializer
 from tags.serializers import CustomTagSerializer
+
+from .models import Project, Task, Comment, Attachment
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -29,9 +30,35 @@ class AssigneeSerializer(serializers.Serializer):
     role = serializers.CharField(required=False)
     profile = ProfileSerializer(read_only=True)
 
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(write_only=True, required=False)
+
+    def validate_assignees(self, value):
+        max_assignees = 10
+
+        if len(value) > max_assignees:
+            raise serializers.ValidationError(
+                f"Maximum {max_assignees} assignees allowed for the project."
+            )
+
+        return value
+
+    def validate_deadline(self, value):
+        today = timezone.now()
+
+        if value <= today:
+            raise serializers.ValidationError(
+                "The deadline must be set to a future date."
+            )
+
+        return value
 
     class Meta:
         model = Project
@@ -59,6 +86,9 @@ class CustomCreatedBySerializer(serializers.StringRelatedField):
             }
         return None
 
+    def to_internal_value(self, data):
+        pass
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True)
@@ -75,16 +105,6 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = "__all__"
-
-    def validate_deadline(self, value):
-        today = timezone.now()
-
-        if value <= today:
-            raise serializers.ValidationError(
-                "The deadline must be set to a future date."
-            )
-
-        return value
 
     def create(self, validated_data):
         assignees_data = validated_data.pop("assignees", [])
@@ -117,6 +137,31 @@ class ProjectSerializer(serializers.ModelSerializer):
     #         )
 
     #     return value
+
+
+class TaskCreateSerializer(serializers.ModelSerializer):
+    def validate_assignees(self, value):
+        max_assignees = 110
+
+        if len(value) > max_assignees:
+            raise serializers.ValidationError(
+                f"Maximum {max_assignees} assignees allowed for the task."
+            )
+
+        return value
+
+    class Meta:
+        model = Task
+        fields = [
+            "assignees",
+            "title",
+            "description",
+            "priority",
+            "status",
+            "type",
+            "project",
+            "archive",
+        ]
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -154,11 +199,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
         task.assignees.set(assignees)
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["owner"] = OwnerSerializer(instance.owner).data
-        return representation
-
 
 class CommentSerializer(serializers.ModelSerializer):
     created_by = CustomCreatedBySerializer(
@@ -182,3 +222,9 @@ class AttachmentSerializer(serializers.ModelSerializer):
 class DictionaryContentSerializer(serializers.Serializer):
     dictionary_name = serializers.CharField(max_length=255)
     content = serializers.DictField()
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass

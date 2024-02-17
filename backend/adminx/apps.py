@@ -6,4 +6,5 @@ class AdminxConfig(AppConfig):
     name = "adminx"
 
     def ready(self):
+        # pylint: disable=import-outside-toplevel, unused-import
         import adminx.signals

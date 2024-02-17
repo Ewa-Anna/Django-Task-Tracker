@@ -4,6 +4,7 @@ from task.models import Task, Project, Comment, Attachment
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "priority",
         "status",
@@ -32,6 +33,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "deadline",
         "owner",
@@ -59,7 +61,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("text", "project", "task", "created", "updated")
+    list_display = ("id", "text", "project", "task", "created", "updated")
     list_filter = (
         "project",
         "task",

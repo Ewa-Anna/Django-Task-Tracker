@@ -1,5 +1,5 @@
-import pytest
 import json
+import pytest
 
 from django.contrib.auth import get_user_model
 
@@ -37,7 +37,7 @@ def test_create_user(admin_authenticated_api_client):
     }
     json_data = json.dumps(user2)
     response = admin_authenticated_api_client.post(
-        f"/task-tracker/v1/user/users/", json_data, content_type="application/json"
+        "/task-tracker/v1/user/users/", json_data, content_type="application/json"
     )
     assert response.status_code == status.HTTP_201_CREATED
     assert CustomUser.objects.count() == 1
