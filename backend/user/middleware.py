@@ -5,7 +5,7 @@ from django.utils.timezone import now
 User = get_user_model()
 
 
-class SetLastUserLoggin(object):
+class SetLastUserLoggin:
     def __init__(self, get_response):
         self.get_response = get_response
 

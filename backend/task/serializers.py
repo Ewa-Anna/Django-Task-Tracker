@@ -2,10 +2,11 @@ from django.utils import timezone
 
 from rest_framework import serializers
 
-from .models import Project, Task, Comment, Attachment
 from user.models import CustomUser
 from user.serializers import ProfileSerializer
 from tags.serializers import CustomTagSerializer
+
+from .models import Project, Task, Comment, Attachment
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -28,6 +29,12 @@ class AssigneeSerializer(serializers.Serializer):
     email = serializers.EmailField()
     role = serializers.CharField(required=False)
     profile = ProfileSerializer(read_only=True)
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
@@ -78,6 +85,9 @@ class CustomCreatedBySerializer(serializers.StringRelatedField):
                 "photo": value.profile.photo,
             }
         return None
+
+    def to_internal_value(self, data):
+        pass
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -212,3 +222,9 @@ class AttachmentSerializer(serializers.ModelSerializer):
 class DictionaryContentSerializer(serializers.Serializer):
     dictionary_name = serializers.CharField(max_length=255)
     content = serializers.DictField()
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass

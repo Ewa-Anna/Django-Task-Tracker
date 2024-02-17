@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
-from .models import ChangeLog, ContactForm
 from task.models import Task
 from task.serializers import TaskSerializer, ProjectSerializer
+
+from .models import ChangeLog, ContactForm
 
 
 class ChangeLogSerializer(serializers.ModelSerializer):

@@ -14,6 +14,9 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
+from task.models import Project, Task
+from task.serializers import ProjectSerializer, TaskSerializer
+
 from .serializers import (
     UserSerializer,
     LoginSerializer,
@@ -21,8 +24,6 @@ from .serializers import (
     CustomPasswordTokenSerializer,
 )
 from .models import Profile
-from task.models import Project, Task
-from task.serializers import ProjectSerializer, TaskSerializer
 
 
 User = get_user_model()
@@ -116,6 +117,7 @@ class RegistrationView(generics.CreateAPIView):
             email = EmailMessage(mail_subject, message, to=[user.email])
             email.send()
 
+        # pylint: disable=broad-exception-caught
         except Exception as e:
             print(f"Error sending email: {e}")
 
@@ -169,6 +171,7 @@ class ActivationUserEmailView(APIView):
         try:
             uid = force_bytes(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
+
             if default_token_generator.check_token(user, token):
                 user.is_active = True
                 user.save()
@@ -176,11 +179,12 @@ class ActivationUserEmailView(APIView):
                     {"detail": "Your account has been activated. You can now log in."},
                     status=status.HTTP_200_OK,
                 )
-            else:
-                return Response(
-                    {"detail": "Activation link is invalid or expired."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+
+            return Response(
+                {"detail": "Activation link is invalid or expired."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             return Response(
                 {"detail": "Activation link is invalid or expired."},
@@ -222,7 +226,8 @@ class CustomPasswordTokenView(ResetPasswordConfirm, generics.GenericAPIView):
 class DashboardView(APIView):
     """
     This view allows listing data for the user's profile and permits editing them.
-    Additionally, it returns a list of projects owned by the user, projects assigned to the user, and assigned tasks.
+    Additionally, it returns a list of projects owned by the user,
+    projects assigned to the user, and assigned tasks.
     """
 
     permission_classes = [IsAuthenticated]

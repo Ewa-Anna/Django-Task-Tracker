@@ -9,6 +9,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
+from user.models import ROLES, THEMES, GENDER
+from user.permissions import CustomPermission
+
 from .serializers import (
     DictionaryContentSerializer,
     TaskSerializer,
@@ -16,8 +19,7 @@ from .serializers import (
     CommentSerializer,
 )
 from .models import PRIORITY, STATUS, VISIBILITY, Project, TYPE, Task, Comment
-from user.models import ROLES, THEMES, GENDER
-from user.permissions import CustomPermission
+from .utils import handle_permission_denied
 
 
 class DictionaryContentView(APIView):
@@ -106,7 +108,7 @@ class ProjectDeleteView(APIView):
     """
 
     permission_classes = [IsAuthenticated, CustomPermission]
-
+    # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
         "POST": ["manager", "admin"],
@@ -117,10 +119,7 @@ class ProjectDeleteView(APIView):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 
@@ -130,7 +129,10 @@ class ProjectDeleteView(APIView):
             tasks = project.related_projects.all()
             task_serializer = TaskSerializer(tasks, many=True)
 
-            message = f"Are you sure you want to delete project '{project.title}' with the following tasks?"
+            message = (
+                f"Are you sure you want to delete project '{project.title}' "
+                f"with the following tasks?"
+            )
             return Response({"message": message, "tasks": task_serializer.data})
         except Project.DoesNotExist:
             return Response(

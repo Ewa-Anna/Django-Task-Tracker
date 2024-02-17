@@ -22,6 +22,7 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, CustomPermission]
 
+    # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
         "POST": ["admin"],

@@ -10,6 +10,13 @@ from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from user.permissions import CustomPermission
+
+# pylint: disable=import-error, no-name-in-module
+from backend.pagination import (
+    CustomPagination,
+)
+
 from .models import Project, Task, Comment, Attachment
 from .serializers import (
     ProjectSerializer,
@@ -19,8 +26,7 @@ from .serializers import (
     CommentSerializer,
     AttachmentSerializer,
 )
-from user.permissions import CustomPermission
-from backend.pagination import CustomPagination
+from .utils import handle_permission_denied
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -33,6 +39,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     permission_classes = [IsAuthenticated, CustomPermission]
 
+    # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
         "POST": ["manager", "admin"],
@@ -148,10 +155,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 
@@ -174,6 +178,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             response_data = {"success": False, "message": e.detail}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
+        # pylint: disable=broad-except
         except Exception as e:
             response_data = {
                 "success": False,
@@ -224,7 +229,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         description = request.query_params.get("description")
         priority = request.query_params.get("priority")
         status = request.query_params.get("status")
-        type = request.query_params.get("type")
+        task_type = request.query_params.get("type")
         project = request.query_params.get("project")
         assignees = request.query_params.get("assignees")
 
@@ -242,8 +247,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         if status:
             queryset = queryset.filter(status=status)
 
-        if type:
-            queryset = queryset.filter(type=type)
+        if task_type:
+            queryset = queryset.filter(task_type=task_type)
 
         if project:
             queryset = queryset.filter(project=project)
@@ -265,10 +270,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 
@@ -280,6 +282,8 @@ class TaskViewSet(viewsets.ModelViewSet):
             response_data = {"success": True, "message": "Task created successfully."}
 
             return Response(response_data, status=status.HTTP_201_CREATED)
+
+        # pylint: disable=broad-except
         except Exception as e:
             response_data = {
                 "success": False,
@@ -349,10 +353,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def handle_exception(self, exc):
         if isinstance(exc, PermissionDenied):
-            response_data = {
-                "detail": "You do not have permission to perform this action. If this is a mistake, please contact your administrator to acquire permission."
-            }
-            return Response(response_data, status=status.HTTP_403_FORBIDDEN)
+            return handle_permission_denied()
 
         return super().handle_exception(exc)
 

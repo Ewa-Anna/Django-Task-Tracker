@@ -1,4 +1,5 @@
 from itertools import chain
+from smtplib import SMTPException, SMTPAuthenticationError
 
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
@@ -11,15 +12,16 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import SessionAuthentication
 
+from task.serializers import TaskSerializer
+from task.models import Task, Project
+from user.permissions import CustomPermission
+
 from .models import ChangeLog, ContactForm
 from .serializers import (
     ChangeLogSerializer,
     ContactFormSerializer,
     LastActivitySerializer,
 )
-from task.serializers import TaskSerializer
-from task.models import Task, Project
-from user.permissions import CustomPermission
 
 
 User = get_user_model()
@@ -27,7 +29,8 @@ User = get_user_model()
 
 class ChangeLogView(APIView):
     """
-    This view allows user to retrieve changes made in the database for projects, tasks, and comments.
+    This view allows user to retrieve changes made in the database for
+    projects, tasks, and comments.
     """
 
     permission_classes = [IsAuthenticated, CustomPermission]
@@ -95,14 +98,25 @@ class ContactFormView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def send_email_notification(self, data):
-        subject = f"Thank You for Contacting BugBard - Confirmation"
-        message = f"We received your message as follows:\n\nName: {data['name']}\nEmail: {data['email']}\nMessage: {data['message']}\n\nSomeone will contact you shortly.\n\nBest regards,\nBugBard Administration"
+        subject = "Thank You for Contacting BugBard - Confirmation"
+        message = (
+            f"We received your message as follows:\n\n"
+            f"Name: {data['name']}\n"
+            f"Email: {data['email']}\n"
+            f"Message: {data['message']}\n\n"
+            f"Someone will contact you shortly.\n\n"
+            f"Best regards,\n"
+            f"BugBard Administration"
+        )
 
         try:
             email = EmailMessage(subject, message, to=[data["email"]])
             email.send()
 
-        except Exception as e:
+        except SMTPAuthenticationError as e:
+            print(f"Error authenticating SMTP server: {e}")
+
+        except SMTPException as e:
             print(f"Error sending email: {e}")
 
     def get_permissions(self):

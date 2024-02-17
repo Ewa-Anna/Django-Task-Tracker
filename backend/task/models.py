@@ -75,11 +75,11 @@ class Project(models.Model):
         indexes = [models.Index(fields=["title", "owner", "deadline"])]
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
 
     def save(self, *args, **kwargs):
         user = kwargs.pop("user", None)
-        self.modified_by = user
+        self.updated_by = user
         super().save(*args, **kwargs)
 
 

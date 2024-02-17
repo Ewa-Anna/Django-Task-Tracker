@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import re_path
-from django.urls.conf import include, path
+from django.urls.conf import include
 
 from .viewsets import CustomTagViewSet
 

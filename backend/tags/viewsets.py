@@ -17,6 +17,7 @@ class CustomTagViewSet(viewsets.ModelViewSet):
     serializer_class = CustomTagSerializer
     permission_classes = [IsAuthenticated, CustomPermission]
 
+    # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
         "POST": ["admin"],
