@@ -38,7 +38,8 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
         if len(value) > max_assignees:
             raise serializers.ValidationError(
-                f"Maximum {max_assignees} assignees allowed for the project.")
+                f"Maximum {max_assignees} assignees allowed for the project."
+            )
 
         return value
 
@@ -129,13 +130,13 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):
-    
     def validate_assignees(self, value):
-        max_assignees = 10
+        max_assignees = 110
 
         if len(value) > max_assignees:
             raise serializers.ValidationError(
-                f"Maximum {max_assignees} assignees allowed for the task.")
+                f"Maximum {max_assignees} assignees allowed for the task."
+            )
 
         return value
 
@@ -151,6 +152,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             "project",
             "archive",
         ]
+
 
 class TaskSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True, source="owner")
@@ -186,7 +188,6 @@ class TaskSerializer(serializers.ModelSerializer):
                 assignees.append(assignee_serializer.save())
 
         task.assignees.set(assignees)
-
 
 
 class CommentSerializer(serializers.ModelSerializer):

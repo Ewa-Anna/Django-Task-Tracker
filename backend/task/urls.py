@@ -8,6 +8,9 @@ from .views import (
     ProjectOwnerList,
     ProjectAssigneeList,
     TaskAssigneeList,
+    ProjectTasksView,
+    CommentForTaskView,
+    ProjectStatistics,
 )
 from .viewsets import ProjectViewSet, TaskViewSet, CommentViewSet, AttachmentViewSet
 
@@ -49,7 +52,17 @@ urlpatterns = [
         name="project-task-detail",
     ),
     path(
+        "prj_task_statistics/<int:project_id>",
+        ProjectStatistics.as_view(),
+        name="project-task-statistics",
+    ),
+    path(
         "projects/<int:pk>/delete/", ProjectDeleteView.as_view(), name="project-delete"
+    ),
+    path(
+        "tasks_of_prj/<int:project_id>",
+        ProjectTasksView.as_view(),
+        name="tasks-of-a-pproject",
     ),
     path("list_of_prj_owned/", ProjectOwnerList.as_view(), name="project-owner-list"),
     path(
@@ -66,5 +79,10 @@ urlpatterns = [
         "dropdown-list/<str:dictionary_name>",
         DictionaryContentView.as_view(),
         name="dropdown-list",
+    ),
+    path(
+        "comment-for-tasks/<int:task_id>",
+        CommentForTaskView.as_view(),
+        name="comment-for-taskk",
     ),
 ]

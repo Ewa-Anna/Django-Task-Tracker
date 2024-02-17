@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 
+from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,13 +9,23 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import DictionaryContentSerializer, TaskSerializer, ProjectSerializer
-from .models import PRIORITY, STATUS, VISIBILITY, Project, TYPE, Task
-from user.models import ROLES, THEMES
+from .serializers import (
+    DictionaryContentSerializer,
+    TaskSerializer,
+    ProjectSerializer,
+    CommentSerializer,
+)
+from .models import PRIORITY, STATUS, VISIBILITY, Project, TYPE, Task, Comment
+from user.models import ROLES, THEMES, GENDER
 from user.permissions import CustomPermission
 
 
 class DictionaryContentView(APIView):
+    """
+    This view returns values for a drop down list for frontend.
+    Available options: priority, status, visibility, roles, themes, type, gender
+    """
+
     permission_classes = [AllowAny]
 
     def get(self, request, dictionary_name):
@@ -30,6 +42,8 @@ class DictionaryContentView(APIView):
             content = dict(THEMES)
         elif dictionary_name == "type":
             content = dict(TYPE)
+        elif dictionary_name == "gender":
+            content = dict(GENDER)
         else:
             return Response(
                 {"error": f"Dictionary with name {dictionary_name} not found"},
@@ -116,3 +130,38 @@ class ProjectDeleteView(APIView):
             return Response(
                 {"message": "Project not found"}, status=status.HTTP_404_NOT_FOUND
             )
+
+
+class ProjectTasksView(ListAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        project_id = self.kwargs.get("project_id")
+        return Task.objects.filter(project_id=project_id)
+
+
+class ProjectStatistics(APIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, project_id):
+        total_tasks = Task.objects.filter(project_id=project_id).count()
+        task_statistics = (
+            Task.objects.filter(project_id=project_id)
+            .values("type")
+            .annotate(total=Count("id"))
+        )
+        task_statistics = {stat["type"]: stat["total"] for stat in task_statistics}
+        response_data = {"total_tasks": total_tasks, "task_statistics": task_statistics}
+
+        return Response(response_data)
+
+
+class CommentForTaskView(ListAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        task_id = self.kwargs.get("task_id")
+        return Comment.objects.filter(task_id=task_id)
