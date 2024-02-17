@@ -29,6 +29,11 @@ User = get_user_model()
 
 
 class LoginView(APIView):
+    """
+    This view is for login purposes.
+    In reponse it returns basic user data.
+    """
+
     permission_classes = []
     authentication_classes = []
 
@@ -73,6 +78,10 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
+    """
+    This view is for logout purposes.
+    """
+
     permission_classes = [IsAuthenticated]
     authentication_classes = [SessionAuthentication]
 
@@ -84,6 +93,10 @@ class LogoutView(APIView):
 
 
 class RegistrationView(generics.CreateAPIView):
+    """
+    This view is for registration purposes.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
@@ -145,6 +158,10 @@ class RegistrationView(generics.CreateAPIView):
 
 
 class ActivationUserEmailView(APIView):
+    """
+    This view is for activation of user's email.
+    """
+
     permission_classes = []
     authentication_classes = []
 
@@ -172,12 +189,20 @@ class ActivationUserEmailView(APIView):
 
 
 class ChangePasswordView(generics.UpdateAPIView):
+    """
+    This view allows user to change their password.
+    """
+
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ChangePasswordSerializer
 
 
 class CustomPasswordTokenView(ResetPasswordConfirm, generics.GenericAPIView):
+    """
+    This view is for validating password update.
+    """
+
     queryset = User.objects.all()
     serializer_class = CustomPasswordTokenSerializer
     permission_classes = []
@@ -195,6 +220,11 @@ class CustomPasswordTokenView(ResetPasswordConfirm, generics.GenericAPIView):
 
 
 class DashboardView(APIView):
+    """
+    This view allows listing data for the user's profile and permits editing them.
+    Additionally, it returns a list of projects owned by the user, projects assigned to the user, and assigned tasks.
+    """
+
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
 
@@ -217,19 +247,21 @@ class DashboardView(APIView):
         }
 
         projects = Project.objects.filter(owner=user)
-        project_serializer = ProjectSerializer(projects, many=True)
+        project_serializer = ProjectSerializer(
+            projects, many=True, context={"request": request}
+        )
         user_data["projects"] = project_serializer.data
 
-        tasks = Task.objects.filter(owner=user)
-        task_serializer = TaskSerializer(tasks, many=True)
-        user_data["tasks"] = task_serializer.data
-
         assigned_projects = Project.objects.filter(assignees=user)
-        assigned_project_serializer = ProjectSerializer(assigned_projects, many=True)
+        assigned_project_serializer = ProjectSerializer(
+            assigned_projects, many=True, context={"request": request}
+        )
         user_data["assigned_projects"] = assigned_project_serializer.data
 
         assigned_tasks = Task.objects.filter(assignees=user)
-        assigned_task_serializer = TaskSerializer(assigned_tasks, many=True)
+        assigned_task_serializer = TaskSerializer(
+            assigned_tasks, many=True, context={"request": request}
+        )
         user_data["assigned_tasks"] = assigned_task_serializer.data
 
         return Response(user_data)
@@ -264,6 +296,10 @@ class DashboardView(APIView):
 
 
 class DeactivateAccountView(APIView):
+    """
+    This view allows user to deactivate their account.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -277,6 +313,11 @@ class DeactivateAccountView(APIView):
 
 
 class SessionValidationView(APIView):
+    """
+    This view allows to validate the session.
+    For redirecting purposes, when the session is expired.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

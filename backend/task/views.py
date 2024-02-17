@@ -59,6 +59,10 @@ class DictionaryContentView(APIView):
 
 
 class ProjectOwnerList(APIView):
+    """
+    This view returns list of projects for a given owner.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -68,6 +72,10 @@ class ProjectOwnerList(APIView):
 
 
 class ProjectAssigneeList(APIView):
+    """
+    This view returns list of projects for a given assignee.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -77,6 +85,10 @@ class ProjectAssigneeList(APIView):
 
 
 class TaskAssigneeList(APIView):
+    """
+    This view returns list of tasks for a given assignee.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -86,6 +98,13 @@ class TaskAssigneeList(APIView):
 
 
 class ProjectDeleteView(APIView):
+    """
+    This view allows deleting project with given project id. Only for admin.
+    It works two steps:
+    1. GET method asks for confirmation of delete.
+    2. DELETE method deletes given project and associated tasks.
+    """
+
     permission_classes = [IsAuthenticated, CustomPermission]
 
     required_roles = {
@@ -133,6 +152,10 @@ class ProjectDeleteView(APIView):
 
 
 class ProjectTasksView(ListAPIView):
+    """
+    This view returns list of tasks for given project id.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
@@ -142,6 +165,11 @@ class ProjectTasksView(ListAPIView):
 
 
 class ProjectStatistics(APIView):
+    """
+    This view returns statistics of tasks for given project id.
+    Returns total amount of tasks and grouping by type.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
@@ -159,6 +187,10 @@ class ProjectStatistics(APIView):
 
 
 class CommentForTaskView(ListAPIView):
+    """
+    This view returns all comments for given task id.
+    """
+
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
 

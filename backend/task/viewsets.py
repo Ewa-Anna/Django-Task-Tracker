@@ -24,6 +24,10 @@ from backend.pagination import CustomPagination
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for project.
+    """
+
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
@@ -192,6 +196,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class TaskViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for task.
+    """
+
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     pagination_class = CustomPagination
@@ -294,6 +302,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for comment.
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = CustomPagination
@@ -359,6 +371,10 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class AttachmentViewSet(viewsets.ModelViewSet):
+    """
+    This is a basic viewset for attachement.
+    """
+
     queryset = Attachment.objects.all()
     serializer_class = AttachmentSerializer
     permission_classes = [IsAuthenticated, CustomPermission]

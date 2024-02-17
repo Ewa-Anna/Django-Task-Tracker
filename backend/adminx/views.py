@@ -26,6 +26,10 @@ User = get_user_model()
 
 
 class ChangeLogView(APIView):
+    """
+    This view allows user to retrieve changes made in the database for projects, tasks, and comments.
+    """
+
     permission_classes = [IsAuthenticated, CustomPermission]
     authentication_classes = [SessionAuthentication]
     serializer_class = ChangeLogSerializer
@@ -51,6 +55,10 @@ class ChangeLogView(APIView):
 
 
 class ContactFormView(APIView):
+    """
+    This view is for contact form functionality.
+    """
+
     queryset = ContactForm.objects.all()
     serializer_class = ContactFormSerializer
     permission_classes = [CustomPermission]
@@ -104,6 +112,11 @@ class ContactFormView(APIView):
 
 
 class LastActivity(ListAPIView):
+    """
+    This view shows last activity made in the application.
+    It returns 2 newest projects and 2 newest tasks and displays them.
+    """
+
     serializer_class = LastActivitySerializer
     permission_classes = [IsAuthenticated]
 
@@ -121,6 +134,11 @@ class LastActivity(ListAPIView):
 
 
 class TaskStatistics(ListAPIView):
+    """
+    This view returns statistics for all tasks and for tasks of a currently logged in user.
+    It returns type of task (bug, improvements, question, etc.) and amount of them for pie chart.
+    """
+
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
