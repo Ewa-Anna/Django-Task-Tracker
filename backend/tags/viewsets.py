@@ -2,7 +2,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from user.permissions import CustomPermission
+from user.permissions import CustomPermission, IsProfileComplete
+
 from .models import CustomTags
 from .serializers import CustomTagSerializer
 
@@ -15,7 +16,7 @@ class CustomTagViewSet(viewsets.ModelViewSet):
 
     queryset = CustomTags.objects.all()
     serializer_class = CustomTagSerializer
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
 
     # pylint: disable=duplicate-code
     required_roles = {

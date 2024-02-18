@@ -19,6 +19,7 @@ class ProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+        read_only_fields = ["is_configured"]
 
     def validate_birthdate(self, value):
         today = timezone.now()
@@ -29,6 +30,20 @@ class ProfileSerializer(ModelSerializer):
             )
 
         return value
+
+    def update(self, instance, validated_data):
+        instance.bio = validated_data.get("bio", instance.bio)
+        instance.photo = validated_data.get("photo", instance.photo)
+        instance.birthdate = validated_data.get("birthdate", instance.birthdate)
+        instance.gender = validated_data.get("gender", instance.gender)
+
+        if any(
+            field in validated_data for field in ["bio", "photo", "birthdate", "gender"]
+        ):
+            instance.is_configured = True
+
+        instance.save()
+        return instance
 
 
 class UserSerializer(ModelSerializer):

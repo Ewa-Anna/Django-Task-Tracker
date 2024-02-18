@@ -110,13 +110,15 @@ SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
 
 # Setting time for sessionid
-SESSION_COOKIE_AGE = 1800  # 1800s = 30min
+# SESSION_COOKIE_AGE = 1800  # 1800s = 30min for prod
+SESSION_COOKIE_AGE = 36000  # 10 h for debug
 
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_SECURE = True
 
 # Setting time for csrftoken
-CSRF_COOKIE_AGE = 1800  # 1800s = 30min
+# CSRF_COOKIE_AGE = 1800  # 1800s = 30min for prod
+CSRF_COOKIE_AGE = 36000  # 10 h for debug
 
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_COOKIE_SAMESITE = "None"
@@ -160,6 +162,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
+        "user.permissions.IsProfileComplete",
     ],
     "DEFAULT_PARSER_CLASSES": ("rest_framework.parsers.JSONParser",),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",

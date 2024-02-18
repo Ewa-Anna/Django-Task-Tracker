@@ -10,7 +10,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 
 from user.models import ROLES, THEMES, GENDER
-from user.permissions import CustomPermission
+from user.permissions import CustomPermission, IsProfileComplete
 
 from .serializers import (
     DictionaryContentSerializer,
@@ -65,7 +65,7 @@ class ProjectOwnerList(APIView):
     This view returns list of projects for a given owner.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def get(self, request):
         owned_projects = Project.objects.filter(owner=request.user)
@@ -78,7 +78,7 @@ class ProjectAssigneeList(APIView):
     This view returns list of projects for a given assignee.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def get(self, request):
         assigned_projects = Project.objects.filter(assignees=request.user)
@@ -91,7 +91,7 @@ class TaskAssigneeList(APIView):
     This view returns list of tasks for a given assignee.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def get(self, request):
         assigned_tasks = Task.objects.filter(assignees=request.user)
@@ -107,7 +107,7 @@ class ProjectDeleteView(APIView):
     2. DELETE method deletes given project and associated tasks.
     """
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
     # pylint: disable=duplicate-code
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -159,7 +159,7 @@ class ProjectTasksView(ListAPIView):
     """
 
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def get_queryset(self):
         project_id = self.kwargs.get("project_id")
@@ -173,7 +173,7 @@ class ProjectStatistics(APIView):
     """
 
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def get(self, request, project_id):
         total_tasks = Task.objects.filter(project_id=project_id).count()
@@ -194,7 +194,7 @@ class CommentForTaskView(ListAPIView):
     """
 
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def get_queryset(self):
         task_id = self.kwargs.get("task_id")

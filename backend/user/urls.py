@@ -16,6 +16,7 @@ from .views import (
     ChangePasswordView,
     DeactivateAccountView,
     SessionValidationView,
+    OnboardingView,
 )
 from .viewsets import UserViewSet
 
@@ -61,4 +62,5 @@ urlpatterns = [
     path("register/", RegistrationView.as_view(), name="register"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("validate-session/", SessionValidationView.as_view(), name="validate-session"),
+    path("onboarding/", OnboardingView.as_view(), name="onboarding"),
 ]
