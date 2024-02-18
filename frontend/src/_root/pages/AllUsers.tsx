@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {useHistory} from "react-router-dom"
+import {Link, useHistory} from "react-router-dom"
 import { getUsers } from "@/features/user-api/user-api";
 import { useQuery } from "react-query";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ console.log(csrftoken)
               <Card key={user.id} className="flex flex-col justify-between  border-dark-4 ">
                 <CardHeader className="flex-row gap-4 items-center justify-evenly flex flex-wrap-reverse">
           
-             <div className="flex flex-col items-center gap-1">
+             <div className="flex flex-col items-center gap-1 flex-1">
              <img
                     src={
                       user.userAvatar || "/assets/icons/profile-placeholder.svg"
@@ -57,21 +57,20 @@ console.log(csrftoken)
           
              </div>
                
-                       <div>
-                    <CardTitle>{user.first_name}</CardTitle>
-                    <CardTitle className="text-sm">{user.last_name}</CardTitle>
+                       <div className="flex-1">
+                    <CardTitle className="">{user.first_name}</CardTitle>
+                    <CardTitle className="text-sm flex-1">{user.last_name}</CardTitle>
                     {/* <CardDescription>{user.last_name}</CardDescription> */}
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <p>{user.role}</p>
-                </CardContent>
+       
                 <CardFooter className="flex justify-evenly flex-wrap gap-2 ">
-                <Badge variant="secondary"> ROLE</Badge>
+                <Badge variant="secondary"> {user?.role}</Badge>
+                <Link to={`/profile/${user.id}`}>
                   <Button className="hover:bg-purple-700" variant="ghost">
                     View more
                   </Button>
-                 
+                  </Link>
              
                 </CardFooter>
               </Card>

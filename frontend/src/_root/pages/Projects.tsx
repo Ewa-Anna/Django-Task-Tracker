@@ -72,7 +72,7 @@ const Projects = () => {
   ];
 
   return (
-    <main className="w-full h-full py-5 px-16 mx-auto my-12 custom-scrollbar overflow-scroll pb-20 ">
+    <main className="w-full h-full py-5 px-16 mx-auto custom-scrollbar overflow-scroll pb-20  ">
       <div className="flex flex-col gap-6 md:gap-0 ">
         <div className="flex justify-center gap-2 md:justify-start">
           <LuGitCompare className="w-10 h-10" />
