@@ -24,3 +24,9 @@ export const getReportStatistics= async()=>{
 const response = await clientApi.get("adminx/task-statistics/?limit=22");
 return response.data;
 }
+
+export const getTicketDetails= async(ticketId)=>{
+const response = await clientApi.get(`task/tasks/${ticketId}`)
+return response.data
+
+}
