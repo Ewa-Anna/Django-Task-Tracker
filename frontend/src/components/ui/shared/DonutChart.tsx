@@ -11,18 +11,35 @@ import {
 
 const theme = "dark";
 
-const DonutChart = ({ header }) => {
+const DonutChart = ({ header,pieData }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [sort, setSort] = useState("overall");
   const [isOpen, setIsOpen] = useState(false);
 console.log(sort)
 
+console.log(pieData)
+
+
   const data = [
     { name: "Bug", value: 400 },
     { name: "Feature", value: 300 },
     { name: "Question", value: 300 },
   ];
+
+
+
+  const transformedPieData = pieData&& Object.entries(pieData?.AllTasks).map(([key,value])=>{
+
+
+    return {name:key,value}
+  })
+  const transformedUserPieData = pieData&& Object.entries(pieData?.UserTasks).map(([key,value])=>{
+
+
+    return {name:key,value}
+  })
+
   const COLORS = ["#881337", "#8d6333", "#0e7490",];
 
   const resort = (type) => {
@@ -132,24 +149,24 @@ return label
         </div>
       </div>
 
-      <ResponsiveContainer width="90%" height="100%">
+      <ResponsiveContainer width="100%" height="100%">
         <PieChart width={400} height={400}>
           <Legend
             verticalAlign="middle"
             align="right"
             layout="vertical"
-            height={106}
+            height={56}
             iconSize={18}
           />
           <Pie
             stroke="black"
             isAnimationActive={true}
-            data={data}
-            cx="45%"
+            data={transformedPieData}
+            cx="55%"
             cy="50%"
             labelLine={false}
             label={renderCustomizedLabel}
-            outerRadius={110}
+            outerRadius={105}
             innerRadius={60}
             fill="#8814d8"
             dataKey="value"

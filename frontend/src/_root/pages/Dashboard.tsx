@@ -11,6 +11,8 @@ import { FaBug } from "react-icons/fa";
 import { FaQuestion } from "react-icons/fa";
 import { CiRead } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "react-query";
+import { getReportStatistics } from "@/features/ticket-api/ticket-api";
 
 const Dashboard = () => {
   const [sort, setSort] = useState("all");
@@ -20,6 +22,11 @@ const Dashboard = () => {
     setSort(type);
     setIsOpen(false);
   };
+
+
+const {data:pieChartData}=useQuery("pieChartData",getReportStatistics)
+
+console.log(pieChartData)
 
   const containerRef = useRef<HTMLDivElement>(null);
   return (
@@ -436,9 +443,11 @@ const Dashboard = () => {
           {/* BOTTOM END */}
         </div>
         <div className="px-5">
-          <DonutChart header={"Report statistics"} />
+          <DonutChart header={"Report statistics"}
+          pieData= {pieChartData}
+          />
 
-          <div className="h-3/5 py-2 px-3 mt-2">
+          <div className="h-auto  px-3 mt-2">
             <div className="">
               <h3 className="text-2xl">Activity</h3>
             </div>
