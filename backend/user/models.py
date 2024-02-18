@@ -99,6 +99,8 @@ class Profile(models.Model):
     birthdate = models.DateField(blank=True, null=True, verbose_name="Date of Birth")
     gender = models.CharField(max_length=20, choices=GENDER, blank=True)
 
+    is_configured = models.BooleanField(default=False)
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

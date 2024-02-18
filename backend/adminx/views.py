@@ -14,7 +14,7 @@ from rest_framework.authentication import SessionAuthentication
 
 from task.serializers import TaskSerializer
 from task.models import Task, Project
-from user.permissions import CustomPermission
+from user.permissions import CustomPermission, IsProfileComplete
 from backend.pagination import CustomPagination
 
 from .models import ChangeLog, ContactForm
@@ -34,7 +34,7 @@ class ChangeLogView(APIView):
     projects, tasks, and comments.
     """
 
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
     authentication_classes = [SessionAuthentication]
     serializer_class = ChangeLogSerializer
     pagination_class = CustomPagination
@@ -133,7 +133,7 @@ class LastActivity(ListAPIView):
     """
 
     serializer_class = LastActivitySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
     pagination_class = None
 
     def get_queryset(self):
@@ -156,7 +156,7 @@ class TaskStatistics(ListAPIView):
     """
 
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
     pagination_class = None
 
     def get(self, request, *args, **kwargs):

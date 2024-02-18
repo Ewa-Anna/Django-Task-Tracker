@@ -22,8 +22,10 @@ from .serializers import (
     LoginSerializer,
     ChangePasswordSerializer,
     CustomPasswordTokenSerializer,
+    ProfileSerializer,
 )
 from .models import Profile
+from .permissions import IsProfileComplete
 
 
 User = get_user_model()
@@ -198,7 +200,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     """
 
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
     serializer_class = ChangePasswordSerializer
 
 
@@ -219,7 +221,8 @@ class CustomPasswordTokenView(ResetPasswordConfirm, generics.GenericAPIView):
         self.perform_update(serializer)
 
         return Response(
-            {"message": "Password updated successfully."}, status=status.HTTP_200_OK
+            {"success": True, "message": "Password updated successfully."},
+            status=status.HTTP_200_OK,
         )
 
 
@@ -230,7 +233,7 @@ class DashboardView(APIView):
     projects assigned to the user, and assigned tasks.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
 
     def get(self, request):
@@ -305,7 +308,7 @@ class DeactivateAccountView(APIView):
     This view allows user to deactivate their account.
     """
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsProfileComplete]
 
     def post(self, request):
         user = request.user
@@ -330,3 +333,21 @@ class SessionValidationView(APIView):
             {"success": True, "message": "Session is valid"},
             status=status.HTTP_200_OK,
         )
+
+
+class OnboardingView(APIView):
+    """
+    This view allows user to first-time update the profile in order to set is_configured value to True.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        profile = request.user.profile
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Profile updated successfully"}, status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

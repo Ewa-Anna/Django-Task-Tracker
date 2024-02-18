@@ -47,12 +47,24 @@ class CustomUserAdmin(UserAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "bio", "photo", "birthdate", "created", "updated")
+    list_display = (
+        "user",
+        "bio",
+        "photo",
+        "birthdate",
+        "gender",
+        "is_configured",
+        "created",
+        "updated",
+    )
     search_fields = ("user__username",)
 
     fieldsets = (
         (None, {"fields": ("user",)}),
-        ("Profile Info", {"fields": ("bio", "photo", "birthdate")}),
+        (
+            "Profile Info",
+            {"fields": ("bio", "photo", "birthdate", "gender", "is_configured")},
+        ),
     )
 
 

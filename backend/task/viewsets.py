@@ -10,7 +10,7 @@ from rest_framework import serializers
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from user.permissions import CustomPermission
+from user.permissions import CustomPermission, IsProfileComplete
 
 # pylint: disable=import-error, no-name-in-module
 from backend.pagination import (
@@ -37,7 +37,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
 
     # pylint: disable=duplicate-code
     required_roles = {
@@ -208,7 +208,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     pagination_class = CustomPagination
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -313,7 +313,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = CustomPagination
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -378,7 +378,7 @@ class AttachmentViewSet(viewsets.ModelViewSet):
 
     queryset = Attachment.objects.all()
     serializer_class = AttachmentSerializer
-    permission_classes = [IsAuthenticated, CustomPermission]
+    permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
