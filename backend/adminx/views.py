@@ -15,6 +15,7 @@ from rest_framework.authentication import SessionAuthentication
 from task.serializers import TaskSerializer
 from task.models import Task, Project
 from user.permissions import CustomPermission
+from backend.pagination import CustomPagination
 
 from .models import ChangeLog, ContactForm
 from .serializers import (
@@ -36,6 +37,7 @@ class ChangeLogView(APIView):
     permission_classes = [IsAuthenticated, CustomPermission]
     authentication_classes = [SessionAuthentication]
     serializer_class = ChangeLogSerializer
+    pagination_class = CustomPagination
 
     required_roles = {
         "GET": ["manager", "admin"],
@@ -45,16 +47,15 @@ class ChangeLogView(APIView):
         "DELETE": ["admin"],
     }
 
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = self.serializer_class(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
     def get_queryset(self):
         return ChangeLog.objects.all()
-
-    def get(self, request):
-        queryset = self.get_queryset()
-        serialized_data = self.serializer_class(queryset, many=True).data
-        return Response(
-            {"detail": "Success", "data": serialized_data},
-            status=status.HTTP_200_OK,
-        )
 
 
 class ContactFormView(APIView):
@@ -65,6 +66,7 @@ class ContactFormView(APIView):
     queryset = ContactForm.objects.all()
     serializer_class = ContactFormSerializer
     permission_classes = [CustomPermission]
+    pagination_class = CustomPagination
 
     required_roles = {
         "GET": ["manager", "admin"],
@@ -79,11 +81,10 @@ class ContactFormView(APIView):
 
     def get(self, request):
         queryset = self.get_queryset()
-        serialized_data = self.serializer_class(queryset, many=True).data
-        return Response(
-            serialized_data,
-            status=status.HTTP_200_OK,
-        )
+        paginator = self.pagination_class()
+        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        serialized_data = self.serializer_class(paginated_queryset, many=True).data
+        return paginator.get_paginated_response(serialized_data)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -133,6 +134,7 @@ class LastActivity(ListAPIView):
 
     serializer_class = LastActivitySerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def get_queryset(self):
         newest_tasks = Task.objects.order_by("-created")[:2]
@@ -155,6 +157,7 @@ class TaskStatistics(ListAPIView):
 
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def get(self, request, *args, **kwargs):
         all_tasks = Task.objects.all()
