@@ -31,91 +31,130 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
     },
   });
 
-
   const handleCreateProject = (formData) => {
     const transformedFormData = {
       ...formData,
       assignees: state.assignees.map(({ id }) => {
         return id;
       }),
-      tags:state.tags.map(({id})=>{
-        return id
-      })
+      tags: state.tags.map(({ id }) => {
+        return id;
+      }),
     };
 
     mutation.mutate(transformedFormData);
     console.log(transformedFormData);
   };
 
+  console.log(state);
   const options = { year: "numeric", month: "long", day: "numeric" };
 
   return (
     <div
       className={cn(
-        "flex flex-col justify-around  gap-9 w-full min-h-[510px] max-h-[900px]   max-w-5xl flex-wrap h-full ",
+        "flex flex-col justify-around  gap-9 w-full mb-8  max-w-5xl flex-wrap h-full ",
         {
           hidden:
             currentStep === 0 ||
             currentStep === 1 ||
             currentStep === 2 ||
-          
             currentStep === 0,
         }
       )}
     >
       <Form {...form}>
         <form
-          className="flex flex-col gap-9 w-full max-w-5xl min-h-[600px] max-h-[500px] justify-evenly"
+          className="flex flex-col gap-9 w-full max-w-5xl  justify-evenly"
           onSubmit={form.handleSubmit(() => handleCreateProject(state))}
         >
           <div className=" h-full flex flex-col gap-2 ">
             {/* Start */}
             <div className="border-2 rounded-md  border-dark-4 px-5 py-4">
               <div className="flex justify-between">
-                <div>Step 1</div>
                 <div>
-                  <Button>Edit</Button>
+                  <span className="text-slate-500 font-semibold text-sm">Project Type</span>
+                </div>
+
+                <div>
+                  <Button type="button" onClick={() => setCurrentStep(0)}>
+                    Edit
+                  </Button>
                 </div>
               </div>
-              <p>Visibility</p>
-              <p>{state.visibility}</p>
+              <div className=" flex flex-wrap gap-5">
+              <div className="flex flex-col w-full  break-all">
+                  <span className="mb-3 text-sm">Visibility</span>
+                  <p>{state.visibility}</p>
+                </div>
+              </div>
             </div>
 
             <div className="border-2 border-dark-4  rounded-md  px-5 py-4 ">
               <div className="flex justify-between items-center">
-                <span>Step 2</span>
-                <Button className="hover:bg-violet-900" variant={"ghost"}>
+                <span className="text-slate-500 font-semibold text-sm">
+                  General Info
+                </span>
+                <Button type="button" onClick={()=>setCurrentStep(1)} variant={"ghost"}>
                   Edit
                 </Button>
               </div>
-              <div className="flex flex-col">
-                <div className="flex flex-wrap">
-                  <div className="flex-1">
-                    <p>Title</p>
-                    {state.title}
-                  </div>
-                  <div className="flex-1">
-                    <p>Description</p>
-                    {state.description}
+
+              <div className="flex flex-wrap gap-5">
+                <div className="flex flex-col  break-all">
+                  <span className="mb-3 text-sm">Title</span>
+                  <p>{state.title}</p>
+                </div>
+                <div className="flex flex-col w-full  break-all">
+                  <span className="mb-3 text-sm">Description</span>
+                  <p>{state.description}</p>
+                </div>
+
+                <div className="flex flex-col w-full    break-all">
+                  <span>Deadline</span>
+                  <p>
+                    {state.deadline &&
+                      state.deadline.toLocaleString("en-EN", options)}
+                  </p>
+                </div>
+                <div className="flex flex-col w-full    break-all">
+                  <span>Leader</span>
+                  <p>
+                    {state.owner &&
+                      state.owner}
+                  </p>
+                </div>
+                <div className="flex flex-col w-full  break-all">
+                  <span className="mb-3 text-sm">Tags</span>
+                  <div className="flex gap-2 flex-wrap">
+                    {state.tags &&
+                      state.tags.map((tag)=>{
+                        return(
+                        <div className="text-sm text-slate-300 font-semibold px-2 rounded-[3px] bg-blue-600">
+                        {  tag.name}
+                        </div>
+                        )
+                      })}
                   </div>
                 </div>
-                <div className="flex flex-wrap">
-                  <div className="flex-1">
-                    <p>Leader</p>
-                    {state.owner}
-                  </div>
-                  <div className="flex-1">
-                    <p>Deadline</p>
-                    <p>
-                      {state.deadline &&
-                        state.deadline.toLocaleString("en-EN", options)}
-                    </p>
+                <div className="flex flex-col   break-all">
+                  <span className="mb-3 text-sm">Assignees</span>
+                  <div className="flex gap-2 flex-wrap">
+                    {state?.assignees &&
+                      state?.assignees
+                      .map((member)=>{
+                        return(
+                        <div className="text-sm text-slate-300 font-semibold px-2 rounded-[3px] bg-blue-600">
+                        {  member.email}
+                        </div>
+                        )
+                      })}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex justify-end border-2 flex-1">
+
+          <div className="flex justify-end flex-1 gap-3">
             <Button
               type="button"
               onClick={() => {
@@ -126,11 +165,11 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
               })}
             >
               <ArrowLeft className="mr-1" />
-              Go Back
+               Back
             </Button>
-            <Button className="shad-button_primary">
+            <Button className="hover:bg-green-600" >
               Confirm
-              <ArrowRight className="ml-1" />
+             
             </Button>
           </div>
         </form>

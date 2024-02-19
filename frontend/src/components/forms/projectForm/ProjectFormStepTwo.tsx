@@ -52,7 +52,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
 
   return (
     <div
-      className={cn("flex flex-col gap-9 w-full max-w-5xl   mt-12  ", {
+      className={cn("flex flex-col gap-9 w-full max-w-5xl mb-8   mt-8  ", {
         hidden:
           currentStep === 0 ||
           currentStep === 2 ||
@@ -205,7 +205,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
               })}
             >
               <ArrowLeft className="mr-1" />
-              Go Back
+               Back
             </Button>
             <Button className="hover:bg-violet-600" variant="ghost">
               Next
