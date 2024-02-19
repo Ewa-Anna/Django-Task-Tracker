@@ -1,8 +1,17 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from user.models import CustomUser
 from tags.models import CustomTags
+
+
+def validate_file_size(value):
+    max_file_size_mb = 20
+    max_file_size_bytes = max_file_size_mb * 1024 * 1024
+
+    if value.size > max_file_size_bytes:
+        raise ValidationError("File size exceeds maximum limit (20MB).")
 
 
 PRIORITY = [
@@ -93,9 +102,12 @@ class Task(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, related_name="related_projects"
     )
-
-    assignees = models.ManyToManyField(
-        CustomUser, related_name="assigned_tasks", blank=True
+    assignees = models.ForeignKey(
+        CustomUser,
+        on_delete=models.SET_NULL,
+        related_name="assigned_tasks",
+        blank=True,
+        null=True,
     )
     archive = models.BooleanField(default=False)
 
@@ -177,7 +189,9 @@ class Attachment(models.Model):
         blank=True,
     )
 
-    file = models.FileField(upload_to="attachments/%Y/%m/%d/")
+    file = models.FileField(
+        upload_to="attachments/%Y/%m/%d/", validators=[validate_file_size]
+    )
     uploader = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
