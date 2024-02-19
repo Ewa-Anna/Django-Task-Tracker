@@ -43,7 +43,7 @@ const ProjectFormStepFour = ({
 
   return (
     <div
-      className={cn(" flex-col lg:flex-col w-4/4 ", {
+      className={cn(" flex-col lg:flex-col w-4/4  ", {
         hidden:
           currentStep === 0 ||
           currentStep === 1 ||
@@ -65,8 +65,8 @@ const ProjectFormStepFour = ({
                 <FormLabel className="text-xl">Assign Members</FormLabel>
 
                 <FormControl>
-                  <div className="min-w-[60vw] min-h-[600px]   flex justify-between overflow-hidden flex-col md:min-w-[55wv] lg:flex-row lg:min-w-[55vw] ">
-                    <div className="px-6 py-4 border-2 rounded-[5px] border-dark-4 flex flex-col justify-start  gap-10 min-h-[250px] min-w-[250px] flex-1 overflow-y-scroll custom-scrollbar ">
+                  <div className="  flex justify-between overflow-hidden flex-col md:min-w-[55wv] lg:flex-row lg:min-w-[55vw] mb-8   ">
+                    <div className="px-6 py-4 border-2 rounded-[5px] border-dark-4 flex flex-col justify-start  gap-4 min-h-[450px] min-w-[250px] flex-1 overflow-y-scroll custom-scrollbar ">
                       {users &&
                         users?.results
                           .filter((availableUser) => {
@@ -81,7 +81,7 @@ const ProjectFormStepFour = ({
                             return (
                               <div key={user} className="flex  ">
                                 <label
-                                  className="w-full cursor-pointer  flex items-center gap-3 hover:bg-dark-3 px-1 rounded-[2px]  "
+                                  className="w-full cursor-pointer  flex items-center gap-3 hover:bg-dark-3 px-1 py-2 rounded-[2px]  "
                                   htmlFor={`checkbox-${user.id}`}
                                 >
                                   <input
@@ -160,12 +160,12 @@ const ProjectFormStepFour = ({
                       />
                     </div>
 
-                    <div className="px-6 py-4 border-2 border-dark-4 flex flex-col justify-start  gap-10 min-h-[250px] min-w-[250px] flex-1 overflow-y-scroll custom-scrollbar ">
+                    <div className="px-6 py-4 border-2 border-dark-4 flex flex-col justify-start  gap-4 min-h-[250px] min-w-[250px] flex-1 overflow-y-scroll custom-scrollbar ">
                       {form.watch("assignees").map((contributor) => {
                         return (
                           <div key={contributor} className="flex ">
                             <label
-                              className="w-full cursor-pointer  flex items-center gap-3 hover:bg-dark-3 px-1 rounded-[2px]  "
+                              className="w-full cursor-pointer  flex items-center gap-3 hover:bg-dark-3 px-1 py-2 rounded-[2px]  "
                               htmlFor={`checkbox-${contributor.id}`}
                             >
                               <input
@@ -222,7 +222,7 @@ const ProjectFormStepFour = ({
               })}
             >
               <ArrowLeft className="mr-1 " />
-              Go Back
+               Back
             </Button>
             <Button className="hover:bg-violet-600" variant="ghost">
               Next
