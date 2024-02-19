@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
@@ -7,6 +8,45 @@ from user.serializers import ProfileSerializer
 from tags.serializers import CustomTagSerializer
 
 from .models import Project, Task, Comment, Attachment
+
+
+class AttachmentSerializer(serializers.ModelSerializer):
+    uploader = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Attachment
+        fields = ["id", "file", "uploader", "created"]
+
+    def validate(self, attrs):
+        max_attachments = 3
+        if Attachment.objects.filter(task=attrs["task"]).count() >= max_attachments:
+            raise ValidationError(
+                "Maximum number of attachments exceeded for this task."
+            )
+
+        if (
+            Attachment.objects.filter(project=attrs.get("project")).count()
+            >= max_attachments
+        ):
+            raise ValidationError(
+                "Maximum number of attachments exceeded for this project."
+            )
+
+        if (
+            Attachment.objects.filter(comment=attrs.get("comment")).count()
+            >= max_attachments
+        ):
+            raise ValidationError(
+                "Maximum number of attachments exceeded for this comment."
+            )
+
+        max_file_size_mb = 20
+        max_file_size_bytes = max_file_size_mb * 1024 * 1024
+
+        if attrs["file"].size > max_file_size_bytes:
+            raise ValidationError("File size exceeds maximum limit (20MB).")
+
+        return attrs
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -37,8 +77,24 @@ class AssigneeSerializer(serializers.Serializer):
         pass
 
 
+class CustomCreatedBySerializer(serializers.StringRelatedField):
+    def to_representation(self, value):
+        if value:
+            return {
+                "first_name": value.first_name,
+                "last_name": value.last_name,
+                "email": value.email,
+                "photo": value.profile.photo,
+            }
+        return None
+
+    def to_internal_value(self, data):
+        pass
+
+
 class ProjectCreateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(write_only=True, required=False)
+    attachments = AttachmentSerializer(many=True, required=False)
 
     def validate_assignees(self, value):
         max_assignees = 10
@@ -71,28 +127,24 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             "visibility",
             "status",
             "archive",
+            "attachments",
             "owner",
         ]
 
+    def create(self, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        project = Project.objects.create(**validated_data)
 
-class CustomCreatedBySerializer(serializers.StringRelatedField):
-    def to_representation(self, value):
-        if value:
-            return {
-                "first_name": value.first_name,
-                "last_name": value.last_name,
-                "email": value.email,
-                "photo": value.profile.photo,
-            }
-        return None
+        for attachment_data in attachments_data:
+            Attachment.objects.create(project=project, **attachment_data)
 
-    def to_internal_value(self, data):
-        pass
+        return project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
     owner = OwnerSerializer(read_only=True)
     assignees = AssigneeSerializer(many=True, required=False)
+    attachments = AttachmentSerializer(read_only=True, many=True)
     tags = CustomTagSerializer(many=True, read_only=True)
     created_by = CustomCreatedBySerializer(
         read_only=True, default=serializers.CurrentUserDefault()
@@ -140,15 +192,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):
-    def validate_assignees(self, value):
-        max_assignees = 110
-
-        if len(value) > max_assignees:
-            raise serializers.ValidationError(
-                f"Maximum {max_assignees} assignees allowed for the task."
-            )
-
-        return value
+    attachments = AttachmentSerializer(many=True, required=False)
 
     class Meta:
         model = Task
@@ -161,13 +205,22 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             "type",
             "project",
             "archive",
+            "attachments",
         ]
+
+    def create(self, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        task = Task.objects.create(**validated_data)
+
+        for attachment_data in attachments_data:
+            Attachment.objects.create(task=task, **attachment_data)
+
+        return task
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    owner = OwnerSerializer(read_only=True, source="owner")
-    assignees = AssigneeSerializer(many=True, required=False)
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
+    attachments = AttachmentSerializer(read_only=True, many=True)
     created_by = CustomCreatedBySerializer(
         read_only=True, default=serializers.CurrentUserDefault()
     )
@@ -179,25 +232,12 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = "__all__"
 
-    def create(self, validated_data):
-        assignees_data = validated_data.pop("assignees", [])
-        task = Task.objects.create(**validated_data)
-        self.create_assignees(task, assignees_data)
-        return task
+    def create_assignees(self, task, assignee_data):
+        assignee_id = assignee_data.get("id")
 
-    def create_assignees(self, task, assignees_data):
-        assignees = []
-        for assignee_data in assignees_data:
-            assignee_id = assignee_data.get("id")
-
-            if assignee_id is not None:
-                assignees.append(CustomUser.objects.get(pk=assignee_id))
-            else:
-                assignee_serializer = AssigneeSerializer(data=assignee_data)
-                assignee_serializer.is_valid(raise_exception=True)
-                assignees.append(assignee_serializer.save())
-
-        task.assignees.set(assignees)
+        if assignee_id is not None:
+            assignee = CustomUser.objects.get(pk=assignee_id)
+            task.assignees = assignee
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -207,16 +247,20 @@ class CommentSerializer(serializers.ModelSerializer):
     updated_by = serializers.StringRelatedField(
         default=serializers.CurrentUserDefault(), read_only=True
     )
+    attachments = AttachmentSerializer(many=True, required=False)
 
     class Meta:
         model = Comment
         fields = "__all__"
 
+    def create(self, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        comment = Comment.objects.create(**validated_data)
 
-class AttachmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Attachment
-        fields = ["file"]
+        for attachment_data in attachments_data:
+            Attachment.objects.create(comment=comment, **attachment_data)
+
+        return comment
 
 
 class DictionaryContentSerializer(serializers.Serializer):
