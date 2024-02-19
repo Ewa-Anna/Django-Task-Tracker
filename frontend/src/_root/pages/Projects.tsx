@@ -46,7 +46,7 @@ const Projects = () => {
         const project = row?.original;
 
         return <div className="flex flex-col">
-          <span>{project.owner?.first_name}</span>
+          <span className="text-xs">{project.owner?.first_name}</span>
           <span>{project.owner?.first_name}</span>
         </div>;
       },
@@ -90,7 +90,7 @@ const Projects = () => {
 
       {/* TABLE */}
 
-      {projects && <DataTable columns={columns} data={projects?.results} />}
+      {projects && <DataTable className="mt-4" columns={columns} data={projects?.results} />}
 
       <div className=" grid grid-cols-1 gap-8 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-2 lg:gap-6 px-22 xl:hidden">
         {projects &&

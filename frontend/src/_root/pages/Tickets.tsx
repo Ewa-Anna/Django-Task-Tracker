@@ -36,7 +36,7 @@ const Tickets = () => {
   
     
         return(
-          <div className={cn("border-2 w-[56px] flex justify-center border-dark-4 items-center rounded-[7px]",{
+          <div className={cn("border-2 w-[56px] flex justify-center border-dark-4 items-center rounded-[7px] py-[.5] px-7  font-semibold",{
             
             "bg-priority-low border-2 border-priority-low text-blue-150": ticket.priority === "low",
             "bg-priority-medium border-2 border-priority-medium text-green-150": ticket.priority === "medium",
@@ -83,7 +83,7 @@ const Tickets = () => {
       </div>
 {/* TABLE */}
 
-{tickets&&<DataTable  columns={columns} data={tickets?.results} />}
+{tickets&&<DataTable className="mt-6"  columns={columns} data={tickets?.results} />}
 
 {/* TABLE */}
     </main>

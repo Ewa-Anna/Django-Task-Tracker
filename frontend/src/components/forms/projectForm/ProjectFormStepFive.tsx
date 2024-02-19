@@ -104,27 +104,27 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
                   <span className="mb-3 text-sm">Title</span>
                   <p>{state.title}</p>
                 </div>
-                <div className="flex flex-col w-full  break-all">
-                  <span className="mb-3 text-sm">Description</span>
-                  <p>{state.description}</p>
+                <div className="flex flex-col w-full  break-all mb-1">
+                  <span className="mb-3 text-sm text-slate-500 font-semibold">Description</span>
+                  <p className="text-slate-300">{state.description}</p>
                 </div>
 
-                <div className="flex flex-col w-full    break-all">
-                  <span>Deadline</span>
-                  <p>
+                <div className="flex flex-col w-full    break-all mb-1">
+                  <span className=" mb-3 text-slate-500 font-semibold">Deadline</span>
+                  <p className="text-slate-300">
                     {state.deadline &&
                       state.deadline.toLocaleString("en-EN", options)}
                   </p>
                 </div>
                 <div className="flex flex-col w-full    break-all">
-                  <span>Leader</span>
-                  <p>
+                  <span className="mb-3 text-sm text-slate-500 font-semibold">Leader</span>
+                  <p className="text-slate-300">
                     {state.owner &&
                       state.owner}
                   </p>
                 </div>
                 <div className="flex flex-col w-full  break-all">
-                  <span className="mb-3 text-sm">Tags</span>
+                  <span className="mb-3 text-sm text-slate-500 font-semibold">Tags</span>
                   <div className="flex gap-2 flex-wrap">
                     {state.tags &&
                       state.tags.map((tag)=>{
@@ -136,8 +136,9 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
                       })}
                   </div>
                 </div>
-                <div className="flex flex-col   break-all">
-                  <span className="mb-3 text-sm">Assignees</span>
+                <div className="flex flex-col w-full   break-all">
+            
+                  <span className="mb-3 text-sm text-slate-500 font-semibold">Assignees</span>
                   <div className="flex gap-2 flex-wrap">
                     {state?.assignees &&
                       state?.assignees
@@ -149,6 +150,11 @@ const ProjectFormStepFive = ({ currentStep, setCurrentStep }) => {
                         )
                       })}
                   </div>
+                  <div className="flex justify-end ">
+                  <Button type="button" onClick={() => setCurrentStep(2)}>
+                    Edit2
+                  </Button>
+                </div>
                 </div>
               </div>
             </div>

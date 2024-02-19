@@ -17,20 +17,23 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  className?:string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  className
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
+    
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <div className="hidden xl:flex rounded-md border border-dark-3 mt-3">
+    <div className={`hidden xl:flex rounded-md border border-dark-3 mt-3 ${className}`}>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
