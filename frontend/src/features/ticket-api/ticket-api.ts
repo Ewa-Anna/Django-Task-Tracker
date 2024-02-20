@@ -35,3 +35,8 @@ export const addComment= async(formData)=>{
   const response = await clientApi.post('task/comments/',formData)
   return response.data
 }
+
+export const getTicketCommentList = async(id?:string)=>{
+  const response = await clientApi.get(`task/comment-for-tasks/${id}`)
+  return response.data
+}
