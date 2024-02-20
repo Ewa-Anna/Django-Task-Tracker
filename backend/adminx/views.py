@@ -129,7 +129,8 @@ class ContactFormView(APIView):
 class LastActivity(ListAPIView):
     """
     This view shows last activity made in the application.
-    It returns 2 newest projects and 2 newest tasks and displays them.
+    With no query parameters it returns 4 newest public tasks.
+    With ?data=mytasks it returns 4 newest task for current user.
     """
 
     serializer_class = LastActivitySerializer
@@ -137,19 +138,21 @@ class LastActivity(ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        newest_tasks = Task.objects.order_by("-created")[:2]
-        newest_projects = Project.objects.filter(visibility="public").order_by(
-            "-created"
-        )[:2]
+        my_tasks = Task.objects.filter(assignees=self.request.user)
+        public_projects = Project.objects.filter(visibility="public")
+        public_tasks = Task.objects.filter(project__in=public_projects)
 
-        queryset = list(chain(newest_tasks, newest_projects))
+        query_param = self.request.query_params.get("data")
 
-        queryset.sort(key=lambda x: x.created, reverse=True)
+        if query_param == "mytasks":
+            queryset = my_tasks.order_by("-created")[:4]
+        else:
+            queryset = public_tasks.order_by("-created")[:4]
 
         return queryset
 
 
-class TaskStatistics(ListAPIView):
+class TaskStatistics(APIView):
     """
     This view returns statistics for all tasks and for tasks of a currently logged in user.
     It returns type of task (bug, improvements, question, etc.) and amount of them for pie chart.
@@ -160,13 +163,15 @@ class TaskStatistics(ListAPIView):
     pagination_class = None
 
     def get(self, request, *args, **kwargs):
-        all_tasks = Task.objects.all()
-        user_tasks = Task.objects.filter(assignees=self.request.user)
+        data_type = request.query_params.get("data")
+        if data_type == "alltasks":
+            queryset = Task.objects.all()
+        elif data_type == "usertasks":
+            queryset = Task.objects.filter(assignees=self.request.user)
+        else:
+            return Response({"error": "Invalid data parameter"}, status=400)
 
-        all_tasks_counts = all_tasks.values("type").annotate(count=Count("type"))
-        user_tasks_counts = user_tasks.values("type").annotate(count=Count("type"))
+        task_counts = queryset.values("type").annotate(count=Count("type"))
+        task_data = {task["type"]: task["count"] for task in task_counts}
 
-        all_tasks_data = {task["type"]: task["count"] for task in all_tasks_counts}
-        user_tasks_data = {task["type"]: task["count"] for task in user_tasks_counts}
-
-        return Response({"AllTasks": all_tasks_data, "UserTasks": user_tasks_data})
+        return Response(task_data)
