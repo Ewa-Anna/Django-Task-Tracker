@@ -30,3 +30,8 @@ const response = await clientApi.get(`task/tasks/${ticketId}`)
 return response.data
 
 }
+
+export const addComment= async(formData)=>{
+  const response = await clientApi.post('task/comments/',formData)
+  return response.data
+}

@@ -8,6 +8,8 @@ import { AiFillLike } from "react-icons/ai";
 import { AiFillDislike } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
 import { CgSearchLoading } from "react-icons/cg";
+import PostBox from "@/components/ui/shared/PostBox";
+import Comment from "@/components/ui/shared/Comment";
 
 const TicketDetails = () => {
   const { ticketId } = useParams();
@@ -16,10 +18,10 @@ const TicketDetails = () => {
     getTicketDetails(ticketId)
   );
 
-  console.log(ticketDetails);
+
 
   return (
-    <div className="flex justify-center h-[calc(100%-60px)]  overflow-scroll custom-scrollbar ">
+    <div className="flex justify-center h-[calc(100%-0px)]  overflow-scroll custom-scrollbar w-full ">
       <div className="w-[90%] md:w-[80%] lg:w-[85%] xl:w-[72%] pt-8 px-0 flex gap-20 h-full">
         <div className="w-3/4 flex flex-col gap-5 h-full">
         <div className="flex gap-2">
@@ -60,7 +62,7 @@ const TicketDetails = () => {
           </div>
 
           <h2>Description</h2>
-          <p>
+          <p className="break-all">
           {ticketDetails?.description}
           </p>
 
@@ -117,114 +119,27 @@ const TicketDetails = () => {
           </div>
 
           <div className="mt-10">
+<Comment ticketId={ticketDetails?.id} projectId={ticketDetails?.project} currentUserImg={'a'} currentUserId="1"/>
+
             <h2>Comments</h2>
 
-            <div className="  flex flex-col mt-5 gap-4 ">
-              <div className="flex items-center gap-5 my-5 mx-0">
-                <img
-                  className="h-[50px] w-[50px] rounded-[50%] object-cover"
-                  src="https://images.pexels.com/photos/839586/pexels-photo-839586.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                  alt=""
-                />
-                <div className="flex flex-col gap-2">
-                  <span>John Doe</span>
-                  <div className="flex items-center gap-2 text-slate-500">
-                
-                    <span>Role</span>
-                  </div>
-                </div>
-              </div>
-       
-              <p>
-                I just want to say that art_with_ai was the first, and after
-                this, the only artist Ill be using on Fiverr. Communication was
-                amazing, each and every day he sent me images that I was free to
-                request changes to. They listened, understood, and delivered
-                above and beyond my expectations. I absolutely recommend this
-                gig, and know already that Ill be using it again very very soon
-              </p>
-              <div className="flex items-center gap-2">
-                <span>Helpful?</span>
-               <AiFillLike/>
-                <span>Yes</span>
-                <AiFillDislike/>
-                <span>No</span>
-              </div>
-            </div>
+         <PostBox/>
+            <PostBox/>
+            <PostBox/>
+            <PostBox/>
+            <PostBox/> 
 
-            <hr className="mb-5 mt-5 h-0 border-2 border-dark-3" />
-            <div className=" flex flex-col mt-5 gap-4 ">
-              <div className="flex items-center gap-5 my-5 mx-0">
-                <img
-                  className="h-[50px] w-[50px] rounded-[50%] object-cover"
-                  src="https://images.pexels.com/photos/839586/pexels-photo-839586.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                  alt=""
-                />
-                <div className="flex flex-col gap-2">
-                  <span>John Doe</span>
-                  <div className="flex items-center gap-2 text-slate-500">
-                
-                    <span>Role</span>
-                  </div>
-                </div>
-              </div>
+
+
+        
+
        
-              <p>
-                I just want to say that art_with_ai was the first, and after
-                this, the only artist Ill be using on Fiverr. Communication was
-                amazing, each and every day he sent me images that I was free to
-                request changes to. They listened, understood, and delivered
-                above and beyond my expectations. I absolutely recommend this
-                gig, and know already that Ill be using it again very very soon
-              </p>
-              <div className="flex items-center gap-2">
-                <span>Helpful?</span>
-               <AiFillLike/>
-                <span>Yes</span>
-                <AiFillDislike/>
-                <span>No</span>
-              </div>
-            </div>
             
        
-            <hr className="mb-5 mt-5 h-0 border-2 border-dark-3" />
-            <div className="  flex flex-col mt-5 gap-4 ">
-              <div className="flex items-center gap-5 my-5 mx-0">
-                <img
-                  className="h-[50px] w-[50px] rounded-[50%] object-cover"
-                  src="https://images.pexels.com/photos/839586/pexels-photo-839586.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                  alt=""
-                />
-                <div className="flex flex-col gap-2">
-                  <span>John Doe</span>
-                  <div className="flex items-center gap-2 text-slate-500">
-                
-                    <span>Role</span>
-                  </div>
-                </div>
-              </div>
-       
-              <p>
-                I just want to say that art_with_ai was the first, and after
-                this, the only artist Ill be using on Fiverr. Communication was
-                amazing, each and every day he sent me images that I was free to
-                request changes to. They listened, understood, and delivered
-                above and beyond my expectations. I absolutely recommend this
-                gig, and know already that Ill be using it again very very soon
-              </p>
-              <div className="flex items-center gap-2">
-                <span>Helpful?</span>
-               <AiFillLike/>
-                <span>Yes</span>
-                <AiFillDislike/>
-                <span>No</span>
-              </div>
-            </div>
-       
-       
-        
-            <hr className="mb-5 mt-5 h-0 border-2 border-dark-3" />
+   
             {/* <hr /> */}
+    
+     
           </div>
         </div>
         {/* asdddddddddddddddddddddddddddddddddddddddd */}
