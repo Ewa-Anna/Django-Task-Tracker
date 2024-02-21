@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.core.management import call_command
+
 from .models import Project, Task, Comment, ChangeLog, CHANGE_TYPES
 
 
@@ -21,3 +23,10 @@ def create_change_log(sender, instance, created, **kwargs):
         changed_by=instance.created_by if created else instance.updated_by,
         timestamp=timezone.now(),
     )
+
+
+# @receiver(post_save, sender=RecentActivity)
+# def check_cleanup_threshold(sender, instance, **kwargs):
+#     max_records = 100
+#     if RecentActivity.objects.count() > max_records:
+#         call_command("cleanup_recent_activity")
