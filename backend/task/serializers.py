@@ -133,7 +133,11 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         attachments_data = validated_data.pop("attachments", [])
+        assignees_data = validated_data.pop("assignees", [])
         project = Project.objects.create(**validated_data)
+
+        for assignee in assignees_data:
+            project.assignees.add(assignee)
 
         for attachment_data in attachments_data:
             Attachment.objects.create(project=project, **attachment_data)

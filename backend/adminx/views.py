@@ -1,9 +1,10 @@
-from itertools import chain
+import json
 from smtplib import SMTPException, SMTPAuthenticationError
 
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.db.models import Count
+from django.http import JsonResponse
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,6 +12,8 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import SessionAuthentication
+
+from drf_api_logger.models import APILogsModel
 
 from task.serializers import TaskSerializer
 from task.models import Task, Project
@@ -175,3 +178,27 @@ class TaskStatistics(APIView):
         task_data = {task["type"]: task["count"] for task in task_counts}
 
         return Response(task_data)
+
+
+class APILogsView(APIView):
+    def get(self, request, *args, **kwargs):
+        current_user = request.user
+        who = current_user.first_name if current_user.is_authenticated else None
+        api_logs = APILogsModel.objects.order_by("-added_on")
+
+        logs_data = []
+        for log in api_logs:
+            response_data = json.loads(log.response)
+
+            created_by = response_data.get("created_by", {})
+
+            logs_data.append(
+                {
+                    "api": log.api,
+                    "method": log.method,
+                    "status_code": log.status_code,
+                    "added_on": log.added_on.isoformat(),
+                }
+            )
+
+        return JsonResponse(logs_data, safe=False)

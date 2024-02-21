@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "channels",
     "daphne",
+    "drf_api_logger",
     # Apps
     "tags",
     "user",
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware",
     "user.middleware.SetLastUserLoggin",
 ]
 
@@ -275,3 +277,6 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+DRF_API_LOGGER_DATABASE = True
+DRF_API_LOGGER_METHODS = ["PATCH", "POST", "DELETE", "PUT"]
