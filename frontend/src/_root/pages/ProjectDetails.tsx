@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 import { FaScroll } from "react-icons/fa";
-import { formatTimestamp, timeUntilDeadline } from "@/lib/utils";
+import { formatTimestamp } from "@/lib/utils";
 import { CiClock1 } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { MdOutlinePending } from "react-icons/md";
@@ -51,7 +51,7 @@ const ProjectDetails = () => {
 
           {/* seeller */}
           <div className="mt-12 flex flex-col gap-5">
-            <div className=" border-2 border-dark-4 rounded-[5px] p-5 mt-5 ">
+            <div className=" border-2 border-dark-4 rounded-[5px] p-5 mt-5 bg-dark-2 ">
               <h3 className="font-semibold text-xl mb-6">Overall</h3>
               <div className="flex justify-between flex-wrap text-slate-300">
                 <div className="w-[300px] flex flex-col gap-3 mb-5">
@@ -111,7 +111,7 @@ const ProjectDetails = () => {
         {/* LEFT */}
 
         {/* RIGHT */}
-        <div className="hidden xl:flex flex-col gap-5 h-auto max-h-[430px]    border-2 w-1/3 border-dark-4 p-5 sticky top-4 mt-32 rounded-[0.35em] ">
+        <div className="hidden xl:flex flex-col gap-5 h-auto max-h-[430px]    border-2 w-1/3 border-dark-4 p-5 sticky top-4 mt-32 rounded-[0.35em] bg-dark-2 ">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Project Details</h3>
           </div>
@@ -148,7 +148,7 @@ const ProjectDetails = () => {
               </div>
               <div className="flex items-center gap-2 border-2 p-2 border-dark-4 rounded-[10px] bg-green-900 text-slate-200">
                 <GoClockFill />
-                <span>{timeUntilDeadline(project?.deadline)}</span>
+                <span>{(project?.deadline)}</span>
               </div>
             </div>
           </div>
