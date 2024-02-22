@@ -40,3 +40,18 @@ export const getTicketCommentList = async(id?:string)=>{
   const response = await clientApi.get(`task/comment-for-tasks/${id}`)
   return response.data
 }
+
+export const editComment= async({id,formData})=>{
+
+  console.log(id)
+  console.log(formData)
+
+  const response = await clientApi.patch(`task/comments/${id}/`,formData)
+  return response.data
+}
+
+export const deleteComment = async(id)=>{
+
+  const response = await clientApi.delete(`task/comments/${id}/`)
+  return response.data
+}
