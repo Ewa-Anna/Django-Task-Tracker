@@ -1,5 +1,6 @@
 from django.utils import timezone
 
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
@@ -15,6 +16,7 @@ from user.permissions import CustomPermission, IsProfileComplete
 # pylint: disable=import-error, no-name-in-module
 from backend.pagination import (
     CustomPagination,
+    CommentPagination,
 )
 
 from .models import Project, Task, Comment, Attachment
@@ -38,6 +40,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
+    parser_classes = [FileUploadParser]
 
     # pylint: disable=duplicate-code
     required_roles = {
@@ -192,7 +195,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if request.user.is_admin:
             return super().update(request, *args, **kwargs)
 
-        if request.user != instance.creator:
+        if request.user != instance.created_by:
             return Response(
                 {"detail": "You don't have permission to edit this project."},
                 status=status.HTTP_403_FORBIDDEN,
@@ -209,6 +212,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     pagination_class = CustomPagination
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
+    parser_classes = [FileUploadParser]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -297,7 +301,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         if request.user.is_admin:
             return super().update(request, *args, **kwargs)
 
-        if request.user != instance.creator:
+        if request.user != instance.created_by:
             return Response(
                 {"detail": "You don't have permission to edit this task."},
                 status=status.HTTP_403_FORBIDDEN,
@@ -312,8 +316,9 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    pagination_class = CustomPagination
+    pagination_class = CommentPagination
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
+    parser_classes = [FileUploadParser]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -327,7 +332,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def comment(self, request):
         project = request.query_params.get("project")
         task = request.query_params.get("task")
-        creator = request.query_params.get("creator")
+        created_by = request.query_params.get("created_by")
 
         queryset = Comment.objects.all()
 
@@ -337,8 +342,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         if task:
             queryset = queryset.filter(task=task)
 
-        if creator:
-            queryset = queryset.filter(creator__username=creator)
+        if created_by:
+            queryset = queryset.filter(created_by__username=created_by)
 
         paginator = CustomPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
@@ -363,11 +368,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         if request.user.is_admin:
             return super().update(request, *args, **kwargs)
 
-        if request.user != instance.creator:
+        if request.user != instance.created_by:
             return Response(
                 {"detail": "You don't have permission to edit this comment."},
                 status=status.HTTP_403_FORBIDDEN,
             )
+
+        attachments_data = request.data.get("attachments", [])
+        if attachments_data:
+            for attachment_data in attachments_data:
+                Attachment.objects.create(comment=instance, **attachment_data)
+
         return super().update(request, *args, **kwargs)
 
 
@@ -379,6 +390,7 @@ class AttachmentViewSet(viewsets.ModelViewSet):
     queryset = Attachment.objects.all()
     serializer_class = AttachmentSerializer
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
+    parser_classes = [MultiPartParser, FormParser, FileUploadParser]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],

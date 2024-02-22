@@ -6,3 +6,10 @@ class CustomPagination(LimitOffsetPagination):
     limit_query_param = "limit"
     offset_query_param = "offset"
     max_limit = 1000
+
+
+class CommentPagination(LimitOffsetPagination):
+    default_limit = 5
+    limit_query_param = "limit"
+    offset_query_param = "offset"
+    max_limit = 1000
