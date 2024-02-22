@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../button";
 import { Input } from "../input";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { addComment } from "@/features/ticket-api/ticket-api";
 import { Textarea } from "../textarea";
+
 
 interface Props {
   ticketId: string;
@@ -25,7 +26,7 @@ interface Props {
 }
 
 export const CommentValidation = z.object({
-  comment: z.string().nonempty().min(3, { message: "Minimum 3 characters." }  ),
+  comment: z.string().nonempty().min(3, { message: "Minimum 3 characters." }  ).max(500,{message:"You have exceeded the character limit. Please shorten your comment"}),
 
 });
 
@@ -38,10 +39,10 @@ function Comment({ ticketId,projectId, currentUserImg, currentUserId }: Props) {
     },
   });
 
-
+const queryClient= useQueryClient()
 const mutation = useMutation(addComment,{
     onSuccess:(data)=>{
-        console.log(data)
+      queryClient.invalidateQueries("ticketCommentList")
     },
     onError:(e)=>{
 console.log(e)
@@ -85,7 +86,7 @@ console.log(e)
                   
                   {...field}
                   placeholder="Comment..."
-                  className="no-focus text-light-1 outline-none"
+                  className="shad-textarea custom-scrollbar"
                 />
               </FormControl>
             </FormItem>
