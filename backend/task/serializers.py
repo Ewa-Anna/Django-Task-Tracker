@@ -15,38 +15,38 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ["id", "file", "uploader", "created"]
+        fields = "__all__"
 
-    def validate(self, attrs):
-        max_attachments = 3
-        if Attachment.objects.filter(task=attrs["task"]).count() >= max_attachments:
-            raise ValidationError(
-                "Maximum number of attachments exceeded for this task."
-            )
+    # def validate(self, attrs):
+    #     max_attachments = 3
+    #     if Attachment.objects.filter(task=attrs["task"]).count() >= max_attachments:
+    #         raise ValidationError(
+    #             "Maximum number of attachments exceeded for this task."
+    #         )
 
-        if (
-            Attachment.objects.filter(project=attrs.get("project")).count()
-            >= max_attachments
-        ):
-            raise ValidationError(
-                "Maximum number of attachments exceeded for this project."
-            )
+    #     if (
+    #         Attachment.objects.filter(project=attrs.get("project")).count()
+    #         >= max_attachments
+    #     ):
+    #         raise ValidationError(
+    #             "Maximum number of attachments exceeded for this project."
+    #         )
 
-        if (
-            Attachment.objects.filter(comment=attrs.get("comment")).count()
-            >= max_attachments
-        ):
-            raise ValidationError(
-                "Maximum number of attachments exceeded for this comment."
-            )
+    #     if (
+    #         Attachment.objects.filter(comment=attrs.get("comment")).count()
+    #         >= max_attachments
+    #     ):
+    #         raise ValidationError(
+    #             "Maximum number of attachments exceeded for this comment."
+    #         )
 
-        max_file_size_mb = 20
-        max_file_size_bytes = max_file_size_mb * 1024 * 1024
+    #     max_file_size_mb = 20
+    #     max_file_size_bytes = max_file_size_mb * 1024 * 1024
 
-        if attrs["file"].size > max_file_size_bytes:
-            raise ValidationError("File size exceeds maximum limit (20MB).")
+    #     if attrs["file"].size > max_file_size_bytes:
+    #         raise ValidationError("File size exceeds maximum limit (20MB).")
 
-        return attrs
+    #     return attrs
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -133,7 +133,11 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         attachments_data = validated_data.pop("attachments", [])
+        assignees_data = validated_data.pop("assignees", [])
         project = Project.objects.create(**validated_data)
+
+        for assignee in assignees_data:
+            project.assignees.add(assignee)
 
         for attachment_data in attachments_data:
             Attachment.objects.create(project=project, **attachment_data)

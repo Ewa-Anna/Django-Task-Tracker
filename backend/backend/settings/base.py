@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "channels",
     "daphne",
+    "drf_api_logger",
     # Apps
     "tags",
     "user",
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware",
     "user.middleware.SetLastUserLoggin",
 ]
 
@@ -164,7 +166,12 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
         "user.permissions.IsProfileComplete",
     ],
-    "DEFAULT_PARSER_CLASSES": ("rest_framework.parsers.JSONParser",),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FileUploadParser',
+    ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
 }
@@ -275,3 +282,6 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+DRF_API_LOGGER_DATABASE = True
+DRF_API_LOGGER_METHODS = ["PATCH", "POST", "DELETE", "PUT"]
