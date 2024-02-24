@@ -159,6 +159,7 @@ class TaskStatistics(APIView):
     """
     This view returns statistics for all tasks and for tasks of a currently logged in user.
     It returns type of task (bug, improvements, question, etc.) and amount of them for pie chart.
+    Allows two parameters: alltasks and usertasks
     """
 
     serializer_class = TaskSerializer
@@ -172,7 +173,7 @@ class TaskStatistics(APIView):
         elif data_type == "usertasks":
             queryset = Task.objects.filter(assignees=self.request.user)
         else:
-            return Response({"error": "Invalid data parameter"}, status=400)
+            queryset = Task.objects.all()
 
         task_counts = queryset.values("type").annotate(count=Count("type"))
         task_data = {task["type"]: task["count"] for task in task_counts}
