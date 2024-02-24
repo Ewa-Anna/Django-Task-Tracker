@@ -24,9 +24,6 @@ const Dashboard = () => {
   };
 
 
-const {data:pieChartData}=useQuery("pieChartData",getReportStatistics)
-
-console.log(pieChartData)
 
   const containerRef = useRef<HTMLDivElement>(null);
   return (
@@ -444,7 +441,7 @@ console.log(pieChartData)
         </div>
         <div className="px-5">
           <DonutChart header={"Report statistics"}
-          pieData= {pieChartData}
+          
           />
 
           <div className="h-auto  px-3 mt-2">
