@@ -19,9 +19,11 @@ export const getTicketPriorityOptions = async () => {
 };
 
 
-export const getReportStatistics= async()=>{
+export const getReportStatistics= async(data:string)=>{
 
-const response = await clientApi.get("adminx/task-statistics/?limit=22");
+  const query= `?data=${data}`
+
+const response = await clientApi.get(`adminx/task-statistics/${query}`);
 return response.data;
 }
 

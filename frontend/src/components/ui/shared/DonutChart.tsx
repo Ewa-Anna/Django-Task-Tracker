@@ -1,5 +1,7 @@
-import React, { PureComponent, useRef, useState } from "react";
+import { getReportStatistics } from "@/features/ticket-api/ticket-api";
+import React, { PureComponent, useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { useQuery } from "react-query";
 import {
   PieChart,
   Pie,
@@ -11,34 +13,44 @@ import {
 
 const theme = "dark";
 
-const DonutChart = ({ header,pieData }) => {
+const DonutChart = ({ header, }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const {data:pieChartData,refetch}=useQuery("pieChartData",()=>getReportStatistics(sort),
+    {
+    refetchOnWindowFocus: false,
+    enabled: false //disable the query: 
+                   //this is how we keep it from running on component mount. 
+  })
+
+
 
   const [sort, setSort] = useState("overall");
   const [isOpen, setIsOpen] = useState(false);
 console.log(sort)
 
-console.log(pieData)
-
-
-  const data = [
-    { name: "Bug", value: 400 },
-    { name: "Feature", value: 300 },
-    { name: "Question", value: 300 },
-  ];
+useEffect(()=>{
+refetch()
+},[sort])
 
 
 
-  const transformedPieData = pieData&& Object.entries(pieData?.AllTasks).map(([key,value])=>{
 
 
-    return {name:key,value}
-  })
-  const transformedUserPieData = pieData&& Object.entries(pieData?.UserTasks).map(([key,value])=>{
+const transforPieData=(data)=>{
 
+  if(data){
+    const transformedPieData =  Object.entries(data).map(([key, value]) => ({
+  name: key.charAt(0).toUpperCase() + key.slice(1), // Zmiana pierwszej litery na wielką
+  value: value
+}))
+return transformedPieData
+  }
+return []
+}
 
-    return {name:key,value}
-  })
+const xd = transforPieData(pieChartData)
+
 
   const COLORS = ["#881337", "#8d6333", "#0e7490",];
 
@@ -77,9 +89,8 @@ console.log(pieData)
 const displaySortLabel= ()=>{
 let label
 
-if(sort==="last_month") label="Last Month"
-else if(sort==="last_week")label="Last Week"
-else if(sort==="today")label="Today"
+if(sort==="usertasks") label="My Tasks"
+
 else if(sort==="overall")label="Overall"
 return label
 }
@@ -119,30 +130,18 @@ return label
                 Overall
               </span>}
               
-       {  sort!=="today"&&     <span
+       {  sort!=="usertasks"&&     <span
                 onClick={(e) => {
                   e.stopPropagation();
-                  resort("today");
+                  resort("usertasks");
                 }}
                 className="hover:text-violet-600"
               >
-                Today
+                My Tasks
               </span>}
-          {  sort!=="last_week"&&  <span
-                className="hover:text-violet-600"
-              onClick={(e)=>{
-                e.stopPropagation();
-                resort("last_week")
-              }}
-              >Last Week</span>}
+        
 
-         {  sort!=="last_month"&&   <span
-                className="hover:text-violet-600"
-              onClick={(e)=>{
-                e.stopPropagation();
-                resort("last_month")
-              }}
-              >Last Month</span>}
+     
 
             </div>
           )}
@@ -161,7 +160,7 @@ return label
           <Pie
             stroke="black"
             isAnimationActive={true}
-            data={transformedPieData}
+            data={transforPieData(pieChartData)}
             cx="55%"
             cy="50%"
             labelLine={false}
@@ -171,7 +170,7 @@ return label
             fill="#8814d8"
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {xd.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}

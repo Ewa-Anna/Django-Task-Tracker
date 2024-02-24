@@ -16,7 +16,7 @@ import { Textarea } from "../textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "../button";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { deleteComment, editComment } from "@/features/ticket-api/ticket-api";
 import { Portal } from "./Portal";
 
@@ -33,6 +33,7 @@ export const CommentValidation = z.object({
 });
 const PostBox = ({ ...props }) => {
   const [isEditable, setEditable] = useState(false);
+  const queryClient= useQueryClient()
 
   const mutation = useMutation(editComment, {
     onSuccess: (data) => {
@@ -44,7 +45,9 @@ const PostBox = ({ ...props }) => {
   });
 
   const deleteMutation = useMutation(deleteComment, {
-    onSuccess: (data) => console.log(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries("ticketCommentList")
+    },
     onError: (e) => console.log(e),
   });
 
