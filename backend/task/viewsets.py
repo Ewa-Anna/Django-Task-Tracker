@@ -222,8 +222,16 @@ class TaskViewSet(viewsets.ModelViewSet):
         "DELETE": ["admin"],
     }
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if self.action == "create" or "update":
+            context.update(
+                {"parser_classes": [MultiPartParser, FormParser, FileUploadParser]}
+            )
+        return context
+
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action == "create" or "update":
             return TaskCreateSerializer
         return TaskSerializer
 
@@ -345,7 +353,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         if created_by:
             queryset = queryset.filter(created_by__username=created_by)
 
-        paginator = CustomPagination()
+        paginator = CommentPagination()
         paginated_queryset = paginator.paginate_queryset(queryset, request)
         serializer = CommentSerializer(paginated_queryset, many=True)
         return paginator.get_paginated_response(serializer.data)
