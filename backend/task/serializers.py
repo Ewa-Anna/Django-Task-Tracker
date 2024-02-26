@@ -17,37 +17,6 @@ class AttachmentSerializer(serializers.ModelSerializer):
         model = Attachment
         fields = "__all__"
 
-    # def validate(self, attrs):
-    #     max_attachments = 3
-    #     if Attachment.objects.filter(task=attrs["task"]).count() >= max_attachments:
-    #         raise ValidationError(
-    #             "Maximum number of attachments exceeded for this task."
-    #         )
-
-    #     if (
-    #         Attachment.objects.filter(project=attrs.get("project")).count()
-    #         >= max_attachments
-    #     ):
-    #         raise ValidationError(
-    #             "Maximum number of attachments exceeded for this project."
-    #         )
-
-    #     if (
-    #         Attachment.objects.filter(comment=attrs.get("comment")).count()
-    #         >= max_attachments
-    #     ):
-    #         raise ValidationError(
-    #             "Maximum number of attachments exceeded for this comment."
-    #         )
-
-    #     max_file_size_mb = 20
-    #     max_file_size_bytes = max_file_size_mb * 1024 * 1024
-
-    #     if attrs["file"].size > max_file_size_bytes:
-    #         raise ValidationError("File size exceeds maximum limit (20MB).")
-
-    #     return attrs
-
 
 class OwnerSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
@@ -102,6 +71,16 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
         if len(value) > max_assignees:
             raise serializers.ValidationError(
                 f"Maximum {max_assignees} assignees allowed for the project."
+            )
+
+        return value
+
+    def validate_attachments(self, value):
+        max_attachments = 3
+
+        if len(value) > max_attachments:
+            raise serializers.ValidationError(
+                f"Maximum {max_attachments} attachments allowed for the project."
             )
 
         return value
@@ -221,6 +200,16 @@ class TaskCreateSerializer(serializers.ModelSerializer):
 
         return task
 
+    def validate_attachments(self, value):
+        max_attachments = 3
+
+        if len(value) > max_attachments:
+            raise serializers.ValidationError(
+                f"Maximum {max_attachments} attachments allowed for the project."
+            )
+
+        return value
+
 
 class TaskSerializer(serializers.ModelSerializer):
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
@@ -265,6 +254,16 @@ class CommentSerializer(serializers.ModelSerializer):
             Attachment.objects.create(comment=comment, **attachment_data)
 
         return comment
+
+    def validate_attachments(self, value):
+        max_attachments = 3
+
+        if len(value) > max_attachments:
+            raise serializers.ValidationError(
+                f"Maximum {max_attachments} attachments allowed for the project."
+            )
+
+        return value
 
 
 class DictionaryContentSerializer(serializers.Serializer):
