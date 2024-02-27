@@ -8,6 +8,7 @@ import { ImTicket } from "react-icons/im";
 import { DataTable } from "@/components/ui/data-table";
 import { LuInspect } from "react-icons/lu";
 import { cn } from "@/lib/utils";
+import Loader from "@/components/ui/shared/Loader";
 
 
 const Tickets = () => {
@@ -64,6 +65,14 @@ const Tickets = () => {
     }
   ]
 
+  if(isLoading){
+  return(
+
+<Loader/>
+     
+
+  )
+}
 
   return (
     <main className="w-full h-full py-5 px-16 mx-auto my-12 custom-scrollbar overflow-scroll pb-20">

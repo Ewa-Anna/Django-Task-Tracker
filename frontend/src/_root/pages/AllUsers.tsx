@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LuUsers } from "react-icons/lu";
 import Cookies from 'js-cookie';
+import Loader from "@/components/ui/shared/Loader";
 
 
 const AllUsers = () => {
@@ -31,6 +32,15 @@ console.log(csrftoken)
     refetchOnWindowFocus:false,
   });
 
+  
+if(isLoading){
+  return(
+
+<Loader/>
+     
+
+  )
+}
  
   return (
     <main className="w-full h-full py-5 px-16 mx-auto my-12 custom-scrollbar overflow-scroll pb-20">

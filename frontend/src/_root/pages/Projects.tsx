@@ -19,6 +19,9 @@ import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 
 import { useQuery } from "react-query";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import Loader from "@/components/ui/shared/Loader";
+
 
 const Projects = () => {
   const {
@@ -70,6 +73,16 @@ const Projects = () => {
       },
     },
   ];
+
+if(isLoading){
+  return(
+
+<Loader/>
+     
+
+  )
+}
+
 
   return (
     <main className="w-full h-full py-5 px-16 mx-auto custom-scrollbar overflow-scroll pb-20  ">

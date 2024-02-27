@@ -10,13 +10,14 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import Loader from "./Loader";
 
 const theme = "dark";
 
 const DonutChart = ({ header, }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const {data:pieChartData,refetch}=useQuery("pieChartData",()=>getReportStatistics(sort),
+  const {data:pieChartData,refetch,isLoading}=useQuery("pieChartData",()=>getReportStatistics(sort),
     {
     refetchOnWindowFocus: false,
     enabled: false //disable the query: 
@@ -95,6 +96,8 @@ else if(sort==="overall")label="Overall"
 return label
 }
 
+
+
   return (
     <div className=" w-full p-2  h-1/3 flex rounded-[4px]  flex-col border-2 border-dark-3">
       <div className=" flex justify-between">
@@ -148,7 +151,7 @@ return label
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height="100%">
+{  isLoading?<Loader/> :   <ResponsiveContainer width="100%" height="100%">
         <PieChart width={400} height={400}>
           <Legend
             verticalAlign="middle"
@@ -178,7 +181,7 @@ return label
             ))}
           </Pie>
         </PieChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer>}
     </div>
   );
 };
