@@ -8,9 +8,6 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-
 from user.permissions import CustomPermission, IsProfileComplete
 
 # pylint: disable=import-error, no-name-in-module
@@ -40,7 +37,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
-    parser_classes = [FileUploadParser]
+    parser_classes = [MultiPartParser, FormParser, FileUploadParser]
 
     # pylint: disable=duplicate-code
     required_roles = {
@@ -57,56 +54,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return ProjectSerializer
 
     @action(detail=False, methods=["get"])
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                "title",
-                openapi.IN_QUERY,
-                description="Filter by title",
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                "owner",
-                openapi.IN_QUERY,
-                description="Filter by owner",
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                "tags",
-                openapi.IN_QUERY,
-                description="Filter by tags (input only one tag per query)",
-                type=openapi.TYPE_ARRAY,
-                items=openapi.Items(type="string"),
-            ),
-            openapi.Parameter(
-                "ordering",
-                openapi.IN_QUERY,
-                description="Ordering of results",
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                "visibility",
-                openapi.IN_QUERY,
-                description="Filter by visibility",
-                type=openapi.TYPE_STRING,
-                enum=["public", "private"],
-            ),
-            openapi.Parameter(
-                "start_date",
-                openapi.IN_QUERY,
-                description="Filter by start date (YYYY-MM-DD)",
-                type=openapi.TYPE_STRING,
-                format="date",
-            ),
-            openapi.Parameter(
-                "end_date",
-                openapi.IN_QUERY,
-                description="Filter by end date (YYYY-MM-DD)",
-                type=openapi.TYPE_STRING,
-                format="date",
-            ),
-        ],
-    )
     def project(self, request):
         title = request.query_params.get("title")
         owner = request.query_params.get("owner")
@@ -212,7 +159,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     pagination_class = CustomPagination
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
-    parser_classes = [FileUploadParser]
+    parser_classes = [MultiPartParser, FormParser, FileUploadParser]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
@@ -221,14 +168,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         "PATCH": ["member", "manager", "admin"],
         "DELETE": ["admin"],
     }
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        if self.action == "create" or "update":
-            context.update(
-                {"parser_classes": [MultiPartParser, FormParser, FileUploadParser]}
-            )
-        return context
 
     def get_serializer_class(self):
         if self.action == "create" or "update":
@@ -288,6 +227,9 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
+            attachment = request.FILES.get("attachment")
+            if attachment:
+                serializer.validated_data["attachment"] = attachment
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save(created_by=request.user)
@@ -326,7 +268,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     pagination_class = CommentPagination
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
-    parser_classes = [FileUploadParser]
+    parser_classes = [MultiPartParser, FormParser, FileUploadParser]
 
     required_roles = {
         "GET": ["guest", "member", "manager", "admin"],
