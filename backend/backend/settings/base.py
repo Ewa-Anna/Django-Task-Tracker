@@ -37,7 +37,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Libraries
     "rest_framework",
-    "drf_yasg",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
     "corsheaders",
     "rest_framework.authtoken",
     "django_rest_passwordreset",
@@ -285,3 +286,17 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 DRF_API_LOGGER_DATABASE = True
 DRF_API_LOGGER_METHODS = ["PATCH", "POST", "DELETE", "PUT"]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Task Tracker",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+    "COMPONENT_SPLIT_REQUEST": True,
+}

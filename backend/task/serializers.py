@@ -98,6 +98,7 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
+            "id",
             "assignees",
             "tags",
             "title",
@@ -180,6 +181,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = [
+            "id",
             "assignees",
             "title",
             "description",
@@ -195,8 +197,9 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         attachments_data = validated_data.pop("attachments", [])
         task = Task.objects.create(**validated_data)
 
-        for attachment_data in attachments_data:
-            Attachment.objects.create(task=task, **attachment_data)
+        if attachments_data:
+            for attachment_data in attachments_data:
+                Attachment.objects.create(task=task, **attachment_data)
 
         return task
 
@@ -213,7 +216,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
-    attachments = AttachmentSerializer(read_only=True, many=True)
+    attachments = AttachmentSerializer(read_only=True, many=True, required=False)
     created_by = CustomCreatedBySerializer(
         read_only=True, default=serializers.CurrentUserDefault()
     )
