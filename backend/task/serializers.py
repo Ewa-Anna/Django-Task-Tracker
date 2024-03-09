@@ -197,9 +197,8 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         attachments_data = validated_data.pop("attachments", [])
         task = Task.objects.create(**validated_data)
 
-        if attachments_data:
-            for attachment_data in attachments_data:
-                Attachment.objects.create(task=task, **attachment_data)
+        for attachment_data in attachments_data:
+            Attachment.objects.create(task=task, **attachment_data)
 
         return task
 
@@ -278,3 +277,30 @@ class DictionaryContentSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+
+class CommentCreateSerializer(serializers.ModelSerializer):
+    attachments = AttachmentSerializer(many=True, required=False)
+
+    class Meta:
+        model = Comment
+        fields = ["id", "attachments", "text", "project", "task", "created_by"]
+
+    def create(self, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        comment = Comment.objects.create(**validated_data)
+
+        for attachment_data in attachments_data:
+            Attachment.objects.create(comment=comment, **attachment_data)
+
+        return comment
+
+    def validate_attachments(self, value):
+        max_attachments = 3
+
+        if len(value) > max_attachments:
+            raise serializers.ValidationError(
+                f"Maximum {max_attachments} attachments allowed for the comment."
+            )
+
+        return value
