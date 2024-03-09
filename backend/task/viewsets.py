@@ -23,6 +23,7 @@ from .serializers import (
     TaskSerializer,
     TaskCreateSerializer,
     CommentSerializer,
+    CommentCreateSerializer,
     AttachmentSerializer,
 )
 from .utils import handle_permission_denied
@@ -117,6 +118,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
             tags_data = serializer.validated_data.pop("tags", [])
             project = serializer.save(created_by=self.request.user)
             project.tags.set(tags_data)
+
+            attachments_data = request.data.pop("attachments", [])
+
+            processed_attachments_data = []
+            for attachment_data in attachments_data:
+                processed_attachment_data = {"file": attachment_data}
+                processed_attachments_data.append(processed_attachment_data)
+
+            for attachment_data in processed_attachments_data:
+                attachment_data["uploader"] = request.user
+                Attachment.objects.create(project=project, **attachment_data)
 
             response_data = {
                 "success": True,
@@ -227,14 +239,21 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachment = request.FILES.get("attachment")
-            if attachment:
-                serializer.validated_data["attachment"] = attachment
-            serializer = self.get_serializer(data=request.data)
+            attachments_data = request.data.pop("attachments", [])
+            serializer = TaskCreateSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            serializer.save(created_by=request.user)
-            response_data = {"success": True, "message": "Task created successfully."}
+            task = serializer.save(created_by=request.user)
 
+            processed_attachments_data = []
+            for attachment_data in attachments_data:
+                processed_attachment_data = {"file": attachment_data}
+                processed_attachments_data.append(processed_attachment_data)
+
+            for attachment_data in processed_attachments_data:
+                attachment_data["uploader"] = request.user
+                Attachment.objects.create(task=task, **attachment_data)
+
+            response_data = {"success": True, "message": "Task created successfully."}
             return Response(response_data, status=status.HTTP_201_CREATED)
 
         # pylint: disable=broad-except
@@ -278,6 +297,11 @@ class CommentViewSet(viewsets.ModelViewSet):
         "DELETE": ["manager", "admin"],
     }
 
+    def get_serializer_class(self):
+        if self.action == "create" or "update":
+            return CommentCreateSerializer
+        return CommentSerializer
+
     @action(detail=False, methods=["get"])
     def comment(self, request):
         project = request.query_params.get("project")
@@ -311,6 +335,36 @@ class CommentViewSet(viewsets.ModelViewSet):
             return handle_permission_denied()
 
         return super().handle_exception(exc)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            attachments_data = request.data.pop("attachments", [])
+            serializer = CommentCreateSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            comment = serializer.save(created_by=request.user)
+
+            processed_attachments_data = []
+            for attachment_data in attachments_data:
+                processed_attachment_data = {"file": attachment_data}
+                processed_attachments_data.append(processed_attachment_data)
+
+            for attachment_data in processed_attachments_data:
+                attachment_data["uploader"] = request.user
+                Attachment.objects.create(comment=comment, **attachment_data)
+
+            response_data = {
+                "success": True,
+                "message": "Comment created successfully.",
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+        # pylint: disable=broad-except
+        except Exception as e:
+            response_data = {
+                "success": False,
+                "message": f"Error creating comment: {e}.",
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
