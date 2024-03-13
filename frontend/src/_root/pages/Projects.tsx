@@ -21,6 +21,7 @@ import { useQuery } from "react-query";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Loader from "@/components/ui/shared/Loader";
+import { useEffect } from "react";
 
 
 const Projects = () => {
@@ -29,8 +30,25 @@ const Projects = () => {
     isError,
     isLoading,
     isFetching,
-  } = useQuery("users", () => getProjects());
+  } = useQuery(["projects"], () => getProjects());
 
+
+  useEffect(()=>{
+
+ 
+    console.log(projects)
+
+ 
+  },[projects])
+
+    useEffect(()=>{
+
+console.log("123")
+    console.log(projects)
+
+ 
+  },[])
+  
   const location = useLocation();
   const currentLocation = location.pathname;
 
@@ -50,7 +68,7 @@ const Projects = () => {
 
         return <div className="flex flex-col">
           <span className="text-xs">{project.owner?.first_name}</span>
-          <span>{project.owner?.first_name}</span>
+          <span>{ project.owner?.first_name}</span>
         </div>;
       },
     },
@@ -65,7 +83,7 @@ const Projects = () => {
         return (
           <Link
             className="hover:text-violet-400 transition-all cursor-pointer"
-            to={`${currentLocation}/project/${project.id}`}
+            to={`${currentLocation}/project/${ project.id}`}
           >
             <LuInspect size={21} />
           </Link>
@@ -73,6 +91,8 @@ const Projects = () => {
       },
     },
   ];
+
+
 
 if(isLoading){
   return(
@@ -101,13 +121,15 @@ if(isLoading){
         </div>
       </div>
 
+
+
+
       {/* TABLE */}
 
-      {projects && <DataTable className="mt-4" columns={columns} data={projects?.results} />}
+      {projects && <DataTable className="mt-4" columns={projects && columns} data={projects.results ?? []} />}
 
       <div className=" grid grid-cols-1 gap-8 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-2 lg:gap-6 px-22 xl:hidden">
-        {projects &&
-          projects.results.map((project) => {
+      {projects && projects?.results && projects.results.map((project) => {
             return (
               <Card key={project.id} className=" flex flex-col  border-dark-4">
                 <CardHeader className="break-words">

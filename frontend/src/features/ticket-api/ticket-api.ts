@@ -6,8 +6,8 @@ export const getTickets = async () => {
   return response.data;
 };
 
-export const createTicket = async (formData:INewTicket) => {
-  const response = await clientApi.post(`task/tasks/`, formData,{
+export const createTicket = async (formData: INewTicket) => {
+  const response = await clientApi.post(`task/tasks/`, formData, {
     xsrfHeaderName: "X-CSRFToken"
   });
   return response.data;
@@ -19,40 +19,42 @@ export const getTicketPriorityOptions = async () => {
 };
 
 
-export const getReportStatistics= async(data:string)=>{
+export const getReportStatistics = async (data: string) => {
 
-  const query= `?data=${data}`
+  const query = `?data=${data}`
 
-const response = await clientApi.get(`adminx/task-statistics/${query}`);
-return response.data;
+  const response = await clientApi.get(`adminx/task-statistics/${query}`);
+  return response.data;
 }
 
-export const getTicketDetails= async(ticketId)=>{
-const response = await clientApi.get(`task/tasks/${ticketId}`)
-return response.data
+export const getTicketDetails = async (ticketId) => {
+  console.log("ticketId")
+  console.log(ticketId)
+  const response = await clientApi.get(`task/tasks/${ticketId}`)
+  return response.data
 
 }
 
-export const addComment= async(formData)=>{
-  const response = await clientApi.post('task/comments/',formData)
+export const addComment = async (formData) => {
+  const response = await clientApi.post('task/comments/', formData)
   return response.data
 }
 
-export const getTicketCommentList = async(id?:string)=>{
+export const getTicketCommentList = async (id?: string) => {
   const response = await clientApi.get(`task/comment-for-tasks/${id}`)
   return response.data
 }
 
-export const editComment= async({id,formData})=>{
+export const editComment = async ({ id, formData }) => {
 
   console.log(id)
   console.log(formData)
 
-  const response = await clientApi.patch(`task/comments/${id}/`,formData)
+  const response = await clientApi.patch(`task/comments/${id}/`, formData)
   return response.data
 }
 
-export const deleteComment = async(id)=>{
+export const deleteComment = async (id) => {
 
   const response = await clientApi.delete(`task/comments/${id}/`)
   return response.data
