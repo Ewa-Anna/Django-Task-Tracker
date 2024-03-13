@@ -119,7 +119,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             project = serializer.save(created_by=self.request.user)
             project.tags.set(tags_data)
 
-            attachments_data = request.data.pop("attachments", [])
+            attachments_data = request.data.copy().pop("attachments", [])
 
             processed_attachments_data = []
             for attachment_data in attachments_data:
@@ -239,7 +239,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachments_data = request.data.pop("attachments", [])
+            attachments_data = request.data.copy().pop("attachments", [])
             serializer = TaskCreateSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             task = serializer.save(created_by=request.user)
@@ -338,7 +338,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachments_data = request.data.pop("attachments", [])
+            attachments_data = request.data.copy().pop("attachments", [])
             serializer = CommentCreateSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             comment = serializer.save(created_by=request.user)
