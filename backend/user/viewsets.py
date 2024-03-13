@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from backend.pagination import CustomPagination
 from .serializers import UserSerializer
 from .permissions import CustomPermission, IsProfileComplete
 
@@ -21,6 +22,7 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, CustomPermission, IsProfileComplete]
+    pagination_class = CustomPagination
 
     # pylint: disable=duplicate-code
     required_roles = {
