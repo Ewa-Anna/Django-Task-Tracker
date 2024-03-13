@@ -34,7 +34,7 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
       case "txt":
         return <img src="/assets/icons/txt-placeholder.svg" alt="txt" />;
       default:
-        return <img src="/assets/images/default-icon.svg" alt="" />;
+        return <img src="/assets/images/default-icon.svg" alt="img" />;
     }
   };
 

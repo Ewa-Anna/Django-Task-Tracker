@@ -68,7 +68,7 @@ const ProjectFormStepFour = ({
                   <div className="  flex justify-between overflow-hidden flex-col md:min-w-[55wv] lg:flex-row lg:min-w-[55vw] mb-8   ">
                     <div className="px-6 py-4 border-2 rounded-[5px] border-dark-4 flex flex-col justify-start  gap-4 min-h-[450px] min-w-[250px] flex-1 overflow-y-scroll custom-scrollbar ">
                       {users &&
-                        users?.results
+                        users
                           .filter((availableUser) => {
                             const alreadyAsignedIds = form
                               .getValues("assignees")

@@ -5,7 +5,7 @@ import {
 import { formatTimestamp } from "@/lib/utils";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ProjectDetails from "./ProjectDetails";
 import { Button } from "@/components/ui/button";
 import { CgSearchLoading } from "react-icons/cg";
@@ -22,15 +22,15 @@ import { FcHighPriority } from "react-icons/fc";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 const TicketDetails = () => {
-  const { ticketId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const { data: ticketDetails } = useQuery("ticketDetails", () =>
-    getTicketDetails(ticketId)
+    getTicketDetails(id)
   );
 
   const { data: commentList } = useQuery("ticketCommentList", () =>
-    getTicketCommentList(ticketId)
+    getTicketCommentList(id)
   );
 
   console.log(commentList);
@@ -39,13 +39,17 @@ const TicketDetails = () => {
     <div className="flex justify-center h-[calc(100%-58px)]  overflow-scroll custom-scrollbar w-full   ">
       <div className="w-[90%] md:w-[80%] lg:w-[85%] xl:w-[75%] pt-8 px-0 flex gap-14 h-full  ">
         <div className="w-3/4 flex flex-col gap-5 h-full ">
-          <div className="font-semidbold uppercase text-sm text-slate-200 flex gap-1 ">
+          <div className="font-semidbold uppercase text-sm text-slate-200 flex justify-between gap-1 ">
             <IoMdArrowRoundBack
               className="cursor-pointer"
               size={34}
               onClick={() => navigate(-1)}
             />
+            <Link to={`/edit-ticket/${id}`}>
+            <Button variant="outline">Edit</Button>
+            </Link>
           </div>
+        
           <div className=" flex flex-col gap-6  rounded-[5px]">
             <h1 className="text-2xl font-semibold uppercase  w-[85%] break-all">
               {ticketDetails?.title}
@@ -166,7 +170,7 @@ ${
             <h2 className="mb-3 mt-8 text-xl font-semibold">Comments</h2>
 
             {commentList &&
-              commentList?.results.map((comment) => {
+              commentList.map((comment) => {
                 return <PostBox {...comment} />;
               })}
           </div>

@@ -28,18 +28,23 @@ import { TicketValidationSchema } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import { Value } from "@radix-ui/react-select";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
-import { createTicket } from "@/features/ticket-api/ticket-api";
+import { useMutation, useQuery } from "react-query";
+import { createTicket, getTicketPriorityOptions } from "@/features/ticket-api/ticket-api";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { getUserProjects } from "@/features/project-api/project-api";
+import { IactionType } from "@/enums/enums";
+import { useEffect } from "react";
+
+
 
 type ProjectFormProps = {
-  title: string;
-  description: string;
-  file: string[];
-  tags: string[];
+  action:IactionType;
+  ticket?:INewTicket;
+
 };
 
 export type INewTicket = {
+  project:string;
   title: string;
   description: string;
   type: string;
@@ -47,20 +52,53 @@ export type INewTicket = {
   file: File[];
 };
 
-const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => {
+
+
+
+
+const TicketForm = ({ticket,action}: ProjectFormProps) => {
   const navigate = useNavigate();
   const { showToast } = useAuthContext();
-  // 1. Define your form.
+  
+
+
+
+const {data:priorityOptions}=useQuery(["priorityOptions"],()=>getTicketPriorityOptions())
+const {data:projects}=useQuery(["projects"],()=>getUserProjects(),{
+
+})
+
+
+
+
   const form = useForm<z.infer<typeof TicketValidationSchema>>({
     resolver: zodResolver(TicketValidationSchema),
     defaultValues: {
-      project:"",
+      project:ticket? ticket.project.toString():"",
       title: ticket ? ticket.title : "",
       description: ticket ? ticket.description : "",
       type: ticket ? ticket.type : "",
       priority: ticket ? ticket.priority : "",
     },
   });
+
+
+
+
+
+  useEffect(()=>{
+const defaultValues = form.getValues();
+
+form.reset(defaultValues)
+
+
+
+
+
+  },[ticket,form.reset])
+
+
+
 
   const mutation = useMutation(createTicket, {
     onSuccess: (data) => {
@@ -95,6 +133,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
               control={form.control}
               name="project"
               render={({ field }) => (
+       
                 <FormItem>
                   <FormLabel>Project</FormLabel>
                   <Select
@@ -107,9 +146,9 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {projects&&projects?.map((project)=>{ 
+                      {projects&& projects.length>0 && projects.map((project)=>{ 
                         return (
-                          <SelectItem className="cursor-pointer" value={project?.id.toLocaleString()}>
+                          <SelectItem className="cursor-pointer"  value={String(project.id)}>
                             {project?.title}
                           </SelectItem>
                         );
@@ -259,7 +298,7 @@ const TicketForm = ({ ticket, priorityOptions, projects }: ProjectFormProps) => 
             type="submit"
             className="hover:bg-violet-600 whitespace-nowrap"
           >
-            Create
+     {IactionType.update? "Save":"Create"}
           </Button>
         </div>
       </form>

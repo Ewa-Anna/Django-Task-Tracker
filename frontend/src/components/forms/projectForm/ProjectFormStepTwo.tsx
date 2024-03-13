@@ -120,7 +120,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
                       <SelectContent>
                         <SelectGroup>
                           {users &&
-                            users?.results.map((user) => {
+                            users?.map((user) => {
                               return (
                                 <SelectItem
                                   className="cursor-pointer "
@@ -167,7 +167,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
                   <FormControl>
                     <MultiSelect
                       multiple
-                      options={tags?.results}
+                      options={tags}
                       value={value}
                       onChange={(o) => setValue(o)}
                     />
@@ -184,7 +184,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
                 <FormItem>
                   <FormLabel className="shad-form_label">Add files</FormLabel>
                   <FormControl>
-                    <FileUploader fieldChange={field.onChange} mediaUrl="" />
+                    <FileUploader fieldChange={field.onChange} mediaUrl={project?.imageUrl}/>
                   </FormControl>
 
                   <FormMessage className="shad-form_message" />
