@@ -119,8 +119,22 @@ form.reset(defaultValues)
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof TicketValidationSchema>) {
 
-    console.log(values);
-    mutation.mutate(values)
+const {title,description,project,file}=values
+
+const formData = new FormData();
+
+
+formData.append("title",title);
+formData.append("description",description);
+formData.append("project",project);
+
+Array.from(file).forEach((imageFile) => {
+      formData.append("attachments", imageFile);
+    });
+
+
+   
+    mutation.mutate(formData)
   }
 
   return (

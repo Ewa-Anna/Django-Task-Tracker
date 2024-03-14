@@ -10,12 +10,15 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Button } from "../button";
 import { Input } from "../input";
 import { useMutation, useQueryClient } from "react-query";
 import { addComment } from "@/features/ticket-api/ticket-api";
 import { Textarea } from "../textarea";
+import FileUploader from "./FileUploader";
+import { useState } from "react";
 
 
 interface Props {
@@ -27,7 +30,7 @@ interface Props {
 
 export const CommentValidation = z.object({
   comment: z.string().nonempty().min(3, { message: "Minimum 3 characters." }  ).max(500,{message:"You have exceeded the character limit. Please shorten your comment"}),
-
+ file: z.custom<File[]>(),
 });
 
 function Comment({ ticketId,projectId, currentUserImg, currentUserId }: Props) {
@@ -35,10 +38,15 @@ function Comment({ ticketId,projectId, currentUserImg, currentUserId }: Props) {
     resolver: zodResolver(CommentValidation),
     defaultValues: {
       comment: "",
+      file:[],
 
     },
   });
 
+  const [file,setFile]=useState([]);
+
+const fileRef = form.register("file");
+  
 const queryClient= useQueryClient()
 const mutation = useMutation(addComment,{
     onSuccess:(data)=>{
@@ -56,30 +64,34 @@ console.log(e)
   const onSubmit = async (values) => {
 
     // form.reset();
-    const obj = {
-        text:values.comment,
-        project:projectId,
-        task:ticketId
-    }
-        mutation.mutate(obj)
-    console.log(values)
+
+const imageFiles = values.file;
+const formData = new FormData();
+
+formData.append("text",values.comment);
+formData.append("project",projectId);
+formData.append("project",projectId);
+formData.append("task",ticketId);
+
+ Array.from(imageFiles).forEach((imageFile) => {
+      formData.append("attachments", imageFile);
+    });
+
+mutation.mutate(formData)
+
 
   };
 
   return (
     <Form {...form}>
-      <form className="comment-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className=" comment-forms flex flex-col gap-1" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="comment"
           render={({ field }) => (
-            <FormItem className="flex w-full items-center gap-3">
+            <FormItem className="flex w-full items-center">
               <FormLabel>
-              <img
-            src={currentUserImg || "/assets/icons/profile-placeholder.svg"}
-            alt="Profile image"
-            className="h-14 w-14 rounder-full"
-          />
+     
               </FormLabel>
               <FormControl className="border-none bg-transparent custom-scrollbar">
                 <Textarea
@@ -93,7 +105,24 @@ console.log(e)
           )}
         />
 
-        <Button type="submit" className="comment-form_btn">
+          <FormField
+          control={form.control}
+          name="file"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">Files</FormLabel>
+              <FormControl>
+<Input className="border-2 border-dashed border-gray-500" type="file" {...fileRef}  onChange={(event) => {
+    field.onChange(event.target?.files?.[0] ?? undefined);
+  }}/>
+              </FormControl>
+
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="comment-form_btn mt-1">
           Reply
         </Button>
       </form>

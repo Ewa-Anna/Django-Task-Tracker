@@ -18,14 +18,14 @@ import { RiGitRepositoryPrivateFill } from "react-icons/ri";
 import { Accessibility } from "lucide-react";
 
 const ProjectDetails = () => {
-  const { projectId } = useParams();
+  const { id } = useParams();
 
   const {
     data: project,
     isError,
     isLoading,
     isFetching,
-  } = useQuery("projectDetails", () => getProject(projectId), {
+  } = useQuery("projectDetails", () => getProject(id), {
     refetchOnWindowFocus: false,
   });
 
