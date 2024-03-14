@@ -51,7 +51,7 @@ if(isLoading){
      </div>
       <div className="  grid grid-cols-1 gap-8 md:grid-cols-2 px-18 md:gap-4 lg:grid-cols-4 lg:gap-12 px-22">
         {users &&
-          users.map((user) => {
+          users?.results.map((user) => {
             return (
               <Card key={user.id} className="flex flex-col justify-between  border-dark-4 ">
                 <CardHeader className="flex-row gap-4 items-center justify-evenly flex flex-wrap-reverse">

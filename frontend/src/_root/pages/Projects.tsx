@@ -33,21 +33,8 @@ const Projects = () => {
   } = useQuery(["projects"], () => getProjects());
 
 
-  useEffect(()=>{
-
- 
-    console.log(projects)
-
- 
-  },[projects])
-
-    useEffect(()=>{
-
-console.log("123")
-    console.log(projects)
-
- 
-  },[])
+  console.log("projects");
+  console.log(projects);
   
   const location = useLocation();
   const currentLocation = location.pathname;
