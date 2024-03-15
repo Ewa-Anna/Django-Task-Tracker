@@ -113,7 +113,7 @@ mutation.mutate(formData)
             <FormItem>
               <FormLabel className="shad-form_label">Files</FormLabel>
               <FormControl>
-<Input className="border-2 border-dashed border-gray-500" type="file" {...fileRef}  onChange={(event) => {
+<Input className="border-2 border-dashed border-gray-500 cursor-pointer" type="file" {...fileRef}  onChange={(event) => {
     field.onChange(event.target?.files?.[0] ?? undefined);
   }}/>
               </FormControl>
