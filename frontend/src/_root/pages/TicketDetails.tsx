@@ -20,6 +20,7 @@ import { FcLowPriority } from "react-icons/fc";
 import { FcMediumPriority } from "react-icons/fc";
 import { FcHighPriority } from "react-icons/fc";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { TbFileDownload } from "react-icons/tb";
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -39,7 +40,7 @@ const TicketDetails = () => {
     <div className="flex justify-center h-[calc(100%-58px)]  overflow-scroll custom-scrollbar w-full   ">
       <div className="w-[90%] md:w-[80%] lg:w-[85%] xl:w-[75%] pt-8 px-0 flex gap-14 h-full  ">
         <div className="w-3/4 flex flex-col gap-5 h-full ">
-          <div className="font-semidbold uppercase text-sm text-slate-200 flex justify-between gap-1 ">
+          <div className="font-semidbold uppercase text-sm text-slate-200 flex justify-between gap-1  ">
             <IoMdArrowRoundBack
               className="cursor-pointer"
               size={34}
@@ -148,18 +149,42 @@ ${
                   </div>
                   <div className="w-[300px] flex flex-col  gap-2">
                     <span className="title">Attachments</span>
-                    <span className="desc">0</span>
+                    <span className="desc">{ticketDetails?.attachments.length}</span>
                   </div>
                   <div className="w-[300px] flex flex-col  gap-2">
-                    <span className="title">Avg response time</span>
-                    <span className="desc">4 hours</span>
+                    <span className="title">Comments</span>
+                    <span className="desc">{commentList?.length??"loading"}</span>
                   </div>
                 </div>
+                
+
                 <hr className="mb-5 mt-5 h-0 border-[0.2] border-dark-3 " />
+               
+              <div>
+                <h3>Files</h3>
+                {ticketDetails?.attachments.length>0&& ticketDetails?.attachments.map((attachment)=>{
+
+                  const url = attachment.file;
+const parts = url.split('/');
+const fileName = parts[parts.length -1];
+                  return(
+                      <div className="flex gap-2 p-2 mt-4" >
+   <div className="flex gap-1 text-gray-400 font-semibold cursor-pointer w-fit group">
+       <TbFileDownload size={24} className="group-hover:text-gray-300 transition ease-in-out delay-90 "/>
+      <span className="group-hover:text-gray-300 transition ease-in-out delay-90">{fileName}</span>
+   </div>
+  
+   
+   
+  </div>
+                  )
+                })}
               </div>
+              </div>
+
             </div>
           </div>
-          <div className="mt-10 ">
+          <div className="mt-10 pb-10 ">
             <Comment
               ticketId={ticketDetails?.id}
               projectId={ticketDetails?.project}
