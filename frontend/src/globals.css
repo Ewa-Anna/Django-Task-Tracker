@@ -258,6 +258,9 @@ html {
 .comment-form_btn {
   @apply rounded-3xl bg-primary-500 px-8 py-2  text-light-1 max-xs:w-full !important;
 }
+.comment-form-save_btn{
+    @apply rounded-[6px] bg-green-900 px-6 py-2  text-light-1 max-xs:w-full !important;
+}
 .comment-form {
   @apply mt-10 flex items-center gap-4 border-y border-y-dark-4 py-5 max-xs:flex-col !important;
 }
