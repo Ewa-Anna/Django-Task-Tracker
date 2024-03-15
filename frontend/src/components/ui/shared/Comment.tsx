@@ -50,7 +50,8 @@ const fileRef = form.register("file");
 const queryClient= useQueryClient()
 const mutation = useMutation(addComment,{
     onSuccess:(data)=>{
-      queryClient.invalidateQueries("ticketCommentList")
+      form.reset();
+      queryClient.invalidateQueries("ticketCommentList");
     },
     onError:(e)=>{
 console.log(e)
@@ -63,7 +64,7 @@ console.log(e)
 
   const onSubmit = async (values) => {
 
-    // form.reset();
+     
 
 const imageFiles = values.file;
 const formData = new FormData();
@@ -122,8 +123,8 @@ mutation.mutate(formData)
           )}
         />
 
-        <Button type="submit" className="comment-form_btn mt-1">
-          Reply
+        <Button type="submit" className="comment-form_btn mt-1" disabled={mutation.isLoading}>
+          {mutation.isLoading?"Sending...":"Submit"}
         </Button>
       </form>
     </Form>
