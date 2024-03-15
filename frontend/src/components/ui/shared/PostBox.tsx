@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { AiFillLike } from "react-icons/ai";
 import { MdEdit } from "react-icons/md";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { TiDelete } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
+import { TbFileDownload } from "react-icons/tb";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -132,12 +134,47 @@ const PostBox = ({ ...props }) => {
                 )}
               />
 
-              <Button type="submit" className="comment-form_btn">
-                Submit
+          <div className=" flex justify-end gap-1 mt-2">
+                <Button type="submit" className="comment-form-save_btn" >
+                
+             Save
               </Button>
+              <Button onClick={()=>setEditable(false)} className="hover:bg-gray-800 rounded-[6px]">Cancel</Button>
+          </div>
             </form>
           </Form>
         )}
+        
+      <hr className=" mt-3 h-0 border-2 border-dark-3" />
+        {props?.attachments.length>0&&(
+  <div className="bg-dark-2 py-1 px-4">
+ {props.attachments.map((attachment)=>{
+const url = attachment.file;
+const parts = url.split('/');
+const fileName = parts[parts.length -1];
+
+
+  return(
+  <div className="flex gap-2" >
+   <div className="flex gap-1 text-gray-400 font-semibold cursor-pointer w-fit group">
+       <TbFileDownload size={24} className="group-hover:text-gray-300 transition ease-in-out delay-90 "/>
+      <span className="group-hover:text-gray-300 transition ease-in-out delay-90">{fileName}</span>
+   </div>
+   {isEditable&&(
+   <TiDelete size={23} className="text-rose-800 cursor-pointer hover:text-rose-500"/>
+   )}
+  </div>
+  
+ 
+  )
+ })}   
+   
+ 
+    
+    </div>
+)}
+
+   
         <div className="flex items-center gap-5 px-3 mt-6 ">
           <span className="cursor-pointer">
             <AiFillLike size={19} />
@@ -154,7 +191,6 @@ const PostBox = ({ ...props }) => {
         </div>
       </div>
 
-      <hr className="mb-5 mt-5 h-0 border-2 border-dark-3" />
     </div>
   );
 };
