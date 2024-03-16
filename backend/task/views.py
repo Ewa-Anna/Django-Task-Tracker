@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from user.models import ROLES, THEMES, GENDER
 from user.permissions import CustomPermission, IsProfileComplete
+from backend.pagination import CommentPagination
 
 from .serializers import (
     DictionaryContentSerializer,
@@ -195,6 +196,7 @@ class CommentForTaskView(ListAPIView):
 
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsProfileComplete]
+    pagination_class = CommentPagination
 
     def get_queryset(self):
         task_id = self.kwargs.get("task_id")
