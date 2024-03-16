@@ -83,6 +83,6 @@ urlpatterns = [
     path(
         "comment-for-tasks/<int:task_id>",
         CommentForTaskView.as_view(),
-        name="comment-for-taskk",
+        name="comment-for-task",
     ),
 ]

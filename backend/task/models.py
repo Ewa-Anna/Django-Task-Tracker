@@ -189,7 +189,6 @@ class Attachment(models.Model):
         blank=True,
     )
 
-    # change to URL
     file = models.FileField(
         upload_to="attachments/%Y/%m/%d/", validators=[validate_file_size]
     )

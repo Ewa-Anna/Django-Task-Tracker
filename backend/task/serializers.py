@@ -184,6 +184,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class TaskCreateSerializer(serializers.ModelSerializer):
     attachments = AttachmentSerializer(many=True, required=False)
+    created_by = CustomCreatedBySerializer(
+        read_only=True, default=serializers.CurrentUserDefault()
+    )
+    comments_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
@@ -198,6 +202,8 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             "project",
             "archive",
             "attachments",
+            "created_by",
+            "comments_count",
         ]
 
     def create(self, validated_data):
@@ -218,7 +224,9 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             )
 
         return value
-
+    
+    def get_comments_count(self, obj):
+        return Comment.objects.filter(task=obj).count()
 
 class TaskSerializer(serializers.ModelSerializer):
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
