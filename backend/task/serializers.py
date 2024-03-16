@@ -12,10 +12,17 @@ from .models import Project, Task, Comment, Attachment
 
 class AttachmentSerializer(serializers.ModelSerializer):
     uploader = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Attachment
-        fields = "__all__"
+        fields = ["id", "url", "created", "task", "project", "comment", "uploader"]
+
+    def get_url(self, obj):
+        request = self.context.get("request")
+        if obj.file:
+            return request.build_absolute_uri(obj.file.url)
+        return None
 
 
 class OwnerSerializer(serializers.ModelSerializer):
