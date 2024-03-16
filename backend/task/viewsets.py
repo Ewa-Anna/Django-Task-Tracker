@@ -16,6 +16,7 @@ from backend.pagination import (
     CommentPagination,
 )
 
+from .views import CommentForTaskView
 from .models import Project, Task, Comment, Attachment
 from .serializers import (
     ProjectSerializer,
@@ -276,7 +277,20 @@ class TaskViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN,
             )
         return super().update(request, *args, **kwargs)
+    
+    @action(detail=True, methods=["get"])
+    def comments_count(self, request, pk=None):
+        task = self.get_object()
+        view = CommentForTaskView()
+        view.request = request
+        queryset = view.get_queryset()
+        comments_count = queryset.filter(task_id=task.id).count()
 
+        serializer = self.get_serializer(task)
+        task_data = serializer.data
+        task_data['comments_count'] = comments_count
+
+        return Response(task_data)
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
