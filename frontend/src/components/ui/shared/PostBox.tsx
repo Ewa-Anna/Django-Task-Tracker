@@ -149,7 +149,7 @@ const PostBox = ({ ...props }) => {
         {props?.attachments.length>0&&(
   <div className="bg-dark-2 py-1 px-4">
  {props.attachments.map((attachment)=>{
-const url = attachment.file;
+const url = attachment?.url;
 const parts = url.split('/');
 const fileName = parts[parts.length -1];
 
