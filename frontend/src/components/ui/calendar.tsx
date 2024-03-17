@@ -12,11 +12,20 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker>
 function Calendar({
   className,
   classNames,
+  defaultDate,
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+
+
+//  const now = new Date();
+//   const defaultDate = new Date(2006, 0, 1); // Ustawia datę początkową na 1 stycznia 2000 roku
+
+
+
   return (
     <DayPicker
+  defaultMonth={defaultDate}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
