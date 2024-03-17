@@ -153,7 +153,7 @@ ${
                   </div>
                   <div className="w-[300px] flex flex-col  gap-2">
                     <span className="title">Comments</span>
-                    <span className="desc">{commentList?.length??"loading"}</span>
+                    <span className="desc">{ticketDetails?.comments_count??"loading"}</span>
                   </div>
                 </div>
                 
@@ -164,7 +164,7 @@ ${
                 <h3>Files</h3>
                 {ticketDetails?.attachments.length>0&& ticketDetails?.attachments.map((attachment)=>{
 
-                  const url = attachment.file;
+                  const url = attachment.url;
 const parts = url.split('/');
 const fileName = parts[parts.length -1];
                   return(
@@ -195,7 +195,7 @@ const fileName = parts[parts.length -1];
             <h2 className="mb-3 mt-8 text-xl font-semibold">Comments</h2>
 
             {commentList &&
-              commentList.map((comment) => {
+              commentList?.results.map((comment) => {
                 return <PostBox {...comment} />;
               })}
           </div>

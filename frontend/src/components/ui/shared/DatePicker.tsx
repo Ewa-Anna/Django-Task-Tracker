@@ -13,9 +13,26 @@ import {
 } from "@/components/ui/popover"
 
 
-export function DatePicker({ onChange }: { onChange: (date: Date) => void }) {
+type DatePickerProps ={
+  minAge?:string;
+  maxAge?:string;
+  onChange: (date: Date) => void ;
+}
+
+export function DatePicker({ onChange,minAge = '0', maxAge = '0' }:DatePickerProps) {
     const [date, setDate] = React.useState<Date>()
    
+  const defaultDate = new Date();
+  defaultDate.setFullYear(2000);
+
+const now = new Date();
+const maxDate = new Date();
+const minDate = new Date();
+maxDate.setFullYear(maxDate.getFullYear() - Number(minAge));
+minDate.setFullYear(minDate.getFullYear() - Number(maxAge));
+
+console.log(maxDate)
+
     return (
       <Popover>
         <PopoverTrigger asChild>
@@ -32,13 +49,20 @@ export function DatePicker({ onChange }: { onChange: (date: Date) => void }) {
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0 bg-dark-4"  >
           <Calendar
-          
+          defaultDate={new Date(maxDate ||new Date())}
             mode="single"
             selected={date}
             onSelect={(newDate: Date) => {
                 setDate(newDate);
-                onChange(newDate); // Dodaj tę linijkę
+                onChange(newDate);
               }}
+          disabled={date => {
+    if (minAge === '0' && maxAge === '0') {
+                            return false; // Żadne daty nie są wyłączone
+                        }
+
+  return date > maxDate|| date < minDate;
+}}
             initialFocus
             
           />

@@ -184,7 +184,7 @@ const ProjectFormStepTwo = ({ currentStep, users, setCurrentStep, tags }) => {
                 <FormItem>
                   <FormLabel className="shad-form_label">Add files</FormLabel>
                   <FormControl>
-                    <FileUploader fieldChange={field.onChange} mediaUrl={project?.imageUrl}/>
+                    <FileUploader fieldChange={field.onChange} />
                   </FormControl>
 
                   <FormMessage className="shad-form_message" />

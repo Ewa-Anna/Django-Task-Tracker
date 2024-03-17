@@ -17,9 +17,15 @@ import Profile from "./_root/pages/Profile";
 import Tickets from "./_root/pages/Tickets";
 import Projects from "./_root/pages/Projects";
 import Dashboard from "./_root/pages/Dashboard";
+import ManageProfileLayout from "./_root/ManageProfileLayout";
+import ProfileForm from "./components/forms/ProfileForm/ProfileForm";
+import AccountForm from "./components/accountForm/AccountForm";
+import NotificationForm from "./components/forms/notificationForm/NotificationForm";
 
 
 function App() {
+
+  
   return (
     <main className="flex h-screen">
       <Routes>
@@ -44,6 +50,13 @@ function App() {
           <Route path="all-users" element={<AllUsers />} />
           <Route path="tickets" element={<Tickets />} />
           <Route path="projects" element={<Projects />} />
+
+          <Route path="manage" element={<ManageProfileLayout/>} >
+
+<Route index element={<ProfileForm/>}/>
+<Route path="account" element={<AccountForm/>}/>
+<Route path="notifications" element={<NotificationForm/>}/>
+            </Route>
         </Route>
       </Routes>
       <Toaster />

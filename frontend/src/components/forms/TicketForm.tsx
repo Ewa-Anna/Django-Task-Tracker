@@ -79,6 +79,7 @@ const {data:projects}=useQuery(["projects"],()=>getUserProjects(),{
       description: ticket ? ticket.description : "",
       type: ticket ? ticket.type : "",
       priority: ticket ? ticket.priority : "",
+      file:ticket?ticket.file:[]
     },
   });
 
@@ -88,10 +89,12 @@ const {data:projects}=useQuery(["projects"],()=>getUserProjects(),{
 
   useEffect(()=>{
 const defaultValues = form.getValues();
+// console.log("default")
+// console.log(defaultValues)
 
-form.reset(defaultValues)
+// form.reset(defaultValues)
 
-
+form.reset(ticket)
 
 
 
@@ -127,6 +130,8 @@ const formData = new FormData();
 formData.append("title",title);
 formData.append("description",description);
 formData.append("project",project);
+
+console.log(file)
 
 Array.from(file).forEach((imageFile) => {
       formData.append("attachments", imageFile);
