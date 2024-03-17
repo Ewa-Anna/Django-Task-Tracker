@@ -57,7 +57,7 @@ export const bottombarLinks = [
 export const asideLinks = [
   {
     label: "Profile",
-    route: "/manage/profile"
+    route: "/manage"
   },
   {
     label: "Account",

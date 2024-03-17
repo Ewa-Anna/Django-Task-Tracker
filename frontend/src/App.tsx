@@ -24,6 +24,8 @@ import NotificationForm from "./components/forms/notificationForm/NotificationFo
 
 
 function App() {
+
+  
   return (
     <main className="flex h-screen">
       <Routes>
@@ -51,7 +53,7 @@ function App() {
 
           <Route path="manage" element={<ManageProfileLayout/>} >
 
-<Route path="profile" element={<ProfileForm/>}/>
+<Route index element={<ProfileForm/>}/>
 <Route path="account" element={<AccountForm/>}/>
 <Route path="notifications" element={<NotificationForm/>}/>
             </Route>

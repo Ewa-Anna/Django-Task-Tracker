@@ -4,7 +4,7 @@ import axios from "../axios/axios";
 import clientApi from "../axios/axios";
 import jsonApi from "../axios/axios-json";
 
-const API_BASE_URL= import.meta.env.VITE_API_BASE_URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 
 export const createUserAccount = async (formData: RegisterFormData) => {
@@ -17,7 +17,7 @@ export const loginUser = async (formData: SignInFormData) => {
     const response = await clientApi.post("/user/login/", formData);
     console.log(response.headers)
     return response.data;
-    
+
 
   } catch (error) {
     console.error(error);
@@ -34,8 +34,8 @@ export const logoutUser = async () => {
 
 
 
-export const validateToken = async()=>{
-  
+export const validateToken = async () => {
+
 }
 
 export const getUsers = async () => {
@@ -48,3 +48,27 @@ export const getUsers = async () => {
 };
 
 
+export const getUserDetails = async (id) => {
+
+
+  try {
+    const response = await clientApi.get(`user/users/${id}/`)
+    return response.data;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const updateProfile = async (formData) => {
+
+  const { id } = formData
+
+
+  try {
+    const response = await clientApi.patch(`user/users/${id}/`, formData)
+    return response.data;
+  } catch (error) {
+    console.log(error)
+  }
+
+}
