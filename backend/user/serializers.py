@@ -9,7 +9,7 @@ from django_rest_passwordreset.serializers import (
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 
-from .models import Profile, CustomUser
+from .models import Profile, CustomUser, GENDER, THEMES
 
 
 User = get_user_model()
@@ -180,3 +180,15 @@ class CustomPasswordActivateSerializer(
         label="Confirm password", write_only=True, required=True
     )
     token = serializers.CharField()
+
+
+
+
+class UserProfileSerializer(serializers.Serializer):
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    bio = serializers.CharField(required=False)
+    photo = serializers.ImageField(required=False)
+    birthdate = serializers.DateField(required=False)
+    gender = serializers.ChoiceField(choices=GENDER, required=False)
+    theme = serializers.ChoiceField(choices=THEMES, required=False)

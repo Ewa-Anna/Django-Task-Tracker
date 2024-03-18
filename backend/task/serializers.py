@@ -1,3 +1,5 @@
+import os
+
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
@@ -13,15 +15,25 @@ from .models import Project, Task, Comment, Attachment
 class AttachmentSerializer(serializers.ModelSerializer):
     uploader = serializers.HiddenField(default=serializers.CurrentUserDefault())
     url = serializers.SerializerMethodField()
+    filename_to_display = serializers.SerializerMethodField()
 
     class Meta:
         model = Attachment
-        fields = ["id", "url", "created", "task", "project", "comment", "uploader"]
+        fields = ["id", "url", "created", "task", "project",
+                  "comment", "uploader", "filename_to_display"]
 
     def get_url(self, obj):
         request = self.context.get("request")
         if obj.file:
             return request.build_absolute_uri(obj.file.url)
+        return None
+
+    def get_filename_to_display(self, obj):
+        if obj.file:
+            file_url = obj.file.url
+            file_name = file_url.split('/')[-1]
+            filename_without_suffix = file_name.rsplit('_', 1)[0]
+            return filename_without_suffix
         return None
 
 
@@ -224,9 +236,10 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             )
 
         return value
-    
+
     def get_comments_count(self, obj):
         return Comment.objects.filter(task=obj).count()
+
 
 class TaskSerializer(serializers.ModelSerializer):
     owner = serializers.StringRelatedField(default=serializers.CurrentUserDefault())
