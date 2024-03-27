@@ -1,7 +1,4 @@
-import os
-
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
@@ -19,8 +16,16 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ["id", "url", "created", "task", "project",
-                  "comment", "uploader", "filename_to_display"]
+        fields = [
+            "id",
+            "url",
+            "created",
+            "task",
+            "project",
+            "comment",
+            "uploader",
+            "filename_to_display",
+        ]
 
     def get_url(self, obj):
         request = self.context.get("request")
@@ -31,8 +36,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
     def get_filename_to_display(self, obj):
         if obj.file:
             file_url = obj.file.url
-            file_name = file_url.split('/')[-1]
-            filename_without_suffix = file_name.rsplit('_', 1)[0]
+            file_name = file_url.split("/")[-1]
+            filename_without_suffix = file_name.rsplit("_", 1)[0]
             return filename_without_suffix
         return None
 
@@ -84,6 +89,35 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(write_only=True, required=False)
     attachments = AttachmentSerializer(many=True, required=False)
 
+    class Meta:
+        model = Project
+        fields = [
+            "id",
+            "assignees",
+            "tags",
+            "title",
+            "description",
+            "deadline",
+            "visibility",
+            "status",
+            "archive",
+            "attachments",
+            "owner",
+        ]
+
+    def create(self, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        assignees_data = validated_data.pop("assignees", [])
+        project = Project.objects.create(**validated_data)
+
+        for assignee in assignees_data:
+            project.assignees.add(assignee)
+
+        for attachment_data in attachments_data:
+            Attachment.objects.create(project=project, **attachment_data)
+
+        return project
+
     def validate_assignees(self, value):
         max_assignees = 10
 
@@ -113,35 +147,6 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             )
 
         return value
-
-    class Meta:
-        model = Project
-        fields = [
-            "id",
-            "assignees",
-            "tags",
-            "title",
-            "description",
-            "deadline",
-            "visibility",
-            "status",
-            "archive",
-            "attachments",
-            "owner",
-        ]
-
-    def create(self, validated_data):
-        attachments_data = validated_data.pop("attachments", [])
-        assignees_data = validated_data.pop("assignees", [])
-        project = Project.objects.create(**validated_data)
-
-        for assignee in assignees_data:
-            project.assignees.add(assignee)
-
-        for attachment_data in attachments_data:
-            Attachment.objects.create(project=project, **attachment_data)
-
-        return project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -196,10 +201,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class TaskCreateSerializer(serializers.ModelSerializer):
     attachments = AttachmentSerializer(many=True, required=False)
-    created_by = CustomCreatedBySerializer(
-        read_only=True, default=serializers.CurrentUserDefault()
-    )
-    comments_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Task
@@ -214,18 +216,8 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             "project",
             "archive",
             "attachments",
-            "created_by",
             "comments_count",
         ]
-
-    def create(self, validated_data):
-        attachments_data = validated_data.pop("attachments", [])
-        task = Task.objects.create(**validated_data)
-
-        for attachment_data in attachments_data:
-            Attachment.objects.create(task=task, **attachment_data)
-
-        return task
 
     def validate_attachments(self, value):
         max_attachments = 3
@@ -236,6 +228,15 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             )
 
         return value
+
+    def create(self, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        task = Task.objects.create(**validated_data)
+
+        for attachment_data in attachments_data:
+            Attachment.objects.create(task=task, **attachment_data)
+
+        return task
 
     def get_comments_count(self, obj):
         return Comment.objects.filter(task=obj).count()
@@ -275,15 +276,6 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = "__all__"
-
-    def create(self, validated_data):
-        attachments_data = validated_data.pop("attachments", [])
-        comment = Comment.objects.create(**validated_data)
-
-        for attachment_data in attachments_data:
-            Attachment.objects.create(comment=comment, **attachment_data)
-
-        return comment
 
     def validate_attachments(self, value):
         max_attachments = 3

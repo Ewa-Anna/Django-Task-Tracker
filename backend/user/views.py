@@ -23,7 +23,7 @@ from .serializers import (
     ChangePasswordSerializer,
     CustomPasswordTokenSerializer,
     ProfileSerializer,
-    UserProfileSerializer
+    UserProfileSerializer,
 )
 from .models import Profile
 from .permissions import IsProfileComplete
@@ -260,15 +260,21 @@ class DashboardView(APIView):
         user_data = self.get_user_data(user)
 
         projects = Project.objects.filter(owner=user)
-        project_serializer = ProjectSerializer(projects, many=True, context={"request": request})
+        project_serializer = ProjectSerializer(
+            projects, many=True, context={"request": request}
+        )
         user_data["projects"] = project_serializer.data
 
         assigned_projects = Project.objects.filter(assignees=user)
-        assigned_project_serializer = ProjectSerializer(assigned_projects, many=True, context={"request": request})
+        assigned_project_serializer = ProjectSerializer(
+            assigned_projects, many=True, context={"request": request}
+        )
         user_data["assigned_projects"] = assigned_project_serializer.data
 
         assigned_tasks = Task.objects.filter(assignees=user)
-        assigned_task_serializer = TaskSerializer(assigned_tasks, many=True, context={"request": request})
+        assigned_task_serializer = TaskSerializer(
+            assigned_tasks, many=True, context={"request": request}
+        )
         user_data["assigned_tasks"] = assigned_task_serializer.data
 
         return Response(user_data)
