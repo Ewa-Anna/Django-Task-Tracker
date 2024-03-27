@@ -182,8 +182,6 @@ class CustomPasswordActivateSerializer(
     token = serializers.CharField()
 
 
-
-
 class UserProfileSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)

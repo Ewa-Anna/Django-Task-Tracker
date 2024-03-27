@@ -102,6 +102,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         return paginator.get_paginated_response(serializer.data)
 
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
 
@@ -183,7 +186,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     }
 
     def get_serializer_class(self):
-        if self.action == "create" or "update":
+        if self.action == "create":
             return TaskCreateSerializer
         return TaskSerializer
 
@@ -240,10 +243,11 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachments_data = request.data.copy().pop("attachments", [])
-            serializer = TaskCreateSerializer(data=request.data)
+            serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            task = serializer.save(created_by=request.user)
+            task = serializer.save(created_by=self.request.user)
+
+            attachments_data = request.data.copy().pop("attachments", [])
 
             processed_attachments_data = []
             for attachment_data in attachments_data:
@@ -256,6 +260,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
             response_data = {"success": True, "message": "Task created successfully."}
             return Response(response_data, status=status.HTTP_201_CREATED)
+
+        except serializers.ValidationError as e:
+            response_data = {"success": False, "message": e.detail}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=broad-except
         except Exception as e:
@@ -277,7 +285,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN,
             )
         return super().update(request, *args, **kwargs)
-    
+
     @action(detail=True, methods=["get"])
     def comments_count(self, request, pk=None):
         task = self.get_object()
@@ -288,9 +296,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
         task_data = serializer.data
-        task_data['comments_count'] = comments_count
+        task_data["comments_count"] = comments_count
 
         return Response(task_data)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
@@ -312,7 +321,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     }
 
     def get_serializer_class(self):
-        if self.action == "create" or "update":
+        if self.action == "create":
             return CommentCreateSerializer
         return CommentSerializer
 
@@ -352,10 +361,11 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachments_data = request.data.copy().pop("attachments", [])
-            serializer = CommentCreateSerializer(data=request.data)
+            serializer = self.get_serializer(data=request.data)
+            # serializer = CommentCreateSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            comment = serializer.save(created_by=request.user)
+            attachments_data = request.data.copy().pop("attachments", [])
+            comment = serializer.save(created_by=self.request.user)
 
             processed_attachments_data = []
             for attachment_data in attachments_data:

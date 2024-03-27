@@ -204,7 +204,7 @@ class Attachment(models.Model):
 
     def __str__(self):
         return f"Attachement added by {self.uploader.username}"
-    
+
     def delete(self, *args, **kwargs):
         if self.file:
             public_id = "/".join(self.file.name.split("/")[-7:])
