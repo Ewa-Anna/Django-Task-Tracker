@@ -1,27 +1,30 @@
-## Table of Contents
-- [Installation](#how-to-install-and-run-the-project)
+# React + TypeScript + Vite
 
-## How to install and run the project?
-### Running the project locally
-1. Clone the repository
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-` git clone https://github.com/Ewa-Anna/React-Django-Task-Tracker `
+Currently, two official plugins are available:
 
-2. Change the directory
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-` cd frontend `
+## Expanding the ESLint configuration
 
-3. Install dependencies
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-` npm install`
+- Configure the top-level `parserOptions` property like this:
 
-4. Run the development server
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
 
-` npm run dev `
-
-Project will run on http://127.0.0.1:5173/
-
-### Creating .env file
-Inside frontend directory you need to create  ` .env `file and add backend base URL :
-`VITE_API_BASE_URL="http://127.0.0.1:8000/task-tracker/v1/"`
-
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
