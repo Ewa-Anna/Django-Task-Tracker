@@ -1,5 +1,7 @@
 import React from 'react'
 import { sidebarLinks } from '../constants'
+import {  Link, Switch, Route, Redirect } from "react-router-dom";
+import {HashRouter}
 
 const LeftSideBar: React.FC = () => {
 
