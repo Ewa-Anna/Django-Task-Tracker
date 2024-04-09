@@ -4,12 +4,15 @@ import LeftSideBar from "./LeftSideBar";
 
 const MainLayout: React.FC = ({ children }) => {
     return (
-        <div className="border-2 flex flex-col">
+        <div className="border-2 flex flex-col h-full">
             <Header />
-            <section className="w-auto flex">
+
+            <div className="flex h-full">
                 <LeftSideBar />
                 {children}
-            </section>
+            </div>
+
+
 
 
         </div>
