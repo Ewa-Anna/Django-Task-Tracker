@@ -1,44 +1,50 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { sidebarLinks } from '../constants'
 import { Link, Switch, Route, Redirect, useLocation, NavLink } from "react-router-dom";
+import { useWindowSize } from '@uidotdev/usehooks';
 
 
 const LeftSideBar: React.FC = () => {
     const { pathname } = useLocation();
 
+    const [isMenuActive, setIsMenuActive] = useState(true)
+    const windowSize = useWindowSize();
 
-    return (
-        <nav className='bg-white w-[200px] '>
-            <ul className=' h-1/2 flex flex-col justify-evenly  '>
-                {sidebarLinks.map(({ label, route, imgURL }, index) => {
-                    const isActive = pathname === route;
-                    return (
-                        <li className='group py-2.5 px-3 hover:bg-blue-500 '
-                            key={index}
-                        >
+    useEffect(() => {
+        if (windowSize.width < 1024) {
+            setIsMenuActive(false);
+        } else {
+            setIsMenuActive(true);
+        }
+    }, [windowSize.width]);
 
 
+
+    if (isMenuActive) {
+        return (
+            <nav className={'leftsidebar-hidden leftsidebar flex flex-col justify-between '}>
+                <ul className="flex flex-col  ">
+                    {sidebarLinks.map(({ label, route, imgURL }) => {
+                        const isActive = pathname === route;
+                        return (
                             <NavLink
                                 to={route}
-                                className='text-slate-700 group-hover:invert-white font-semibold flex items-center gap-x-2'
+                                key={label}
+                                className={`flex gap-2 py-3 items-center leftsidebar-link group ${isActive && 'text-orange-600'}`}
                             >
-
                                 <img
-                                    color='white'
-                                    className='w-7 h-auto group-hover:invert-white '
-                                    src={imgURL}
-                                    alt={label}
-                                />
-                                {label}
+                                    className='w-5 h-auto'
+                                    src={imgURL} alt={label} />
+                                <li>{label}</li>
+
                             </NavLink>
+                        );
+                    })}
+                </ul>
 
-                        </li>
-                    )
-                })}
-
-            </ul>
-        </nav>
-    )
+            </nav>
+        );
+    }
 }
 
 export default LeftSideBar

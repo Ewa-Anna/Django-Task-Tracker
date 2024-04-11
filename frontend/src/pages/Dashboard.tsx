@@ -3,9 +3,11 @@ import MainLayout from '../components/MainLayout';
 
 const Dashboarad: React.FC = () => {
     return (
-        <MainLayout>
-            <div className='bg-blue-500 w-full'>adsad</div>
-        </MainLayout>
+
+        <div className=' flex  h-screen w-full  flex-1  custom-scrollbar overflow-scroll   '>
+            sad
+        </div>
+
     )
 }
 
