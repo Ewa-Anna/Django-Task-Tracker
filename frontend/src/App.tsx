@@ -2,14 +2,34 @@
 import "./App.css";
 import React from "react";
 import Dashboarad from "./pages/Dashboarad";
+import { Route, Routes } from "react-router-dom";
+import Projects from "./pages/Projects";
+import Register from "./pages/public/Register";
+import Login from "./pages/public/Login";
+import MainLayout from "./components/MainLayout";
+import Dashboard from "./pages/Dashboard";
+import Tickets from "./pages/Tickets";
+import ProjectDetails from "./components/ProjectDetails";
+
 
 const App: React.FC = () => {
 
 
   return (
-    <div className="font-opensans">
-      <Dashboarad />
-    </div>
+    <main className="bg-gray-100 h-screen w-full overflow-hidden ">
+      <Routes>
+
+        <Route element={<MainLayout />} >
+          <Route index path="/" element={<Dashboard />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/tickets" element={<Tickets />} />
+          <Route path="/project/:id" element={<ProjectDetails />} />
+
+
+        </Route>
+      </Routes>
+
+    </main>
   )
 }
 
