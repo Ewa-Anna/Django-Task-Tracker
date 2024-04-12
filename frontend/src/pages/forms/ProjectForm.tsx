@@ -1,7 +1,8 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import { images } from '../../constants';
 
-const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
+const ProjectForm: React.FC = ({ visibilityOptions, tags, users }) => {
 
 
 
@@ -11,13 +12,16 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
             description: "",
             visibility: "",
             tags: [],
+            owner: "",
+            deadline: "",
+            assignees: []
         }
     })
 
     const val = getValues()
     console.log(val)
     return (
-        <form className='mx-auto w-full flex flex-col gap-y-8 ' >
+        <form className='mx-auto w-full  flex gap-9 flex-col lg:gap-y-12 mb-32' >
             <div className="">
                 <label
                     htmlFor="title"
@@ -30,7 +34,7 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
                     type="text"
                     className="border rounded w-full py-3  lg:py-1.5 px-2 xl:py-1 font-normal"
                     id="title"
-                    placeholder="here enter post title"
+                    placeholder="here enter project title"
                 />
                 {errors.title && <span>{errors.title.message}</span>}
             </div>
@@ -47,7 +51,7 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
 
                     className="border rounded w-full py-3  lg:py-1.5 px-2 xl:py-1 font-normal custom-scrollbar"
                     id="description"
-                    placeholder="here enter post title"
+                    placeholder="here enter project description"
                     rows={8}
                 />
                 {errors.description && <span>{errors.description.message}</span>}
@@ -75,7 +79,7 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
                                         type="radio"
                                         value={option?.value}
                                         id={option?.name}
-                                        hidden='true'
+                                        hidden={true}
                                     />
                                     {option?.name}
                                 </label>
@@ -85,27 +89,28 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
             </div>
 
 
-            {/* Categories */}
+            {/* Tags */}
             <div>
                 <span className="text-sm block font-semibold text-gray-700">
                     Tags
                 </span>
                 <div className=" grid-row-5 gap-3 md:grid-cols-3 md:gap-3 lg:grid">
-                    {categories &&
-                        categories.map((category) => {
+                    {tags &&
+                        tags.map((tag) => {
 
                             return (
                                 <label
-                                    htmlFor={category?.name}
+                                    key={tag.id}
+                                    htmlFor={tag?.name}
                                     className="text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2"
                                 >
                                     <input
                                         type="checkbox"
-                                        value={category?._id}
-                                        id={category?.name}
+                                        value={tag?.id}
+                                        id={tag?.name}
 
                                     />
-                                    {category?.name}
+                                    {tag?.name}
                                 </label>
                             );
                         })}
@@ -122,13 +127,15 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
                         Project leader
                     </span>
                     <select name="" id='owner' className='w-full bg-gray-200 py-3 rounded' >
-                        {categories &&
-                            categories.map((category) => {
+                        {users &&
+                            users.map((user) => {
 
                                 return (
 
-                                    <option value="">
-                                        {category?.name}
+                                    <option
+                                        key={user.id}
+                                        value={user.id}>
+                                        {user?.first_name}{user?.last_name}
                                     </option>
 
                                 );
@@ -142,15 +149,16 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
                         Deadline date
                     </span>
                     <select name="" id='owner' className='w-full bg-gray-200 py-3 rounded ' >
-                        {categories &&
-                            categories.map((category) => {
+                        {users &&
+                            users.map((user) => {
 
                                 return (
 
                                     <option
+                                        key={user.id}
+                                        value={user.id}>
 
-                                        value={category.name}>
-                                        {category?.name}
+                                        {user?.first_name}
                                     </option>
 
                                 );
@@ -159,6 +167,42 @@ const ProjectForm: React.FC = ({ visibilityOptions, categories }) => {
                 </div>
 
 
+            </div>
+
+            {/* Contributors */}
+            <div>
+                <span className="text-sm block font-semibold text-gray-700">
+                    Members
+                </span>
+                <div className=" grid-row-5 gap-3 md:grid-cols-3 md:gap-3 lg:grid">
+                    {users &&
+                        users.map((user) => {
+
+                            return (
+                                <label
+                                    key={user.id}
+                                    htmlFor={user?.id}
+                                    className="text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        value={user?.id}
+                                        id={user?.id}
+
+                                    />
+                                    {user?.first_name}
+                                </label>
+                            );
+                        })}
+                </div>
+
+            </div>
+            <div className='flex justify-end'>
+                <button
+                    className='bg-violet-400 px-10 py-2 text-white 
+                font-semibold rounded outline-none border-none hover:opacity-80'>
+                    Create project
+                </button>
             </div>
         </form>
     )
