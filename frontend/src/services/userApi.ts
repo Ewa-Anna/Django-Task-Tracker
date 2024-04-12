@@ -84,28 +84,25 @@ export const validateSession = async () => {
     }
 }
 
-export const logoutt = async ({ token }: { token: string }) => {
-    console.log(token);
+export const getUsers = async () => {
+
     try {
+
         const config = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': token
-            },
-            credentials: 'include'
-        };
-
-        const response = await fetch("http://localhost:8000/task-tracker/v1/user/logout/", config);
-
-        if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(errorMessage || 'An unexpected error occurred');
+            withCredentials: true,
         }
 
-        return await response.json();
+        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/user/users/", config)
+
+        return response.data;
     } catch (error) {
-        console.log(error);
-        throw new Error(error.message || 'An unexpected error occurred');
+        console.log(error)
+        if (axios.isAxiosError(error)) {
+            console.log('error message:', error.message)
+            throw new Error(error.message);
+        } else {
+            console.log("undexpected error", error)
+            throw new Error("An unexpected error ocured")
+        }
     }
 }

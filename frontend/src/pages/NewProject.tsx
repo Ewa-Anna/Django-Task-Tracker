@@ -1,5 +1,8 @@
 import React from 'react'
 import ProjectForm from './forms/ProjectForm'
+import { useQuery } from '@tanstack/react-query'
+import { getTags } from '../services/projectsApi'
+import { getUsers } from '../services/userApi'
 
 
 
@@ -17,7 +20,19 @@ const visibilityOptions = [
     { id: 2, name: "Private", value: "private" },
 ]
 
+
+
 const NewProject = () => {
+
+    const { data: tags } = useQuery({
+        queryFn: () => getTags(),
+        queryKey: ["tags"]
+    })
+    const { data: users } = useQuery({
+        queryFn: () => getUsers(),
+        queryKey: ["users"]
+    })
+
     return (
         <div
             className='common-container'
@@ -27,7 +42,8 @@ const NewProject = () => {
                     New Project
                 </h1>
                 <ProjectForm
-                    categories={categories}
+                    tags={tags}
+                    users={users?.results}
                     visibilityOptions={visibilityOptions}
                 />
             </section>
