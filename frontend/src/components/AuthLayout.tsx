@@ -1,14 +1,17 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 
 
-const AuthLayout = ({ children }) => {
+const AuthLayout = () => {
     return (
-        <div className='h-full w-ful bg-slate-400 flex'>
+        <div className="w-full flex h-full ">
 
-            {children}
-            <section className='flex-1'>
-                asd
+
+            <Outlet />
+            <section className="flex flex-1 h-full overflow-scroll custom-scrollbar  ">
+
             </section>
+
         </div>
     )
 }

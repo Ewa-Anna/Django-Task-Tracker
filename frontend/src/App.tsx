@@ -10,6 +10,8 @@ import MainLayout from "./components/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
 import ProjectDetails from "./components/ProjectDetails";
+import AuthLayout from "./components/AuthLayout";
+import NewProject from "./pages/NewProject";
 
 
 const App: React.FC = () => {
@@ -22,8 +24,17 @@ const App: React.FC = () => {
         <Route element={<MainLayout />} >
           <Route index path="/" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/project/new" element={<NewProject />} />
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/project/:id" element={<ProjectDetails />} />
+
+
+        </Route>
+
+        <Route element={<AuthLayout />} >
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
 
 
         </Route>

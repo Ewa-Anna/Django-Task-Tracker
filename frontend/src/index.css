@@ -108,9 +108,9 @@
     background: #7878a3;
   }
 
-  .common-container {
-    @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar;
-  }
+.common-container {
+  @apply h-screen w-full flex flex-col flex-1 gap-10 overflow-scroll py-20 lg:p-0 custom-scrollbar;
+}
 
   /* All Users */
   .user-container {
@@ -219,7 +219,7 @@
 
   /* Left sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] border-r;
+    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px]  bg-white;
   }
 
   .leftsidebar-link {
