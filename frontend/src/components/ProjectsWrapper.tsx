@@ -12,7 +12,7 @@ const ProjectsWrapper: React.FC = ({ projects, isLoading, isError }) => {
 
     return (
         <section
-            className='flex flex-col container px-5 border-2 '>
+            className='flex flex-col    '>
 
             <div className='flex flex-wrap md:gap-x-5 gap-y-5 pb-10'>
                 {isLoading ? (
