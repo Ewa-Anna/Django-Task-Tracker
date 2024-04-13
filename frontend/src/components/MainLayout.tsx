@@ -40,7 +40,7 @@ const RootLayout: React.FC = () => {
     };
 
     return (
-        <div className="w-full flex flex-col  ">
+        <div className="w-full flex flex-col  h-screen">
             <Header handleMenuHide={handleMenuHide} handleMobileMenu={handleMobileMenu} />
             <main className=" flex">
                 <LeftSideBar />
