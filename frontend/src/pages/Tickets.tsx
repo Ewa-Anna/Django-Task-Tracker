@@ -16,6 +16,10 @@ const Tickets: React.FC = () => {
     const token = localStorage.getItem("token")
     const [currentPage, setCurrentPage] = useState(1);
 
+    const userString = localStorage.getItem("user")
+    const { role } = JSON.parse(userString as string);
+
+
     const { data: tickets, isLoading, isError, isFetching } = useQuery({
         queryFn: () => {
             return getAllTickets({ token: token });
@@ -24,7 +28,7 @@ const Tickets: React.FC = () => {
         refetchOnWindowFocus: false
     });
 
-    console.log(tickets)
+
     return (
 
 
@@ -32,12 +36,12 @@ const Tickets: React.FC = () => {
 
             <div className="w-full mx-auto  px-10 py-8  ">
 
-                <div className="flex flex-row justify-between w-full mb-1 sm:mb-0 mt-2">
-                    <h2 className="text-2xl leading-tight">Tickets</h2>
-                    <div className="text-end mt-2 mb-2">
+                <div className="flex flex-col gap-4 sm:flex-row justify-between py-2 px-16">
+                    <h2 className="h1-bold text-center sm:text-left sm:h2-bold">Tickets</h2>
+                    <div className="flex flex-col gap-8 py-2">
                         <form
 
-                            className="flex flex-col justify-center w-3/4 max-w-sm space-y-3 md:flex-row md:w-full md:space-x-3 md:space-y-0"
+                            className="flex mx-auto flex-col justify-center w-3/4 max-w-sm space-y-3 md:flex-row md:w-full md:space-x-3 md:space-y-0 "
                         >
                             <div className=" relative ">
                                 <input
@@ -55,6 +59,14 @@ const Tickets: React.FC = () => {
                                 Filter
                             </button>
                         </form>
+
+                        <Link
+                            to={"/ticket/new"}
+                            className='border-2 py-2 text-center bg-purple-500 text-white text-bold rounded-lg hover:opacity-85'
+
+                        >
+                            New ticket
+                        </Link>
                     </div>
                 </div>
                 <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
