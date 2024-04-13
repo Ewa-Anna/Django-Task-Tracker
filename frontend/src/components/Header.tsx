@@ -6,11 +6,32 @@ import { FaMessage } from "react-icons/fa6";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineArrowRight } from "react-icons/md";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 export const Header: React.FC = () => {
+    const navigate = useNavigate()
     const token = localStorage.getItem("token")
 
+
+    const { mutate, isLoading } = useMutation({
+        mutationFn: ({ token }) => logout({ token }),
+        onSuccess: (data) => {
+
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            navigate("/login")
+
+        },
+        onError: (error: Error) => {
+            console.log(error.message)
+        }
+    })
+
+
+    const logoutHandler = ({ token }) => {
+        mutate({ token })
+    }
 
     return (
 
@@ -41,7 +62,7 @@ export const Header: React.FC = () => {
                     </li>
                 </ul>
                 <button
-                    onClick={() => logout({ token: token })}
+                    onClick={() => logoutHandler({ token })}
 
                     className="border-2 border-violet-600 px-6 py-2 rounded-full
                          text-violet-600 font-semibold hover:bg-violet-600 hover:text-slate-100 transition-all duration-200"

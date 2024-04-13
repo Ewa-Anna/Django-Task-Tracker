@@ -1,23 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AuthLayout from '../../components/AuthLayout'
 import { useMutation } from '@tanstack/react-query';
 import { login } from '../../services/userApi';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login: React.FC = () => {
+    const navigate = useNavigate()
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     const { mutate, isLoading } = useMutation({
-        mutationFn: ({ email, password }) => login({ email, password }),
+        mutationFn: ({ email, password }: { email: string, password: string }) => login({ email, password }),
         onSuccess: (data) => {
 
             localStorage.setItem('user', JSON.stringify(data))
             localStorage.setItem('token', data.csrf_token)
+            navigate("/")
 
         },
         onError: (error: Error) => {
             toast.error(error.message)
+            setErrorMessage("Invalid credentials")
+
         }
     })
     const { register, handleSubmit, formState: { errors, isValid } } = useForm({
@@ -36,7 +41,7 @@ const Login = () => {
 
     return (
 
-        <div className='bg-orange-600 flex-1 px-10 flex items-center justify-center'>
+        <div className='bg-slate-100 flex-1 px-10 flex items-center justify-center'>
             <form onSubmit={handleSubmit(submitHandler)}>
 
 
@@ -97,6 +102,10 @@ const Login = () => {
                     {errors.password?.message && (
                         <span className='text-red-500 text-xs mt-1'>{errors.password.message}</span>
                     )}
+                    {errorMessage &&
+                        <div className='flex justify-center'>
+                            <span className='text-sm text-rose-500 '> {errorMessage}</span>
+                        </div>}
                 </div>
 
 
@@ -105,10 +114,11 @@ const Login = () => {
                     className='text-sm font-semibold text-primary'>
                     Forgot Password?
                 </Link>
+
                 <button
                     type='submit'
                     disabled={!isValid || isLoading}
-                    className='bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed'>
+                    className='bg-teal-600 text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed'>
                     Sign In
                 </button>
                 <p
