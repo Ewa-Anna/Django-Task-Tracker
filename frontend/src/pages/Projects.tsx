@@ -6,10 +6,14 @@ import ProjectCard from '../components/ProjectCard';
 import ProjectsWrapper from '../components/ProjectsWrapper';
 import Pagination from '../components/Pagination';
 import { Link } from 'react-router-dom';
+import { useAccountStore } from '../store';
 
 const Projects: React.FC = () => {
 
+    const userAccount = useAccountStore((state) => state.account);
 
+
+    console.log(userAccount)
     const token = localStorage.getItem("token")
     console.log(token)
 

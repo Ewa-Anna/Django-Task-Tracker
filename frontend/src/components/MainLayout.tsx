@@ -5,16 +5,22 @@ import LeftSideBar from './LeftSideBar';
 import toast from 'react-hot-toast';
 import { validateSession } from '../services/userApi';
 import { useQuery } from '@tanstack/react-query';
+import { useAccountStore } from '../store';
 
 
 const RootLayout: React.FC = () => {
 
 
+    const setAccount = useAccountStore((state) => state.setAccount);
     const navigate = useNavigate()
 
     const { data: session, isError, isLoading } = useQuery({
         queryFn: () => {
             return validateSession();
+        },
+        onSuccess: (data) => {
+
+            setAccount(JSON.stringify(data.message))
         },
         onError: () => {
             navigate("/login")
