@@ -4,7 +4,11 @@ import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query';
 import { getProjectDetails } from '../services/projectsApi';
 import { MdOutlinePending, MdPublic } from 'react-icons/md';
+import { IoEye } from "react-icons/io5";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { images } from '../constants';
+import { FaFileArrowUp } from "react-icons/fa6";
+import { IoMdDownload } from "react-icons/io";
 
 const ProjectDetails: React.FC = () => {
     const { id } = useParams();
@@ -30,7 +34,7 @@ const ProjectDetails: React.FC = () => {
             className=' flex flex-col  h-screen w-full  flex-1  custom-scrollbar overflow-scroll   '
         >
 
-            <div className=" flex gap-12  h-auto  flex-col-reverse w-[90%] md:w-[94%] py-10 xl:flex-row mx-auto ">
+            <div className=" flex gap-12  h-auto  flex-col-reverse w-[100%] md:w-[90%] py-10 xl:flex-row mx-auto ">
                 {/* LEFT */}
                 <div className="flex flex-col  gap-5 flex-grow px-14 py-10 flex-1 h-auto shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ">
                     <h1 className="h2-bold">{project?.title}</h1>
@@ -78,25 +82,28 @@ const ProjectDetails: React.FC = () => {
                             </div>
                             <hr className="h-[0px]  mb-5" />
 
-                            <h4 className="mb-10 text-xl font-semibold">Members</h4>
+                            <h4 className=" mb-3 text-xl font-semibold">Members</h4>
 
-                            <div className='py-12 '>
+                            <div className='py-2 md:py-10 '>
                                 {project?.assignees.length > 0 ? (
                                     project?.assignees.map((member) => (
-                                        <div className="flex justify-evenly text-slate-800 mb-10 md:mb-5">
-                                            <span className="flex-1 flex items-center">
-                                                {member.first_name}
-                                            </span>
-                                            <span className="flex-1 flex items-center">
-                                                {member.last_name}
-                                            </span>
+                                        <div className="border-b p-2 flex flex-col items-center   md:flex-row md:justify-evenly text-slate-800 mb-10 md:mb-5">
+                                            <img src={member?.profile?.photo || images.ProfileImage} alt="" />
+                                            <div className='flex flex-1  flex-col items-center'>
+                                                <span className=" flex items-center ml-2 ">
+                                                    {member.first_name}
+                                                </span>
+                                                <span className=" flex items-center ml-2">
+                                                    {member.last_name}
+                                                </span>
+                                            </div>
                                             <span className="flex-1 flex items-center">
                                                 {member.role}
                                             </span>
                                             <Link to={`/profile/${member?.id}`}>
                                                 <div className="flex-1 flex items-center">
-                                                    <button className="hover:bg-violet-600 mt-1" variant={"ghost"}>
-                                                        View
+                                                    <button className=" py-1.5 px-3 rounded mt-1" variant={"ghost"}>
+                                                        <IoEye className='text-blue-400 w-6 h-auto' />
                                                     </button>
                                                 </div>
                                             </Link>
@@ -112,15 +119,41 @@ const ProjectDetails: React.FC = () => {
                                     </div>
                                 )}
                             </div>
+                            <div className='pb-10'>
+                                <span className='text-xl font-semibold text-slate-700'>Files</span>
+                                <div className='mt-5'>
+                                    {project?.attachments?.map((attachment) => {
+                                        return (
+                                            <div className='  flex justify-between items-center'>
+                                                <div className='flex items-center gap-x-1'>
+                                                    <FaFileArrowUp
+                                                        className='w-6 h-auto'
+                                                    />
+                                                    <span>{attachment?.filename_to_display}</span>
+                                                </div>
+
+                                                <a
+                                                    href={attachment?.url} download
+
+                                                >
+                                                    <IoMdDownload
+                                                        className='w-6 h-auto hover:text-blue-300 transition-all'
+                                                    />
+                                                </a>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 {/* LEFT */}
 
                 {/* RIGHT */}
-                <div className="mx-auto flex  xs:mb-2  w-full border-2 pb-4 rounded xl:flex flex-col gap-5 h-auto min-h-[430px]  xl:w-1/3    xl:p-5 xl:sticky xl:top-4 mt-32 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]  ">
+                <div className="mx-auto flex p-8 xs:mb-2  w-full border-2 pb-4 rounded xl:flex flex-col gap-5 h-auto min-h-[430px]  xl:w-1/3    xl:p-5 xl:sticky xl:top-8 mt-32 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]  ">
                     <div className="flex items-center justify-between">
-                        <h3 className="font-semibold">Project Details</h3>
+                        <h3 className="font-bold text-slate-600 text-2xl">Project Details</h3>
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className=" grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1 ">
@@ -160,12 +193,12 @@ const ProjectDetails: React.FC = () => {
                         </div>
                     </div>
 
-                    <h2>Project Leader</h2>
+                    <h2 className='text-xl font-bold text-slate-600'>Project Leader</h2>
                     <div className="flex justify-evenly">
                         <Link to={`/profile/${project?.owner?.id}`}>
                             <img
-                                className="w-[100px] h-[100px] rounded-[15%] object-cover xs:w-[200px] xs:h-[200px]"
-                                src="https://images.pexels.com/photos/720327/pexels-photo-720327.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                                className="w-[100px] h-[100px] rounded-[15%] object-cover xs:w-[200px] xs:h-[200px] lg:w-[120px] lg:h-[120px]"
+                                src={project?.owner?.profile?.photo || images.ProfileImage}
                                 alt="userAvatar"
                             />
                         </Link>

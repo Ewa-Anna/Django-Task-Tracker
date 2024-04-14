@@ -1,14 +1,14 @@
 import axios from "axios"
 import clientApi from "../axios";
 
-export const getAllProjects = async ({ token }: { token: string | null }) => {
+export const getAllProjects = async ({ limit = 10 }) => {
 
     try {
         const config = {
             withCredentials: true,
         }
 
-        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/task/projects/", config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/projects/?limit=${limit}`, config)
 
         return response.data;
     } catch (error) {

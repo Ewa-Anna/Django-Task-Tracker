@@ -8,26 +8,24 @@ import { ImGift } from 'react-icons/im';
 import { DiVim } from 'react-icons/di';
 import { IoTrashBinSharp } from "react-icons/io5";
 
-const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handleSave, }) => {
+const TicketForm: React.FC = ({ projects, typeOptions, priorityOptions, users, handleSave, statusOptions, type }) => {
 
     const [deadlineDateError, setDeadlineDateError] = useState('')
     const [isDateSelected, setIsDateSelected] = useState(false);
 
     const { register, formState: { errors, isDirty }, watch, getValues, handleSubmit, setValue } = useForm({
         defaultValues: {
+            project: "",
             title: "",
             description: "",
             priority: "",
             status: [],
             type: "",
-            project: "",
             attachments: "",
 
 
         }
     })
-
-
 
     const minDate = new Date();
     const maxDate = new Date();
@@ -38,37 +36,23 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
 
 
     const onSubmit = handleSubmit((data) => {
-
-        console.log(data)
-
         const {
+            project,
             title,
             description,
-            deadline,
-            owner,
-            tags,
-            visibility,
-            assignees,
+            type,
+            priority,
             attachments } = data
 
-        const isoDeadline = new Date(deadline).toISOString();
         const file = attachments[0]
         const formData = new FormData();
 
         formData.append("title", title);
+        formData.append("project", project);
         formData.append("description", description);
-        formData.append("deadline", isoDeadline);
-        formData.append("owner", owner);
-        formData.append("visibility", visibility);
+        formData.append("type", type);
+        formData.append("priority", priority);
         formData.append("attachments", file);
-
-        tags.forEach((tag) => {
-            formData.append('tags', tag)
-        })
-
-        assignees.forEach((assigne) => {
-            formData.append('assignees', assigne)
-        })
 
         for (let pair of formData.entries()) {
             console.log(pair[0] + ', ' + pair[1]);
@@ -107,6 +91,76 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                 {errors.title && <span className='text-rose-500 text-sm'>{errors.title.message}</span>}
             </div>
 
+            {/* Project */}
+            <div className="flex justify-between gap-10">
+                <div className='flex-1'>
+                    <span
+
+                        className="text-sm block font-semibold text-gray-700">
+                        Project
+                    </span>
+                    <select
+                        {...register("project", { required: "Please select project" })}
+                        name="project"
+                        id="project"
+                        className='w-full bg-gray-200 py-3 rounded custom-scrollbar'
+                    >
+                        {projects && projects.map((project) => (
+                            <option key={project.id} value={project.id}>
+                                (ID:{project?.id}) {project?.title}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.project && <span className='text-red-500 text-sm text-rose-500'>{errors.project.message}</span>}
+                </div>
+
+            </div>
+            {/* Status && Person asign - Visible only on EDIT MODE  */}
+            {type === 'edit' && <div className='flex  gap-10'>
+                <div className='flex-1'>
+                    <span
+
+                        className="text-sm block font-semibold text-gray-700">
+                        Project
+                    </span>
+                    <select
+                        {...register("project", { required: "Please select project" })}
+                        name="owner"
+                        id="owner"
+                        className='w-full bg-gray-200 py-3 rounded'
+                    >
+                        {users && users.map((user) => (
+                            <option key={user.id} value={user.id}>
+                                {user?.first_name} {user?.last_name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.project && <span className='text-red-500 text-sm text-rose-500'>{errors.project.message}</span>}
+                </div>
+                <div className='flex-1'>
+                    <span
+
+                        className="text-sm block font-semibold text-gray-700">
+                        Project
+                    </span>
+                    <select
+                        {...register("project", { required: "Please select project" })}
+                        name="owner"
+                        id="owner"
+                        className='w-full bg-gray-200 py-3 rounded'
+                    >
+                        {users && users.map((user) => (
+                            <option key={user.id} value={user.id}>
+                                {user?.first_name} {user?.last_name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.project && <span className='text-red-500 text-sm text-rose-500'>{errors.project.message}</span>}
+                </div>
+            </div>}
+
+
+
             <div className="">
                 <label
                     htmlFor="description"
@@ -118,7 +172,7 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                     {...register("description", { required: "description is required" })}
                     className="border rounded w-full py-3  lg:py-1.5 px-2 xl:py-1 font-normal custom-scrollbar"
                     id="description"
-                    placeholder="here enter project description"
+                    placeholder="here enter ticket description"
                     rows={8}
                 />
                 {errors.description && <span className='text-rose-500 text-sm'>{errors.description.message}</span>}
@@ -138,12 +192,12 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                             <label
                                 key={id}
                                 htmlFor={label}
-                                className={`${watch("visibility") === value && " bg-[#a5b4fc] text-white font-bold"
+                                className={`${watch("priority") === value && " bg-blue-400 text-white font-bold"
                                     }  text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2`}
                             >
                                 <input
-                                    {...register("visibility", { required: "Please chose project type" })}
-                                    name='visibility'
+                                    {...register("priority", { required: "Please select ticket priority" })}
+                                    name='priority'
                                     type="radio"
                                     value={value}
                                     id={label}
@@ -154,7 +208,7 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                         );
                     })}
                 </div>
-                {errors.visibility && <span className='text-red-500 text-sm text-rose-500'>{errors.visibility.message}</span>}
+                {errors.priority && <span className='text-red-500 text-sm text-rose-500'>{errors.priority.message}</span>}
             </div>
             {/* TYPE */}
             <div>
@@ -162,19 +216,19 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                     Type
                 </span>
                 <div className=" grid-row-5 gap-3 md:grid-cols-2 md:gap-3 lg:grid">
-                    {visibilityOptions && Object.entries(visibilityOptions).map(([key, value], index) => {
+                    {typeOptions && Object.entries(typeOptions).map(([key, value], index) => {
                         return { id: index + 1, label: value, value: key }
                     }).map(({ id, label, value }) => {
                         return (
                             <label
                                 key={id}
                                 htmlFor={label}
-                                className={`${watch("visibility") === value && " bg-[#a5b4fc] text-white font-bold"
+                                className={`${watch("type") === value && " bg-blue-400 text-white font-bold"
                                     }  text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2`}
                             >
                                 <input
-                                    {...register("visibility", { required: "Please chose project type" })}
-                                    name='visibility'
+                                    {...register("type", { required: "Please chose project type" })}
+                                    name='type'
                                     type="radio"
                                     value={value}
                                     id={label}
@@ -185,75 +239,14 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                         );
                     })}
                 </div>
-                {errors.visibility && <span className='text-red-500 text-sm text-rose-500'>{errors.visibility.message}</span>}
+                {errors.type && <span className='text-red-500 text-sm text-rose-500'>{errors.type.message}</span>}
             </div>
 
 
-
-            {/* Leader */}
-            <div className="flex justify-between gap-10">
-                <div className='flex-1'>
-                    <span
-
-                        className="text-sm block font-semibold text-gray-700">
-                        Project leader
-                    </span>
-                    <select
-                        {...register("owner", { required: "Please select project leader" })}
-                        name="owner"
-                        id="owner"
-                        className='w-full bg-gray-200 py-3 rounded'
-                    >
-                        {users && users.map((user) => (
-                            <option key={user.id} value={user.id}>
-                                {user?.first_name} {user?.last_name}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.owner && <span className='text-red-500 text-sm text-rose-500'>{errors.owner.message}</span>}
-                </div>
-
-            </div>
-
-            {/* Contributors */}
-            <div>
-                <span className="text-sm block font-semibold text-gray-700">
-                    Members
-                </span>
-                <div className=" grid-row-5 gap-3 md:grid-cols-3 md:gap-3 lg:grid">
-                    {users &&
-                        users.map((user) => {
-
-                            return (
-                                <label
-                                    key={user.id}
-                                    htmlFor={user?.id}
-                                    className="text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2"
-                                >
-                                    <input
-                                        {...register("assignees", {
-                                            validate: (tags) => {
-                                                if (tags && tags.length > 0)
-                                                    return true;
-                                                else return "Atleast one project member is required";
-                                            },
-                                        })}
-                                        type="checkbox"
-                                        value={user?.id}
-                                        id={user?.id}
-
-                                    />
-                                    {user?.first_name}
-                                </label>
-                            );
-                        })}
-                </div>
-                {errors.assignees && <span className='text-red-500 text-sm text-rose-500'>{errors.assignees.message}</span>}
-            </div>
 
             {/* Attachments */}
             <div className=' relative '>
-                <label htmlFor="postPicture" className="text-sm cursor-pointer">
+                <label htmlFor="attachments" className="text-sm cursor-pointer">
                     {watch("attachments") ? (
                         <div className="max-w-[150px] h-auto relative">
                             <img src={URL.createObjectURL(fileInputValue)} className='w-full h-full object-contain ' />
@@ -270,7 +263,7 @@ const TicketForm: React.FC = ({ visibilityOptions, priorityOptions, users, handl
                     {...register("attachments")}
                     type="file"
                     className=" mt-2  "
-                    id="postPicture"
+                    id="attachments"
                     hidden={true}
                 />
                 {watch("attachments") && (
