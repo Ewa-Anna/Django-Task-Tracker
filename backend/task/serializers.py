@@ -30,7 +30,11 @@ class AttachmentSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         request = self.context.get("request")
         if obj.file:
-            return request.build_absolute_uri(obj.file.url)
+            cloudinary_url = obj.file.url
+            transformed_url = cloudinary_url.replace(
+                "/upload/", "/upload/fl_attachment/"
+            )
+            return request.build_absolute_uri(transformed_url)
         return None
 
     def get_filename_to_display(self, obj):
