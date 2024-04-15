@@ -1,4 +1,4 @@
-import json
+# import json
 from smtplib import SMTPException, SMTPAuthenticationError
 
 from django.contrib.auth import get_user_model
@@ -18,7 +18,11 @@ from drf_api_logger.models import APILogsModel
 from task.serializers import TaskSerializer
 from task.models import Task, Project
 from user.permissions import CustomPermission, IsProfileComplete
-from backend.pagination import CustomPagination
+
+# pylint: disable=import-error, no-name-in-module
+from backend.pagination import (
+    CustomPagination,
+)
 
 from .models import ChangeLog, ContactForm
 from .serializers import (
@@ -183,15 +187,15 @@ class TaskStatistics(APIView):
 
 class APILogsView(APIView):
     def get(self, request, *args, **kwargs):
-        current_user = request.user
-        who = current_user.first_name if current_user.is_authenticated else None
+        # current_user = request.user
+        # who = current_user.first_name if current_user.is_authenticated else None
         api_logs = APILogsModel.objects.order_by("-added_on")
 
         logs_data = []
         for log in api_logs:
-            response_data = json.loads(log.response)
+            # response_data = json.loads(log.response)
 
-            created_by = response_data.get("created_by", {})
+            # created_by = response_data.get("created_by", {})
 
             logs_data.append(
                 {

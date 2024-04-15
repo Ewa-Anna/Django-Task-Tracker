@@ -182,6 +182,7 @@ class CustomPasswordActivateSerializer(
     token = serializers.CharField()
 
 
+# pylint: disable=abstract-method
 class UserProfileSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)

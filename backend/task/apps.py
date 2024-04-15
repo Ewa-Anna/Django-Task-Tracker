@@ -7,4 +7,4 @@ class TaskConfig(AppConfig):
 
     def ready(self):
         # pylint: disable=import-outside-toplevel, unused-import
-        import task.signals
+        import task.signals  # noqa: F401

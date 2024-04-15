@@ -368,7 +368,8 @@ class SessionValidationView(APIView):
 
 class OnboardingView(APIView):
     """
-    This view allows user to first-time update the profile in order to set is_configured value to True.
+    This view allows user to first-time update the profile in order to set
+    is_configured value to True.
     """
 
     permission_classes = [IsAuthenticated]
