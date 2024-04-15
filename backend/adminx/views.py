@@ -18,7 +18,11 @@ from drf_api_logger.models import APILogsModel
 from task.serializers import TaskSerializer
 from task.models import Task, Project
 from user.permissions import CustomPermission, IsProfileComplete
-from backend.pagination import CustomPagination
+
+# pylint: disable=import-error, no-name-in-module
+from backend.pagination import (
+    CustomPagination,
+)
 
 from .models import ChangeLog, ContactForm
 from .serializers import (
