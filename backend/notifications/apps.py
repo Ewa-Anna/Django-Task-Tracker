@@ -7,4 +7,4 @@ class NotificationsConfig(AppConfig):
 
     def ready(self):
         # pylint: disable=import-outside-toplevel, unused-import
-        import notifications.signals
+        import notifications.signals  # noqa: F401

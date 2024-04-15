@@ -343,15 +343,33 @@ class SessionValidationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(
-            {"success": True, "message": "Session is valid"},
-            status=status.HTTP_200_OK,
-        )
+        user = request.user
+        profile = Profile.objects.get_or_create(user=user)[0]
+        response_data = {
+            "user_id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "theme": user.theme,
+            "role": user.role,
+            "join_date": user.join_date,
+            "last_loggin": user.last_loggin,
+            "bio": profile.bio,
+            "photo": profile.photo,
+            "birthdate": profile.birthdate,
+            "gender": profile.gender,
+            "csrf_token": request.META.get("CSRF_COOKIE"),
+        }
+        response_data["success"] = True
+        response_data["message"] = "Session is valid"
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class OnboardingView(APIView):
     """
-    This view allows user to first-time update the profile in order to set is_configured value to True.
+    This view allows user to first-time update the profile in order to set
+    is_configured value to True.
     """
 
     permission_classes = [IsAuthenticated]

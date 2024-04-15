@@ -1,7 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from django.core.management import call_command
+
+# from django.core.management import call_command
 
 from .models import Project, Task, Comment, ChangeLog, CHANGE_TYPES
 

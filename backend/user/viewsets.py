@@ -5,7 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from backend.pagination import CustomPagination
+# pylint: disable=import-error, no-name-in-module
+from backend.pagination import (
+    CustomPagination,
+)
 from .serializers import UserSerializer
 from .permissions import CustomPermission, IsProfileComplete
 
