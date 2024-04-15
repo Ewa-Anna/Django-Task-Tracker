@@ -107,3 +107,23 @@ export const createNewProject = async ({ formData }) => {
         }
     }
 }
+
+
+export const updateProject = async ({ formData }) => {
+    try {
+        const projectId = formData.get('id');
+
+        const response = await clientApi.patch(`http://127.0.0.1:8000/task-tracker/v1/task/projects/${projectId}/`, formData)
+
+        return response.data;
+    } catch (error) {
+        console.log(error)
+        if (axios.isAxiosError(error)) {
+            console.log('error message:', error.message)
+            throw new Error(error.message);
+        } else {
+            console.log("undexpected error", error)
+            throw new Error("An unexpected error ocured")
+        }
+    }
+}

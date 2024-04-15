@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import DatePicker from "react-datepicker";
 import { images } from '../../constants';
@@ -8,28 +8,34 @@ import { ImGift } from 'react-icons/im';
 import { DiVim } from 'react-icons/di';
 import { IoTrashBinSharp } from "react-icons/io5";
 
-const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) => {
+const ProjectForm: React.FC = ({ project, isProjectLoading, visibilityOptions, tags, users, handleSave, }) => {
 
     const [deadlineDateError, setDeadlineDateError] = useState('')
     const [isDateSelected, setIsDateSelected] = useState(false);
 
-    const { register, formState: { errors, isDirty }, watch, getValues, handleSubmit, setValue } = useForm({
+    const { register, formState: { errors, isDirty }, getFieldState, watch, getValues, handleSubmit, setValue, } = useForm({
         defaultValues: {
-            title: "",
-            description: "",
-            visibility: "",
-            tags: [],
-            owner: "",
-            deadline: "",
-            attachments: "",
-            assignees: [],
 
-        }
+            title: project ? project?.title : "",
+            description: project ? project?.description : "",
+            visibility: project ? project?.visibility : "",
+            deadline: project ? project?.deadline : [],
+            tags: project ? project?.tags : [],
+            owner: project ? project?.owner.id : "",
+            attachments: project ? project?.attachments : "",
+            assignees: project ? project?.assignees : ""
+
+        },
+
+
     })
 
+    const attach = watch("attachments")
 
 
     const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 1);
+
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1)
 
@@ -39,7 +45,10 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
 
     const onSubmit = handleSubmit((data) => {
 
-        console.log(data)
+
+
+
+
 
         const {
             title,
@@ -55,25 +64,78 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
         const file = attachments[0]
         const formData = new FormData();
 
-        formData.append("title", title);
-        formData.append("description", description);
-        formData.append("deadline", isoDeadline);
-        formData.append("owner", owner);
-        formData.append("visibility", visibility);
-        formData.append("attachments", file);
+        if (project) {
+            const titleFieldState = getFieldState("title");
+            const descriptionFieldState = getFieldState("description");
+            const ownerFieldState = getFieldState("owner");
+            const visibilityFieldState = getFieldState("visibility");
+            const deadlineFieldState = getFieldState("deadline");
+            const tagsFieldState = getFieldState("tags");
+            const assigneesFieldState = getFieldState("assignees");
+            const attachmentsFieldState = getFieldState("attachments");
 
-        tags.forEach((tag) => {
-            formData.append('tags', tag)
-        })
+            formData.append("id", project?.id)
 
-        assignees.forEach((assigne) => {
-            formData.append('assignees', assigne)
-        })
+            if (titleFieldState.isDirty) {
+                formData.append("title", title)
+            }
+
+            if (descriptionFieldState.isDirty) {
+                formData.append("description", description)
+            }
+
+            if (ownerFieldState.isDirty) {
+                formData.append("owner", owner)
+            }
+
+            if (visibilityFieldState.isDirty) {
+                formData.append("visibility", visibility)
+            }
+            if (deadlineFieldState.isDirty) {
+                formData.append("deadline", deadline)
+            }
+
+            if (attachmentsFieldState.isDirty) {
+                formData.append("attachments", attachments)
+            }
+
+            if (tagsFieldState.isDirty) {
+
+                tags.forEach((tag) => {
+                    formData.append('tags', tag)
+                })
+            }
+
+            if (assigneesFieldState.isDirty) {
+
+                assignees.forEach((assigne) => {
+                    formData.append('assignees', assigne)
+                })
+            }
+
+        }
+        else {
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("deadline", isoDeadline);
+            formData.append("owner", owner);
+            formData.append("visibility", visibility);
+            formData.append("attachments", file);
+
+            tags.forEach((tag) => {
+                formData.append('tags', tag)
+            })
+
+            assignees.forEach((assigne) => {
+                formData.append('assignees', assigne)
+            })
+
+
+        }
 
         for (let pair of formData.entries()) {
             console.log(pair[0] + ', ' + pair[1]);
         }
-
         handleSave({ formData })
 
     })
@@ -165,6 +227,11 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
                 <div className=" grid-row-5 gap-3 md:grid-cols-3 md:gap-3 lg:grid">
                     {tags &&
                         tags.map((tag) => {
+                            const id = tag?.id
+                            const formTagsState = watch("tags")
+
+                            const isChecked = project && formTagsState.some((t) => t.id === id);
+
 
                             return (
                                 <label
@@ -183,6 +250,7 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
                                         type="checkbox"
                                         value={tag?.id}
                                         id={tag?.name}
+                                        defaultChecked={isChecked}
                                     />
                                     {tag?.name}
                                 </label>
@@ -243,7 +311,9 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
                 <div className=" grid-row-5 gap-3 md:grid-cols-3 md:gap-3 lg:grid">
                     {users &&
                         users.map((user) => {
-
+                            const id = user?.id
+                            const formAssigneesState = watch("assignees")
+                            const isChecked = project && formAssigneesState.some((t) => t.id === id);
                             return (
                                 <label
                                     key={user.id}
@@ -261,7 +331,7 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
                                         type="checkbox"
                                         value={user?.id}
                                         id={user?.id}
-
+                                        defaultChecked={isChecked}
                                     />
                                     {user?.first_name}
                                 </label>
@@ -276,7 +346,7 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
                 <label htmlFor="postPicture" className="text-sm cursor-pointer">
                     {watch("attachments") ? (
                         <div className="max-w-[150px] h-auto relative">
-                            <img src={URL.createObjectURL(fileInputValue)} className='w-full h-full object-contain ' />
+                            <img src={fileInputValue?.url ? fileInputValue?.url : URL.createObjectURL(fileInputValue)} alt="file" />
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                                 <span className="text-white font-bold text-lg">Click to change</span>
                             </div>
@@ -308,9 +378,10 @@ const ProjectForm: React.FC = ({ visibilityOptions, tags, users, handleSave, }) 
 
             <div className='flex justify-end'>
                 <button
+                    disabled={!isDirty}
                     className='bg-violet-400 px-10 py-2 text-white 
                 font-semibold rounded outline-none border-none hover:opacity-80'>
-                    Create project
+                    {project ? "Save changes" : "Create Project"}
                 </button>
             </div>
         </form >

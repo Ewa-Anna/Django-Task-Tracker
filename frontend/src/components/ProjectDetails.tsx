@@ -11,9 +11,11 @@ import { FaFileArrowUp } from "react-icons/fa6";
 import { IoMdDownload } from "react-icons/io";
 
 const ProjectDetails: React.FC = () => {
+    const { role } = JSON.parse(localStorage.getItem("user") || "null") as string | null;
+
     const { id } = useParams();
     const [breadCrumbsData, setBreadCrumbsData] = useState([]);
-    console.log(breadCrumbsData)
+
     const { data: project } = useQuery({
         queryFn: () => getProjectDetails({ id }),
         queryKey: ["project", id],
@@ -26,7 +28,7 @@ const ProjectDetails: React.FC = () => {
         }
     })
 
-    console.log(ProjectDetails)
+
 
     return (
 
@@ -37,6 +39,13 @@ const ProjectDetails: React.FC = () => {
             <div className=" flex gap-12  h-auto  flex-col-reverse w-[100%] md:w-[90%] py-10 xl:flex-row mx-auto ">
                 {/* LEFT */}
                 <div className="flex flex-col  gap-5 flex-grow px-14 py-10 flex-1 h-auto shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ">
+                    {role === 'admin' && <div className='flex justify-end'>
+                        <Link to={`/project/edit/${id}`}>
+                            <button
+                                className='bg-blue-400 text-white py-1 px-3.5 font-semibold rounded'>
+                                Edit
+                            </button></Link>
+                    </div>}
                     <h1 className="h2-bold">{project?.title}</h1>
 
                     <div className="flex items-center  gap-2 flex-wrap ">
@@ -151,9 +160,10 @@ const ProjectDetails: React.FC = () => {
                 {/* LEFT */}
 
                 {/* RIGHT */}
-                <div className="mx-auto flex p-8 xs:mb-2  w-full border-2 pb-4 rounded xl:flex flex-col gap-5 h-auto min-h-[430px]  xl:w-1/3    xl:p-5 xl:sticky xl:top-8 mt-32 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]  ">
+                <div className="mx-auto flex p-8 xs:mb-2  w-full  pb-4 rounded xl:flex flex-col gap-5 
+                h-fit min-h-[430px] xl:min-w-[30%] xl:w-fit    xl:p-5 xl:sticky xl:top-8  shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]  ">
                     <div className="flex items-center justify-between">
-                        <h3 className="font-bold text-slate-600 text-2xl">Project Details</h3>
+                        <h3 className="font-bold text-slate-800 text-2xl lg:text-base">Project Details</h3>
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className=" grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1 ">
@@ -193,18 +203,18 @@ const ProjectDetails: React.FC = () => {
                         </div>
                     </div>
 
-                    <h2 className='text-xl font-bold text-slate-600'>Project Leader</h2>
-                    <div className="flex justify-evenly">
+                    <h2 className='text-xl font-bold text-slate-800 lg:text-base'>Project Leader</h2>
+                    <div className="flex justify-evenly items-center">
                         <Link to={`/profile/${project?.owner?.id}`}>
                             <img
-                                className="w-[100px] h-[100px] rounded-[15%] object-cover xs:w-[200px] xs:h-[200px] lg:w-[120px] lg:h-[120px]"
+                                className="w-[100px] h-[100px] rounded-[15%] object-cover xs:w-[200px] xs:h-[200px] lg:w-[90px] lg:h-[90px]"
                                 src={project?.owner?.profile?.photo || images.ProfileImage}
                                 alt="userAvatar"
                             />
                         </Link>
                         <div className="flex flex-col h-full justify-center items-center">
-                            <span className='text-xl xs:text-2xl font-semibold text-slate-700'>{project?.owner?.first_name}</span>
-                            <span className='text-xl xs:text-2xl font-semibold text-slate-700'>{project?.owner?.last_name}</span>
+                            <span className='text-xl xs:text-2xl xl:text-base font-semibold text-slate-700'>{project?.owner?.first_name}</span>
+                            <span className='text-xl xs:text-2xl xl:text-base font-semibold text-slate-700'>{project?.owner?.last_name}</span>
 
 
 

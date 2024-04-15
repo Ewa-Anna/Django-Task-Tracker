@@ -1,22 +1,28 @@
 import React from 'react'
 import ProjectForm from './forms/ProjectForm'
+import { getProjectDetails, getTags, getVisibilityOptions, updateProject } from '../services/projectsApi'
+import { FaEdit } from "react-icons/fa";
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { createNewProject, getTags, getVisibilityOptions } from '../services/projectsApi'
-import { getUsers } from '../services/userApi'
-import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getUsers } from '../services/userApi';
+import toast from 'react-hot-toast';
 
+const EditProject: React.FC = () => {
 
-const NewProject: React.FC = () => {
-
-    const queryClient = new QueryClient()
+    const { id } = useParams();
+    const queryClient = new QueryClient;
     const navigate = useNavigate();
+
+    const { data: project, isLoading: isProjectLoading } = useQuery({
+        queryFn: () => getProjectDetails({ id }),
+        queryKey: ["project", id],
+    })
 
     const { data: tags } = useQuery({
         queryFn: () => getTags(),
         queryKey: ["tags"]
     })
+
     const { data: users } = useQuery({
         queryFn: () => getUsers({ limit: 100 }),
         queryKey: ["users"]
@@ -27,15 +33,16 @@ const NewProject: React.FC = () => {
         queryKey: ["visibilityOptions"]
     })
 
+
     const { mutate } = useMutation({
         mutationFn: ({ formData }) => {
-            return createNewProject({
+            return updateProject({
                 formData
             })
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["projects"]);
-            toast.success("Project Created successfully");
+            queryClient.invalidateQueries(["project", id]);
+            toast.success("Project updated sucessfully");
             navigate("/projects")
         },
         onError: (error) => {
@@ -49,24 +56,28 @@ const NewProject: React.FC = () => {
         mutate({ formData })
     }
 
+
     return (
         <div
             className="common-container h-fit ">
             <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 md:max-w-3xl lg:gap-x-5 lg:max-w-5xl xl:max-w-4xl">
                 <h1 className="pt-2 pb-10 h2-bold flex items-center justify-center gap-x-3 lg:justify-start lg:gap-x-2">
-                    <AiOutlineFundProjectionScreen className='w-12 h-auto lg:w-9 lg:h-auto' />  New Project
+                    <FaEdit className='w-12 h-auto lg:w-9 lg:h-auto' />  Edit Project
+                    <span className='text-lg text-slate-500 font-base ml-2'>I D: {id}</span>
                 </h1>
 
-                {visibilityOptions && tags && users &&
-                    <ProjectForm
-                        tags={tags}
-                        users={users?.results}
-                        visibilityOptions={visibilityOptions}
-                        handleSave={handleSave}
-                    />}
+
+                {project && tags && users && visibilityOptions && <ProjectForm
+                    project={project}
+                    tags={tags}
+                    users={users?.results}
+                    visibilityOptions={visibilityOptions}
+                    isProjectLoading={isProjectLoading}
+                    handleSave={handleSave}
+                />}
             </section>
         </div>
     )
 }
 
-export default NewProject
+export default EditProject
