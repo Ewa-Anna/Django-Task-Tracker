@@ -7,4 +7,4 @@ class UserConfig(AppConfig):
 
     def ready(self):
         # pylint: disable=import-outside-toplevel, unused-import
-        import user.signals
+        import user.signals  # noqa: F401

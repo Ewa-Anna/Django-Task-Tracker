@@ -7,4 +7,4 @@ class AdminxConfig(AppConfig):
 
     def ready(self):
         # pylint: disable=import-outside-toplevel, unused-import
-        import adminx.signals
+        import adminx.signals  # noqa: F401
