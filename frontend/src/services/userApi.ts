@@ -84,7 +84,7 @@ export const validateSession = async () => {
     }
 }
 
-export const getUsers = async () => {
+export const getUsers = async ({ limit = 10 }) => {
 
     try {
 
@@ -92,7 +92,7 @@ export const getUsers = async () => {
             withCredentials: true,
         }
 
-        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/user/users/", config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/user/users/?limit=${limit}`, config)
 
         return response.data;
     } catch (error) {

@@ -16,7 +16,7 @@ const sidebarLinks = [
   },
   {
     imgURL: "/src/assets/icons/users.svg",
-    route: "/all-users",
+    route: "/users",
     label: "Users",
   },
 
