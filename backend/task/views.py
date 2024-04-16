@@ -11,7 +11,11 @@ from rest_framework.permissions import IsAuthenticated
 
 from user.models import ROLES, THEMES, GENDER
 from user.permissions import CustomPermission, IsProfileComplete
-from backend.pagination import CommentPagination
+
+# pylint: disable=import-error, no-name-in-module
+from backend.pagination import (
+    CommentPagination,
+)
 
 from .serializers import (
     DictionaryContentSerializer,

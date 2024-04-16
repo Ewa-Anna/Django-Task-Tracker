@@ -1,5 +1,5 @@
-import React from 'react'
-import { images } from '../constants'
+import React from "react"
+import { images } from "../constants"
 
 const UserCard: React.FC = ({ user }) => {
     return (

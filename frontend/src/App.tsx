@@ -16,6 +16,7 @@ import NewProject from "./pages/NewProject";
 import NewTicket from "./pages/NewTicket";
 import Users from "./pages/Users";
 import EditProject from "./pages/EditProject";
+import TicketDetails from "./components/TicketDetails";
 
 
 const App: React.FC = () => {
@@ -32,6 +33,7 @@ const App: React.FC = () => {
           <Route path="/ticket/new" element={<NewTicket />} />
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/project/:id" element={<ProjectDetails />} />
+          <Route path="/ticket/:id" element={<TicketDetails />} />
           <Route path="/project/edit/:id" element={<EditProject />} />
           <Route path="/users" element={<Users />} />
 
