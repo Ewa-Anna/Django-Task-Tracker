@@ -56,15 +56,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return ProjectSerializer
 
     @action(detail=False, methods=["get"])
-    def project(self, request):
-        title = request.query_params.get("title")
-        owner = request.query_params.get("owner")
-        tags = request.query_params.getlist("tags")
-        ordering = request.query_params.get("ordering")
-        visibility = request.query_params.get("visibility", "public")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        title = self.request.query_params.get("title")
+        owner = self.request.query_params.get("owner")
+        tags = self.request.query_params.getlist("tags")
+        ordering = self.request.query_params.get("ordering")
+        visibility = self.request.query_params.get("visibility", "public")
 
-        start_date = request.query_params.get("start_date")
-        end_date = request.query_params.get("end_date")
+        start_date = self.request.query_params.get("start_date")
+        end_date = self.request.query_params.get("end_date")
 
         queryset = Project.objects.all()
 
@@ -95,12 +96,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
             )
             queryset = queryset.filter(deadline__date__lte=end_date)
 
-        paginator = CustomPagination()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        return queryset
 
-        serializer = ProjectSerializer(paginated_queryset, many=True)
-
-        return paginator.get_paginated_response(serializer.data)
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
@@ -191,14 +193,15 @@ class TaskViewSet(viewsets.ModelViewSet):
         return TaskSerializer
 
     @action(detail=False, methods=["get"])
-    def task(self, request):
-        title = request.query_params.get("title")
-        description = request.query_params.get("description")
-        priority = request.query_params.get("priority")
-        status = request.query_params.get("status")
-        task_type = request.query_params.get("type")
-        project = request.query_params.get("project")
-        assignees = request.query_params.get("assignees")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        title = self.request.query_params.get("title")
+        description = self.request.query_params.get("description")
+        priority = self.request.query_params.get("priority")
+        status = self.request.query_params.get("status")
+        task_type = self.request.query_params.get("type")
+        project = self.request.query_params.get("project")
+        assignees = self.request.query_params.get("assignees")
 
         queryset = Task.objects.all()
 
@@ -224,10 +227,13 @@ class TaskViewSet(viewsets.ModelViewSet):
             assignee_list = assignees.split(",")
             queryset = queryset.filter(assignees__username__in=assignee_list)
 
-        paginator = CustomPagination()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
-        serializer = TaskSerializer(paginated_queryset, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
