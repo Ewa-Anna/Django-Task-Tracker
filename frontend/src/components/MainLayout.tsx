@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { Header } from './Header';
-import LeftSideBar from './LeftSideBar';
-import toast from 'react-hot-toast';
-import { validateSession } from '../services/userApi';
-import { useQuery } from '@tanstack/react-query';
-import { useAccountStore } from '../store';
+import React, { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Header } from "./Header";
+import LeftSideBar from "./LeftSideBar";
+import toast from "react-hot-toast";
+import { validateSession } from "../services/userApi";
+import { useQuery } from "@tanstack/react-query";
+import { useAccountStore } from "../store";
 
 
 const RootLayout: React.FC = () => {
@@ -25,7 +25,7 @@ const RootLayout: React.FC = () => {
         onError: () => {
             navigate("/login")
         },
-        queryKey: ['session'],
+        queryKey: ["session"],
         retry: false,
 
     })

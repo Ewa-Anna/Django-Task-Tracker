@@ -14,7 +14,7 @@ export const getAllTickets = async ({ token }: { token: string | null }) => {
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -29,13 +29,13 @@ export const getTicketTypeOptions = async () => {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/dropdown-list/type`, config)
+        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/task/dropdown-list/type", config)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -50,13 +50,13 @@ export const getTicketPriorityOptions = async () => {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/dropdown-list/priority`, config)
+        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/task/dropdown-list/priority", config)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -69,13 +69,36 @@ export const createNewTicket = async ({ formData }) => {
     try {
 
 
-        const response = await clientApi.post(`http://127.0.0.1:8000/task-tracker/v1/task/tasks/`, formData)
+        const response = await clientApi.post("http://127.0.0.1:8000/task-tracker/v1/task/tasks/", formData)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
+            throw new Error(error.message);
+        } else {
+            console.log("undexpected error", error)
+            throw new Error("An unexpected error ocured")
+        }
+    }
+}
+
+
+export const getTicketDetails = async ({ id }) => {
+
+    try {
+        const config = {
+            withCredentials: true,
+        }
+
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/tasks/${id}`, config)
+
+        return response.data;
+    } catch (error) {
+        console.log(error)
+        if (axios.isAxiosError(error)) {
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
