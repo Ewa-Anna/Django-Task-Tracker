@@ -82,6 +82,7 @@ class CustomCreatedBySerializer(serializers.StringRelatedField):
     def to_representation(self, value):
         if value:
             return {
+                "id": value.id,
                 "first_name": value.first_name,
                 "last_name": value.last_name,
                 "email": value.email,
