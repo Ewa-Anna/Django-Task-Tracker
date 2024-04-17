@@ -2,17 +2,27 @@ import React, { useState } from "react";
 
 import { Link, useParams } from "react-router-dom";
 
-import { getTicketDetails } from "../services/ticketsApi";
-import { useQuery } from "@tanstack/react-query";
+import {
+  addComment,
+  deleteComment,
+  getCommentsByTicketId,
+  getTicketDetails,
+  updateComment,
+} from "../services/ticketsApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { images } from "../constants";
 import { FaFileArrowUp, FaPeopleGroup } from "react-icons/fa6";
 import { IoMdDownload } from "react-icons/io";
-
 import { MdOutlinePending, MdPublic } from "react-icons/md";
+import CommentContainer from "./CommentContainer";
+import CommentForm from "../pages/forms/CommentForm";
+import toast from "react-hot-toast";
 
 const TicketDetails = () => {
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const [breadCrumbsData, setBreadCrumbsData] = useState([]);
+  const [affectedComment, setAffectedComment] = useState(null);
   const { role } = JSON.parse(localStorage.getItem("user") || "null") as
     | string
     | null;
@@ -29,11 +39,58 @@ const TicketDetails = () => {
     },
   });
 
+  const { data: comments } = useQuery({
+    queryFn: () => getCommentsByTicketId({ id }),
+    queryKey: ["comments", id],
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: ({ formData }) => {
+      return addComment({ formData });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"]);
+      toast.success("Comment added sucessfully");
+    },
+  });
+  const { mutate: updateMutate } = useMutation({
+    mutationFn: ({ commentId, formData }) => {
+      return updateComment({ commentId, formData });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"]);
+      setAffectedComment(null);
+      toast.success("Comment updated sucessfully");
+    },
+  });
+
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: ({ commentId }) => {
+      return deleteComment({ commentId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"]);
+      setAffectedComment(null);
+      toast.success("Comment deleted sucessfully");
+    },
+  });
+
+  const handleSave = ({ formData }) => {
+    mutate({ formData });
+  };
+
+  const handleUpdateComment = ({ commentId, formData }) => {
+    updateMutate({ commentId, formData });
+  };
+  const handleDeleteComment = ({ commentId }) => {
+    deleteMutate({ commentId });
+  };
+
   return (
-    <div className=" flex flex-col  h-screen w-full  flex-1  custom-scrollbar overflow-scroll   ">
-      <div className=" flex gap-2 md:gap-4 lg:gap-7  h-auto  flex-col-reverse w-[100%] md:w-[90%] py-8 xl:flex-row mx-auto ">
+    <div className=" flex flex-col  h-screen w-full  flex-1  custom-scrollbar overflow-scroll">
+      <div className="flex gap-2 md:gap-4 lg:gap-7  h-auto  flex-col-reverse w-[100%] md:w-[90%] py-8 xl:flex-row mx-auto ">
         {/* LEFT */}
-        <div className="flex flex-col  gap-5 flex-grow px-14 py-5 flex-1 h-auto shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ">
+        <div className="flex flex-col  gap-5 flex-grow px-4 lg:px-14 py-5 flex-1 h-auto shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] pb-20 ">
           {role === "admin" && (
             <div className="flex justify-end">
               <Link to={`/project/edit/${id}`}>
@@ -48,9 +105,7 @@ const TicketDetails = () => {
             {ticket?.id}
           </span>
           <h1 className="h1-bold">{ticket?.title}</h1>
-
           <div className="flex items-center  gap-2 flex-wrap "></div>
-
           <div className="mt-6 flex flex-col gap-5 ">
             <h2 className="text-base font-semibold text-slate-500">
               Description
@@ -67,15 +122,30 @@ const TicketDetails = () => {
                   <div className="flex items-center justify-between  px-2 border-b py-3 ">
                     <FaFileArrowUp className="w-5 h-auto" />
                     <span>{attachment?.filename_to_display}</span>
-                    <IoMdDownload className="w-6 h-auto cursor-pointer hover:text-blue-500 transition-all" />
+                    <a href={attachment?.url} download>
+                      <IoMdDownload className="w-6 h-auto hover:text-blue-300 transition-all" />
+                    </a>
                   </div>
                 );
               })}
             </div>
           </div>
+          <CommentContainer
+            affectedComment={affectedComment}
+            setAffectedComment={setAffectedComment}
+            handleUpdateComment={handleUpdateComment}
+            handleDeleteComment={handleDeleteComment}
+            comments={comments}
+          />
+          <CommentForm
+            projectId={ticket?.project}
+            ticketId={ticket?.id}
+            handleSave={handleSave}
+            btnLabel={"Submit"}
+          />
         </div>
-        {/* LEFT */}
 
+        {/* LEFT */}
         {/* RIGHT */}
         <div
           className="mx-auto flex p-8 xs:mb-2  w-full  pb-4 rounded xl:flex flex-col gap-5 
@@ -115,7 +185,23 @@ const TicketDetails = () => {
                   Type
                 </th>
                 <th scope="col" className="w-1/2  border-b pb-3">
-                  {ticket?.type}
+                  <span
+                    className={`inline-block  text-white  rounded-full text-xs font-semibold uppercase mr-2 ${
+                      ticket?.type === "question"
+                        ? "bg-gray-500 px-2 py-1.5"
+                        : ticket?.type === "bug"
+                        ? "bg-rose-500 px-6 py-1.5"
+                        : ticket?.type === "improvement"
+                        ? "bg-pink-500 px-2 py-1.5"
+                        : ticket?.type === "feature"
+                        ? "bg-purple-400 px-2.5 py-1.5"
+                        : ticket?.type === "other"
+                        ? "bg-blue-400 px-2.5 py-1.5"
+                        : ""
+                    }`}
+                  >
+                    {ticket?.type}
+                  </span>
                 </th>
               </tr>
               <tr>
@@ -127,16 +213,16 @@ const TicketDetails = () => {
                 </th>
                 <th scope="col" className="w-1/2  border-b pb-3 ">
                   <span
-                    className={`px-7 py-1.5 rounded ${
-                      ticket && ticket?.priority === "low"
-                        ? "bg-green-400"
+                    className={`inline-block  text-white  rounded-full text-xs font-semibold uppercase mr-2 ${
+                      ticket?.priority === "low"
+                        ? "bg-emerald-500 px-5 py-1.5"
                         : ticket?.priority === "medium"
-                        ? "bg-yellow:500"
+                        ? "bg-amber-400 px-6 py-1.5"
                         : ticket?.priority === "high"
-                        ? "bg-rose-400"
+                        ? "bg-rose-500 px-4 py-1.5"
                         : ticket?.priority === "critical"
-                        ? "bg-orange-400"
-                        : "bg-transparent"
+                        ? "bg-orange-400 px-2.5 py-1.5"
+                        : ""
                     }`}
                   >
                     {ticket?.priority}
@@ -200,7 +286,6 @@ const TicketDetails = () => {
             </tbody>
           </table>
         </div>
-
         {/* RIGHT */}
       </div>
     </div>
