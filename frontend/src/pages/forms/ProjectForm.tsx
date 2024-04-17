@@ -61,7 +61,7 @@ const ProjectForm: React.FC = ({
       assignees,
       attachments,
     } = data;
-
+    console.log(data);
     const isoDeadline = new Date(deadline).toISOString();
     const file = attachments[0];
     const formData = new FormData();
@@ -308,6 +308,8 @@ const ProjectForm: React.FC = ({
             Deadline date
           </span>
           <DatePicker
+            startDate={project && watch("deadline")}
+            selected={(project && watch("deadline")) || null}
             minDate={minDate}
             maxDate={maxDate}
             onChange={(date) => handleDateChange(date as Date)}

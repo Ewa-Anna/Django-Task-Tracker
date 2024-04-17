@@ -1,20 +1,20 @@
 import axios from "axios"
 import clientApi from "../axios";
 
-export const getAllProjects = async ({ limit = 10 }) => {
+export const getAllProjects = async ({ limit = 12, title = "", offset = 0, }) => {
 
     try {
         const config = {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/projects/?limit=${limit}`, config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/projects/?title=${title}&offset=${offset}&limit=${limit}`, config)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -36,7 +36,7 @@ export const getProjectDetails = async ({ id }) => {
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -53,13 +53,13 @@ export const getTags = async () => {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/tags/`, config)
+        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/tags/", config)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -74,13 +74,13 @@ export const getVisibilityOptions = async () => {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/dropdown-list/visibility`, config)
+        const response = await axios.get("http://127.0.0.1:8000/task-tracker/v1/task/dropdown-list/visibility", config)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -93,13 +93,13 @@ export const createNewProject = async ({ formData }) => {
     try {
 
 
-        const response = await clientApi.post(`http://127.0.0.1:8000/task-tracker/v1/task/projects/`, formData)
+        const response = await clientApi.post("http://127.0.0.1:8000/task-tracker/v1/task/projects/", formData)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -111,7 +111,7 @@ export const createNewProject = async ({ formData }) => {
 
 export const updateProject = async ({ formData }) => {
     try {
-        const projectId = formData.get('id');
+        const projectId = formData.get("id");
 
         const response = await clientApi.patch(`http://127.0.0.1:8000/task-tracker/v1/task/projects/${projectId}/`, formData)
 
@@ -119,7 +119,7 @@ export const updateProject = async ({ formData }) => {
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
