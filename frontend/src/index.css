@@ -6,7 +6,7 @@
 
 @layer base {
   * {
-    @apply box-border list-none p-0 m-0 scroll-smooth ;
+    @apply box-border list-none p-0 m-0 scroll-smooth;
   }
 
   body {
@@ -108,9 +108,9 @@
     background: #7878a3;
   }
 
-.common-container {
-  @apply h-screen w-full flex flex-col flex-1 gap-10 overflow-scroll py-20 lg:p-0 custom-scrollbar;
-}
+  .common-container {
+    @apply h-screen w-full flex flex-col flex-1 gap-10 overflow-scroll py-20 lg:p-0 custom-scrollbar;
+  }
 
   /* All Users */
   .user-container {
@@ -219,7 +219,7 @@
 
   /* Left sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px]  bg-white;
+    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px];
   }
 
   .leftsidebar-link {

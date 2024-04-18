@@ -19,7 +19,7 @@ export const login = async ({ email, password }: { email: string, password: stri
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -36,10 +36,10 @@ export const logout = async ({ token }: { token: string }) => {
 
 
         const config = {
-            credentials: 'include',
+            credentials: "include",
             withCredentials: true,
             withXSRFToken: true,
-            xsrfHeaderName: 'X-CSRFToken',
+            xsrfHeaderName: "X-CSRFToken",
             headers: {
                 "X-CSRFToken": token,
             },
@@ -52,7 +52,7 @@ export const logout = async ({ token }: { token: string }) => {
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -75,7 +75,7 @@ export const validateSession = async () => {
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)
@@ -84,7 +84,7 @@ export const validateSession = async () => {
     }
 }
 
-export const getUsers = async ({ limit = 10 }) => {
+export const getUsers = async ({ limit = 10, name = "" }) => {
 
     try {
 
@@ -92,13 +92,13 @@ export const getUsers = async ({ limit = 10 }) => {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/user/users/?limit=${limit}`, config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/user/users/?name=${name}&limit=${limit}`, config)
 
         return response.data;
     } catch (error) {
         console.log(error)
         if (axios.isAxiosError(error)) {
-            console.log('error message:', error.message)
+            console.log("error message:", error.message)
             throw new Error(error.message);
         } else {
             console.log("undexpected error", error)

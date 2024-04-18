@@ -14,6 +14,7 @@ import { MdOutlineWidgets } from "react-icons/md";
 const Tickets: React.FC = () => {
   const token = localStorage.getItem("token");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const userString = localStorage.getItem("user");
   const { role } = JSON.parse(userString as string);
@@ -23,48 +24,67 @@ const Tickets: React.FC = () => {
     isLoading,
     isError,
     isFetching,
+    refetch,
   } = useQuery({
     queryFn: () => {
-      return getAllTickets({ token: token });
+      return getAllTickets({ limit: 11, title: searchKeyword });
     },
     queryKey: ["tickets"],
     refetchOnWindowFocus: false,
   });
 
+  const searchKeywordHandler = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const { value } = e.target;
+    setSearchKeyword(value);
+  };
+
+  const submitSearchKeywordHandler = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    e.preventDefault();
+    setCurrentPage(1);
+    refetch();
+  };
+
   return (
     <div className="  common-container">
-      <div className="w-full mx-auto  px-10 py-8  ">
-        <div className="flex flex-col gap-4 sm:flex-row justify-between py-2 px-16">
-          <h2 className="h1-bold text-center sm:text-left sm:h2-bold">
+      <div className="w-full mx-auto  px-10   ">
+        <div className="flex flex-col gap-4  justify-between  lg:pr-6 2xl:pr-12  ">
+          <h1 className="h1-bold text-center sm:text-left sm:h2-bold mt-4">
             Tickets
-          </h2>
-          <div className="flex flex-col gap-8 py-2">
-            <form className="flex mx-auto flex-col justify-center w-3/4 max-w-sm space-y-3 md:flex-row md:w-full md:space-x-3 md:space-y-0 ">
-              <div className=" relative ">
-                <input
-                  type="text"
-                  id='"form-subscribe-Filter'
-                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="Category name..."
-                />
-              </div>
+          </h1>
+
+          <div className="flex flex-col sm:flex-row justify-between gap-10 w-full  mb-6 ">
+            {role === "admin" && (
+              <Link
+                to={"/ticket/new"}
+                className="border-2 px-2 py-2.5 text-center bg-purple-500 text-white font-semibold rounded-lg hover:opacity-85"
+              >
+                + Add new ticket
+              </Link>
+            )}
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                onChange={searchKeywordHandler}
+                className="placeholder:px-2 p-2 w-full rounded-lg mx-auto md:mx-0"
+                placeholder="Ticket title..."
+                type="text"
+                value={searchKeyword}
+              />
               <button
+                onClick={submitSearchKeywordHandler}
                 className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200"
                 type="submit"
               >
                 Filter
               </button>
-            </form>
-
-            <Link
-              to={"/ticket/new"}
-              className="border-2 py-2 text-center bg-purple-500 text-white text-bold rounded-lg hover:opacity-85"
-            >
-              New ticket
-            </Link>
+            </div>
           </div>
         </div>
-        <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
+
+        <div className="px-4  -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
               <thead>

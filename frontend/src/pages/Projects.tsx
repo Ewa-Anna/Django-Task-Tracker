@@ -34,6 +34,7 @@ const Projects: React.FC = () => {
     refetchOnWindowFocus: false,
   });
 
+  console.log(projects?.next);
   const searchKeywordHandler = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -50,13 +51,22 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className=" flex flex-col pb-20 px-10  h-screen w-full  flex-1  custom-scrollbar overflow-scroll  ">
-      <div className="flex flex-col gap-4 sm:flex-row justify-between py-12 px-16">
-        <h1 className="h1-bold text-center sm:text-left sm:h2-bold ">
+    <div className=" flex flex-col pb-20 px-12  h-screen w-full  flex-1  custom-scrollbar overflow-scroll  ">
+      <div className="flex flex-col gap-4  justify-between  lg:pr-6 2xl:pr-12  ">
+        <h1 className="h1-bold text-center sm:text-left sm:h2-bold mt-4">
           Projects
         </h1>
-        <div className="flex flex-col gap-8 py-2">
-          <div className="flex gap-2">
+
+        <div className="flex flex-col sm:flex-row justify-between gap-10 w-full  mb-6 ">
+          {role === "admin" && (
+            <Link
+              to={"/project/new"}
+              className="border-2 px-2 py-2.5 text-center bg-purple-500 text-white font-semibold rounded-lg hover:opacity-85"
+            >
+              + Add new project
+            </Link>
+          )}
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               onChange={searchKeywordHandler}
               className="placeholder:px-2 p-2 w-full rounded-lg mx-auto md:mx-0"
@@ -72,14 +82,6 @@ const Projects: React.FC = () => {
               Filter
             </button>
           </div>
-          {role === "admin" && (
-            <Link
-              to={"/project/new"}
-              className="border-2 py-2 text-center bg-purple-500 text-white text-bold rounded-lg hover:opacity-85"
-            >
-              New project
-            </Link>
-          )}
         </div>
       </div>
       <ProjectsWrapper
@@ -87,6 +89,7 @@ const Projects: React.FC = () => {
         isLoading={isLoading}
         isError={isError}
       />
+      <button>Next</button>
     </div>
   );
 };

@@ -9,8 +9,8 @@ const CommentContainer = ({
   setAffectedComment,
   handleDeleteComment,
 }) => {
-  const { email } = JSON.parse(localStorage.getItem("user"));
-  console.log(email);
+  const { user_id } = JSON.parse(localStorage.getItem("user"));
+
   return (
     <div className={className}>
       <div className="space-y-4 mt-8">
@@ -19,7 +19,7 @@ const CommentContainer = ({
             <Comment
               projectId={comment?.project}
               ticketId={comment?.task}
-              commentBelongsToUser={comment?.created_by?.email === email}
+              commentBelongsToUser={comment?.created_by?.id === user_id}
               key={comment.id}
               affectedComment={affectedComment}
               setAffectedComment={setAffectedComment}
