@@ -1,4 +1,3 @@
-
 import "./App.css";
 import React from "react";
 import { Toaster } from "react-hot-toast";
@@ -17,16 +16,13 @@ import NewTicket from "./pages/NewTicket";
 import Users from "./pages/Users";
 import EditProject from "./pages/EditProject";
 import TicketDetails from "./components/TicketDetails";
-
+import EditTicket from "./pages/EditTicket";
 
 const App: React.FC = () => {
-
-
   return (
     <main className="bg-gray-100 h-screen w-full overflow-hidden ">
       <Routes>
-
-        <Route element={<MainLayout />} >
+        <Route element={<MainLayout />}>
           <Route index path="/" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/project/new" element={<NewProject />} />
@@ -35,22 +31,18 @@ const App: React.FC = () => {
           <Route path="/project/:id" element={<ProjectDetails />} />
           <Route path="/ticket/:id" element={<TicketDetails />} />
           <Route path="/project/edit/:id" element={<EditProject />} />
+          <Route path="/ticket/edit/:id" element={<EditTicket />} />
           <Route path="/users" element={<Users />} />
-
-
         </Route>
 
-        <Route element={<AuthLayout />} >
+        <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-
-
         </Route>
       </Routes>
       <Toaster />
     </main>
-  )
-}
+  );
+};
 
-export default App
+export default App;

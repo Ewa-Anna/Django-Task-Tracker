@@ -93,7 +93,7 @@ const TicketDetails = () => {
         <div className="flex flex-col  gap-5 flex-grow px-4 lg:px-14 py-5 flex-1 h-auto shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] pb-20 ">
           {role === "admin" && (
             <div className="flex justify-end">
-              <Link to={`/project/edit/${id}`}>
+              <Link to={`/ticket/edit/${id}`}>
                 <button className="bg-blue-400 text-white py-1 px-3.5 font-semibold rounded">
                   Edit
                 </button>

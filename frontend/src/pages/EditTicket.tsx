@@ -1,32 +1,42 @@
 import React from "react";
 import ProjectForm from "./forms/ProjectForm";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  createNewProject,
   getAllProjects,
+  getProjectDetails,
   getTags,
   getVisibilityOptions,
+  updateProject,
 } from "../services/projectsApi";
-import { getUsers } from "../services/userApi";
+import { FaEdit } from "react-icons/fa";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+
+import toast from "react-hot-toast";
 import TicketForm from "./forms/TicketForm";
 import {
-  createNewTicket,
+  getTicketDetails,
   getTicketPriorityOptions,
   getTicketTypeOptions,
+  updateTicket,
 } from "../services/ticketsApi";
-import { PiTicketFill } from "react-icons/pi";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { getUsers } from "../services/userApi";
 
-const NewTicket: React.FC = () => {
+const EditTicket: React.FC = () => {
+  const { id } = useParams();
+  const queryClient = new QueryClient();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
+  const { data: ticket, isLoading: isProjectLoading } = useQuery({
+    queryFn: () => getTicketDetails({ id }),
+    queryKey: ["ticket", id],
+  });
+
   const { data: priorityOptions } = useQuery({
     queryFn: () => getTicketPriorityOptions(),
     queryKey: ["priorityOptions"],
   });
   const { data: users } = useQuery({
-    queryFn: () => getUsers(),
+    queryFn: () => getUsers({ limit: 100 }),
     queryKey: ["users"],
   });
 
@@ -49,14 +59,17 @@ const NewTicket: React.FC = () => {
 
   const { mutate } = useMutation({
     mutationFn: ({ formData }) => {
-      return createNewTicket({
+      return updateTicket({
         formData,
       });
     },
     onSuccess: () => {
-      toast.success("Ticket created sucessfully");
-      queryClient.invalidateQueries(["tickets"]);
+      queryClient.invalidateQueries(["ticket", id]);
+      toast.success("Ticket updated sucessfully");
       navigate("/tickets");
+    },
+    onError: (error) => {
+      toast.error("Something went wrong...");
     },
   });
 
@@ -68,11 +81,15 @@ const NewTicket: React.FC = () => {
     <div className="common-container h-fit ">
       <section className="container mx-auto max-w-5xl flex flex-col px-5 py-5 md:max-w-3xl lg:gap-x-5 lg:max-w-5xl xl:max-w-4xl">
         <h1 className="pt-2 pb-10 h2-bold flex items-center justify-center gap-x-3 lg:justify-start lg:gap-x-2">
-          <PiTicketFill className="w-12 h-auto lg:w-9 lg:h-auto" />
-          New Ticket
+          <FaEdit className="w-12 h-auto lg:w-9 lg:h-auto" /> Edit Ticket
+          <span className="text-lg text-slate-500 font-base ml-2">
+            I D: {id}
+          </span>
         </h1>
-        {projects && typeOptions && priorityOptions && (
+
+        {ticket && projects && typeOptions && users && priorityOptions && (
           <TicketForm
+            ticket={ticket}
             projects={projects?.results}
             priorityOptions={priorityOptions}
             users={users?.results}
@@ -85,4 +102,4 @@ const NewTicket: React.FC = () => {
   );
 };
 
-export default NewTicket;
+export default EditTicket;
