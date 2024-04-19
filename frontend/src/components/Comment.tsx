@@ -27,7 +27,7 @@ const Comment = ({
     <div
       className={`${
         commentBelongsToUser ? "border " : ""
-      } flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg border-2`}
+      } flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg border-2 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]`}
     >
       <img
         src={
