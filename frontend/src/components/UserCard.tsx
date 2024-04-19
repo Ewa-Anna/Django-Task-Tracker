@@ -1,5 +1,6 @@
 import React from "react";
 import { images } from "../constants";
+import { Link } from "react-router-dom";
 
 const UserCard: React.FC = ({ user }) => {
   return (
@@ -25,9 +26,11 @@ const UserCard: React.FC = ({ user }) => {
         {" "}
         {user?.role && user.role.toUpperCase()}
       </span>
-      <button className="py-2 px-3 rounded-lg lg:px-8 bg-blue-400 text-slate-100 font-bold">
-        See more
-      </button>
+      <Link to={`/user/${user.id}`}>
+        <button className="py-2 px-3 rounded-lg lg:px-8 bg-blue-400 text-slate-100 font-bold">
+          See more
+        </button>
+      </Link>
     </div>
   );
 };

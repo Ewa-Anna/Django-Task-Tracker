@@ -4,10 +4,12 @@ import { getUsers } from "../services/userApi";
 import { images } from "../constants";
 import UserCard from "../components/UserCard";
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 const Users: React.FC = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [paginationLimit, setPaginationLimit] = useState(5);
   const userString = localStorage.getItem("user");
   const { role } = JSON.parse(userString as string);
 
@@ -18,9 +20,13 @@ const Users: React.FC = () => {
     refetch,
   } = useQuery({
     queryFn: () => {
-      return getUsers({ limit: 12, name: searchKeyword });
+      return getUsers({
+        limit: paginationLimit,
+        name: searchKeyword,
+        offset: currentPage,
+      });
     },
-    queryKey: ["users"],
+    queryKey: ["users", currentPage],
     refetchOnWindowFocus: false,
   });
 
@@ -38,7 +44,7 @@ const Users: React.FC = () => {
     setCurrentPage(1);
     refetch();
   };
-
+  console.log(users?.results?.map((user) => user?.first_name));
   return (
     <div className=" flex flex-col pb-20 px-10  h-screen w-full  flex-1  custom-scrollbar overflow-scroll  ">
       <div className="px-10 flex flex-col gap-4  justify-between  lg:pr-6 2xl:pr-12  ">
@@ -70,6 +76,14 @@ const Users: React.FC = () => {
             return <UserCard user={user} />;
           })}
       </div>
+
+      {!isLoading && (
+        <Pagination
+          onPageChange={(page) => setCurrentPage(page)}
+          currentPage={currentPage}
+          totalPageCount={parseInt(users?.count / paginationLimit)}
+        />
+      )}
     </div>
   );
 };

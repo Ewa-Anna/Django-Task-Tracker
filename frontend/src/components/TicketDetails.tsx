@@ -90,7 +90,7 @@ const TicketDetails = () => {
     <div className=" flex flex-col  h-screen w-full  flex-1  custom-scrollbar overflow-scroll">
       <div className="flex gap-2 md:gap-4 lg:gap-7  h-auto  flex-col-reverse w-[100%] md:w-[90%] py-8 xl:flex-row mx-auto ">
         {/* LEFT */}
-        <div className="flex flex-col  gap-5 flex-grow px-4 lg:px-14 py-5 flex-1 h-auto shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] pb-20 ">
+        <div className="flex flex-col  gap-5 flex-grow px-4 lg:px-14 py-5 flex-1 h-auto  pb-20 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ">
           {role === "admin" && (
             <div className="flex justify-end">
               <Link to={`/ticket/edit/${id}`}>
@@ -100,34 +100,36 @@ const TicketDetails = () => {
               </Link>
             </div>
           )}
-          <span className="text-sm font-semibold ">
-            <span className="text-blue-500">ID:</span>
-            {ticket?.id}
-          </span>
-          <h1 className="h1-bold">{ticket?.title}</h1>
-          <div className="flex items-center  gap-2 flex-wrap "></div>
-          <div className="mt-6 flex flex-col gap-5 ">
-            <h2 className="text-base font-semibold text-slate-500">
-              Description
-            </h2>
-            <div className="   border bg-slate-100  rounded-[8px] lg:p-5 mt-1 min-h-[200px] ">
-              <span> {ticket?.description}</span>
-            </div>
-            <h3 className="text-base font-semibold text-slate-500 mt-3">
-              Attachments
-            </h3>
-            <div>
-              {ticket?.attachments.map((attachment) => {
-                return (
-                  <div className="flex items-center justify-between  px-2 border-b py-3 ">
-                    <FaFileArrowUp className="w-5 h-auto" />
-                    <span>{attachment?.filename_to_display}</span>
-                    <a href={attachment?.url} download>
-                      <IoMdDownload className="w-6 h-auto hover:text-blue-300 transition-all" />
-                    </a>
-                  </div>
-                );
-              })}
+          <div className="">
+            <span className="text-sm font-semibold ">
+              <span className="text-blue-500">ID:</span>
+              {ticket?.id}
+            </span>
+            <h1 className="h1-bold">{ticket?.title}</h1>
+
+            <div className="mt-6 flex flex-col gap-5 ">
+              <h2 className="text-base font-semibold text-slate-500">
+                Description
+              </h2>
+              <div className="   border bg-slate-100  rounded-[8px] lg:p-5 mt-1 min-h-[200px] ">
+                <span> {ticket?.description}</span>
+              </div>
+              <h3 className="text-base font-semibold text-slate-500 mt-3">
+                Attachments
+              </h3>
+              <div>
+                {ticket?.attachments.map((attachment) => {
+                  return (
+                    <div className="flex items-center justify-between  px-2 border-b py-3 ">
+                      <FaFileArrowUp className="w-5 h-auto" />
+                      <span>{attachment?.filename_to_display}</span>
+                      <a href={attachment?.url} download>
+                        <IoMdDownload className="w-6 h-auto hover:text-blue-300 transition-all" />
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
           <CommentContainer
