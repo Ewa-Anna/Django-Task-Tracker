@@ -17,8 +17,7 @@ class IsProfileComplete(BasePermission):
         if request.user.is_authenticated:
             if request.user.profile.is_configured:
                 return True
-            else:
-                raise PermissionDenied(
-                    "Please configure your profile first before accessing this page."
-                )
+            raise PermissionDenied(
+                "Please configure your profile first before accessing this page."
+            )
         return False

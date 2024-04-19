@@ -1,3 +1,6 @@
+import cloudinary
+import cloudinary.uploader
+
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -201,3 +204,10 @@ class Attachment(models.Model):
 
     def __str__(self):
         return f"Attachement added by {self.uploader.username}"
+
+    def delete(self, *args, **kwargs):
+        if self.file:
+            public_id = "/".join(self.file.name.split("/")[-7:])
+            cloudinary.uploader.destroy(public_id)
+            print(f"Deleted file with public ID: {public_id}")
+        super().delete(*args, **kwargs)

@@ -23,6 +23,7 @@ from .serializers import (
     ChangePasswordSerializer,
     CustomPasswordTokenSerializer,
     ProfileSerializer,
+    UserProfileSerializer,
 )
 from .models import Profile
 from .permissions import IsProfileComplete
@@ -235,11 +236,10 @@ class DashboardView(APIView):
 
     permission_classes = [IsAuthenticated, IsProfileComplete]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
+    serializers = UserProfileSerializer
 
-    def get(self, request):
-        user = request.user
+    def get_user_data(self, user):
         profile = Profile.objects.get_or_create(user=user)[0]
-
         user_data = {
             "username": user.username,
             "first_name": user.first_name,
@@ -247,12 +247,17 @@ class DashboardView(APIView):
             "email": user.email,
             "role": user.role,
             "join_date": user.join_date,
-            "last_loggin": user.last_loggin,
+            "last_login": user.last_login,
             "bio": profile.bio,
             "photo": profile.photo,
             "birthdate": profile.birthdate,
             "gender": profile.gender,
         }
+        return user_data
+
+    def get(self, request):
+        user = request.user
+        user_data = self.get_user_data(user)
 
         projects = Project.objects.filter(owner=user)
         project_serializer = ProjectSerializer(
@@ -274,33 +279,42 @@ class DashboardView(APIView):
 
         return Response(user_data)
 
+    def update_user_profile(self, user, profile, request_data):
+        user_fields = ["first_name", "last_name"]
+        profile_fields = ["bio", "photo", "birthdate", "gender"]
+
+        for field in user_fields:
+            setattr(user, field, request_data.get(field, getattr(user, field)))
+
+        for field in profile_fields:
+            setattr(profile, field, request_data.get(field, getattr(profile, field)))
+
+        user.save()
+        profile.save()
+
     def post(self, request):
         user = request.user
-
         user.first_name = request.data.get("first_name", user.first_name)
         user.last_name = request.data.get("last_name", user.last_name)
-
         user.save()
 
         profile, _ = Profile.objects.get_or_create(user=user)
-
         profile.bio = request.data.get("bio", profile.bio)
         profile.photo = request.data.get("photo", profile.photo)
         profile.birthdate = request.data.get("birthdate", profile.birthdate)
         profile.gender = request.data.get("gender", profile.gender)
-
         profile.save()
 
-        updated_data = {
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "bio": profile.bio,
-            "photo": profile.photo,
-            "birthdate": profile.birthdate,
-            "gender": profile.gender,
-        }
+        user_data = self.get_user_data(user)
+        return Response(user_data, status=status.HTTP_200_OK)
 
-        return Response(updated_data, status=status.HTTP_200_OK)
+    def patch(self, request):
+        user = request.user
+        profile, _ = Profile.objects.get_or_create(user=user)
+        self.update_user_profile(user, profile, request.data)
+
+        user_data = self.get_user_data(user)
+        return Response(user_data, status=status.HTTP_200_OK)
 
 
 class DeactivateAccountView(APIView):
@@ -329,15 +343,33 @@ class SessionValidationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(
-            {"success": True, "message": "Session is valid"},
-            status=status.HTTP_200_OK,
-        )
+        user = request.user
+        profile = Profile.objects.get_or_create(user=user)[0]
+        response_data = {
+            "user_id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "theme": user.theme,
+            "role": user.role,
+            "join_date": user.join_date,
+            "last_loggin": user.last_loggin,
+            "bio": profile.bio,
+            "photo": profile.photo,
+            "birthdate": profile.birthdate,
+            "gender": profile.gender,
+            "csrf_token": request.META.get("CSRF_COOKIE"),
+        }
+        response_data["success"] = True
+        response_data["message"] = "Session is valid"
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class OnboardingView(APIView):
     """
-    This view allows user to first-time update the profile in order to set is_configured value to True.
+    This view allows user to first-time update the profile in order to set
+    is_configured value to True.
     """
 
     permission_classes = [IsAuthenticated]

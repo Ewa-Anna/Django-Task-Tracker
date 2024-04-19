@@ -56,15 +56,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return ProjectSerializer
 
     @action(detail=False, methods=["get"])
-    def project(self, request):
-        title = request.query_params.get("title")
-        owner = request.query_params.get("owner")
-        tags = request.query_params.getlist("tags")
-        ordering = request.query_params.get("ordering")
-        visibility = request.query_params.get("visibility", "public")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        title = self.request.query_params.get("title")
+        owner = self.request.query_params.get("owner")
+        tags = self.request.query_params.getlist("tags")
+        ordering = self.request.query_params.get("ordering")
+        visibility = self.request.query_params.get("visibility", "public")
 
-        start_date = request.query_params.get("start_date")
-        end_date = request.query_params.get("end_date")
+        start_date = self.request.query_params.get("start_date")
+        end_date = self.request.query_params.get("end_date")
 
         queryset = Project.objects.all()
 
@@ -95,12 +96,16 @@ class ProjectViewSet(viewsets.ModelViewSet):
             )
             queryset = queryset.filter(deadline__date__lte=end_date)
 
-        paginator = CustomPagination()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
+        return queryset
 
-        serializer = ProjectSerializer(paginated_queryset, many=True)
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
-        return paginator.get_paginated_response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
@@ -183,19 +188,20 @@ class TaskViewSet(viewsets.ModelViewSet):
     }
 
     def get_serializer_class(self):
-        if self.action == "create" or "update":
+        if self.action == "create":
             return TaskCreateSerializer
         return TaskSerializer
 
     @action(detail=False, methods=["get"])
-    def task(self, request):
-        title = request.query_params.get("title")
-        description = request.query_params.get("description")
-        priority = request.query_params.get("priority")
-        status = request.query_params.get("status")
-        task_type = request.query_params.get("type")
-        project = request.query_params.get("project")
-        assignees = request.query_params.get("assignees")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        title = self.request.query_params.get("title")
+        description = self.request.query_params.get("description")
+        priority = self.request.query_params.get("priority")
+        status = self.request.query_params.get("status")
+        task_type = self.request.query_params.get("type")
+        project = self.request.query_params.get("project")
+        assignees = self.request.query_params.get("assignees")
 
         queryset = Task.objects.all()
 
@@ -221,10 +227,13 @@ class TaskViewSet(viewsets.ModelViewSet):
             assignee_list = assignees.split(",")
             queryset = queryset.filter(assignees__username__in=assignee_list)
 
-        paginator = CustomPagination()
-        paginated_queryset = paginator.paginate_queryset(queryset, request)
-        serializer = TaskSerializer(paginated_queryset, many=True)
-        return paginator.get_paginated_response(serializer.data)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
@@ -240,10 +249,11 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachments_data = request.data.copy().pop("attachments", [])
-            serializer = TaskCreateSerializer(data=request.data)
+            serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            task = serializer.save(created_by=request.user)
+            task = serializer.save(created_by=self.request.user)
+
+            attachments_data = request.data.copy().pop("attachments", [])
 
             processed_attachments_data = []
             for attachment_data in attachments_data:
@@ -256,6 +266,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
             response_data = {"success": True, "message": "Task created successfully."}
             return Response(response_data, status=status.HTTP_201_CREATED)
+
+        except serializers.ValidationError as e:
+            response_data = {"success": False, "message": e.detail}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=broad-except
         except Exception as e:
@@ -277,7 +291,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN,
             )
         return super().update(request, *args, **kwargs)
-    
+
     @action(detail=True, methods=["get"])
     def comments_count(self, request, pk=None):
         task = self.get_object()
@@ -288,9 +302,10 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
         task_data = serializer.data
-        task_data['comments_count'] = comments_count
+        task_data["comments_count"] = comments_count
 
         return Response(task_data)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
@@ -312,7 +327,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     }
 
     def get_serializer_class(self):
-        if self.action == "create" or "update":
+        if self.action == "create":
             return CommentCreateSerializer
         return CommentSerializer
 
@@ -352,10 +367,11 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            attachments_data = request.data.copy().pop("attachments", [])
-            serializer = CommentCreateSerializer(data=request.data)
+            serializer = self.get_serializer(data=request.data)
+            # serializer = CommentCreateSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            comment = serializer.save(created_by=request.user)
+            attachments_data = request.data.copy().pop("attachments", [])
+            comment = serializer.save(created_by=self.request.user)
 
             processed_attachments_data = []
             for attachment_data in attachments_data:

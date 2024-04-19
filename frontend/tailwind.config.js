@@ -14,20 +14,11 @@ module.exports = {
       center: true,
       padding: '2rem',
       screens: {
-        '2xl': '1400px',
+        '2xl': '1780px',
       
       },
     },
     extend: {
-
-      gridTemplateColumns: {
-        // Dodaj tę linię do zdefiniowania niestandardowych szerokości kolumn
-        '60-40': '6fr 4fr',
-        '40-60':'4fr 5fr',
-        "30-70":'2fr 7fr',
-        '65-35':'5fr 3fr'
-      },
-      
       colors: {
         'primary-500': '#877EFF',
         'primary-600': '#5D5FEF',
@@ -42,10 +33,6 @@ module.exports = {
         'light-2': '#EFEFEF',
         'light-3': '#7878A3',
         'light-4': '#5C5C7B',
-        'priority-low':'#2E72A1',
-        'priority-medium':'#2A924E',
-        'priority-high':'#D9822B',
-        'priority-critical':'#D15252',
       },
       screens: {
         'xs': '480px',
