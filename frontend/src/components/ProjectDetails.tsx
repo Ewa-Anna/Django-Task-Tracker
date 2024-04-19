@@ -62,31 +62,59 @@ const ProjectDetails: React.FC = () => {
           <p>{project?.description}</p>
 
           {/* seeller */}
-          <div className="mt-12 flex flex-col gap-5 ">
+          <div className="mt-12 flex flex-col  gap-5 ">
             <div className=" border-2  rounded-[5px] p-5 mt-5 ">
               <h3 className="font-semibold text-xl mb-6">Overall</h3>
               <div className="flex justify-between flex-wrap text-slate-800">
-                <div className="w-[300px] flex flex-col gap-3 mb-5">
-                  <span className="font-normal">Total members</span>
-                  <span className="desc">{project?.assignees.length}</span>
+                <div className="w-[300px] flex flex-col gap-3 mb-5 mx-auto sm:mx-0">
+                  <span className="font-normal">Created</span>
+
+                  <div className="flex flex-col">
+                    <span>
+                      {" "}
+                      {new Date(project?.created).toLocaleString("en-US", {
+                        month: "long",
+                      })}{" "}
+                      {new Date(project?.created).getDate()},{" "}
+                      {new Date(project?.created).toLocaleString("en-US", {
+                        year: "numeric",
+                      })}
+                    </span>
+                    <span className="text-xs">
+                      {new Date(project?.created).toLocaleString("en-US", {
+                        hour: "2-digit",
+                      })}{" "}
+                      {new Date(project?.created).toLocaleString("en-US", {
+                        minute: "2-digit",
+                      })}{" "}
+                    </span>
+                  </div>
                 </div>
-                <div className="w-[300px] flex flex-col gap-2 mb-5">
-                  <span className="font-normal">Created At</span>
-                  <span className="desc">
-                    {/* {formatTimestamp(project?.created)} */}
-                  </span>
+                <div className="w-[300px] flex flex-col gap-2 mb-5 mx-auto sm:mx-0">
+                  <span className="font-normal">Due time</span>
+                  <div className="flex flex-col">
+                    <span>
+                      {" "}
+                      {new Date(project?.deadline).toLocaleString("en-US", {
+                        month: "long",
+                      })}{" "}
+                      {new Date(project?.deadline).getDate()},{" "}
+                      {new Date(project?.deadline).toLocaleString("en-US", {
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
                 </div>
-                <div className="w-[300px] flex flex-col gap-2 mb-5">
-                  <span className="font-normal">Avg response time</span>
-                  <span className="desc">4 hours</span>
-                </div>
-                <div className="w-[300px] flex flex-col gap-2 mb-5">
-                  <span className="font-normal">Created By</span>
-                  <span className="desc">{`${project?.created_by?.first_name} ${project?.created_by?.last_name}`}</span>
-                </div>
-                <div className="w-[300px] flex flex-col gap-2 mb-5">
-                  <span className="font-normal">Languages</span>
-                  <span className="desc">English</span>
+
+                <div className="w-[300px] flex  gap-2 mb-5 mx-auto sm:mx-0">
+                  <div className="flex flex-col">
+                    <span className="font-normal">Project Leader</span>
+                    <span className="desc">{`${project?.created_by?.first_name} ${project?.created_by?.last_name}`}</span>
+                  </div>
+                  <img
+                    src={project?.owner?.profile?.photo || images.ProfileImage}
+                    alt=""
+                  />
                 </div>
               </div>
               <hr className="h-[0px]  mb-5" />
@@ -164,64 +192,85 @@ const ProjectDetails: React.FC = () => {
           className="mx-auto flex p-8 xs:mb-2  w-full  pb-4 rounded xl:flex flex-col gap-5 
                 h-fit min-h-[430px] xl:min-w-[30%] xl:w-fit    xl:p-5 xl:sticky xl:top-8  shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]  "
         >
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-slate-800 text-2xl lg:text-base">
-              Project Details
-            </h3>
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className=" grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1 ">
-              <div className="p-2">
-                <span className="text-sm">Visibility</span>
-              </div>
-              <div className=" flex items-center gap-2 border-2 p-2 rounded-[10px] bg-green-900 text-slate-200">
-                {project?.visibility === "public" ? <MdPublic /> : <MdPublic />}
-                <span>{project?.visibility}</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1">
-              <div className="p-2">
-                <span className="text-sm">Status</span>
-              </div>
-              <div className="flex items-center gap-2 border-2 p-2  rounded-[10px] bg-green-900 text-slate-200">
-                {project?.status === "pending" ? (
-                  <MdOutlinePending />
-                ) : (
-                  <MdOutlinePending />
-                )}
-                <span>{project?.status}</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-40-60 gird-rows-3 font-normal text-slate-400 mb-1">
-              <div className="p-2">
-                <span className="text-sm">Due time</span>
-              </div>
-              <div className="flex items-center gap-2 border-2 p-2  rounded-[10px] bg-green-900 text-slate-200">
-                <span>{project?.deadline}</span>
-              </div>
-            </div>
-          </div>
+          <table className=" table-auto w-full  mt-2 rounded   border-separate border-spacing-y-10 ">
+            <tbody className="">
+              <tr className="">
+                <th
+                  scope="col"
+                  className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
+                >
+                  Project{" "}
+                  <span className="text-blue-400 font-bold font-mono">ID</span>
+                </th>
+                <th scope="col" className="w-3/4 border-b pb-3">
+                  {project?.id}
+                </th>
+              </tr>
 
-          <h2 className="text-xl font-bold text-slate-800 lg:text-base">
-            Project Leader
-          </h2>
-          <div className="flex justify-evenly items-center">
-            <Link to={`/profile/${project?.owner?.id}`}>
-              <img
-                className="w-[100px] h-[100px] rounded-[15%] object-cover xs:w-[200px] xs:h-[200px] lg:w-[90px] lg:h-[90px]"
-                src={project?.owner?.profile?.photo || images.ProfileImage}
-                alt="userAvatar"
-              />
-            </Link>
-            <div className="flex flex-col h-full justify-center items-center">
-              <span className="text-xl xs:text-2xl xl:text-base font-semibold text-slate-700">
-                {project?.owner?.first_name}
-              </span>
-              <span className="text-xl xs:text-2xl xl:text-base font-semibold text-slate-700">
-                {project?.owner?.last_name}
-              </span>
-            </div>
-          </div>
+              <tr>
+                <th
+                  scope="col"
+                  className="text-base lg:text-xs text-slate-600 font-semibold w-1/4 border-b pb-3"
+                >
+                  Status
+                </th>
+                <th scope="col" className="w-1/2  border-b pb-3">
+                  {project?.status}
+                </th>
+              </tr>
+              <tr>
+                <th
+                  scope="col"
+                  className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
+                >
+                  Visibility
+                </th>
+                <th scope="col" className="w-1/2  border-b pb-3">
+                  <div
+                    className={`inline-block  rounded-full text-xs font-semibold uppercase mr-2 ${
+                      project?.visibility === "public"
+                        ? " bg-emerald-500 px-2 py-1 text-white"
+                        : "bg-pink-600 px-2 py-1 text-white"
+                    } `}
+                  >
+                    {project?.visibility}
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <th
+                  scope="col"
+                  className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
+                >
+                  Contributors
+                </th>
+                <th scope="col" className="w-1/2  border-b pb-3 ">
+                  <span
+                    className={
+                      "inline-block  text-slate-800  rounded-full lg:text-sm font-semibold uppercase mr-2 "
+                    }
+                  >
+                    {project?.assignees?.length}
+                  </span>
+                </th>
+              </tr>
+              <tr>
+                <th
+                  scope="col"
+                  className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
+                >
+                  Attachments
+                </th>
+                <th scope="col" className="w-1/2  border-b pb-3">
+                  <div className="flex flex-col">
+                    <span className="inline-block  text-slate-800  rounded-full lg:text-sm font-semibold uppercase mr-2 ">
+                      {project?.attachments?.length}
+                    </span>
+                  </div>
+                </th>
+              </tr>
+            </tbody>
+          </table>
         </div>
         {/* RIGHT */}
       </div>

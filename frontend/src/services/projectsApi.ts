@@ -8,7 +8,7 @@ export const getAllProjects = async ({ limit = 12, title = "", offset = 0, }) =>
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/projects/?title=${title}&offset=${offset * limit}&limit=${limit}`, config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/projects/?title=${title}&offset=${offset - 1 * limit}&limit=${limit}`, config)
 
         return response.data;
     } catch (error) {

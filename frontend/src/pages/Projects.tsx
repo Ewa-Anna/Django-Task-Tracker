@@ -3,6 +3,7 @@ import MainLayout from "../components/MainLayout";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProjects } from "../services/projectsApi";
 import ProjectCard from "../components/ProjectCard";
+import { IoClose } from "react-icons/io5";
 import ProjectsWrapper from "../components/ProjectsWrapper";
 import Pagination from "../components/Pagination";
 import { Link } from "react-router-dom";
@@ -16,8 +17,11 @@ const Projects: React.FC = () => {
   console.log(token);
 
   const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [paginationLimit, setPaginationLimit] = useState(12);
 
+  console.log("paginationLimit");
+  console.log(paginationLimit);
   const userString = localStorage.getItem("user");
   const { role } = JSON.parse(userString as string);
 
@@ -28,13 +32,17 @@ const Projects: React.FC = () => {
     refetch,
   } = useQuery({
     queryFn: () => {
-      return getAllProjects({ title: searchKeyword, offset: currentPage });
+      return getAllProjects({
+        limit: paginationLimit,
+        title: searchKeyword,
+        offset: currentPage,
+      });
     },
-    queryKey: ["projects"],
+    queryKey: ["projects", currentPage, paginationLimit],
     refetchOnWindowFocus: false,
   });
 
-  console.log(projects?.next);
+  console.log(projects?.count);
   const searchKeywordHandler = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -46,8 +54,13 @@ const Projects: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     e.preventDefault();
-    setCurrentPage(1);
+    setCurrentPage(0);
     refetch();
+  };
+
+  const resetSearchFilterHandler = (): void => {
+    setSearchKeyword("");
+    setCurrentPage(1);
   };
 
   return (
@@ -66,17 +79,30 @@ const Projects: React.FC = () => {
               + Add new project
             </Link>
           )}
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 relative">
+            <button
+              disabled={searchKeyword.length < 1}
+              onClick={resetSearchFilterHandler}
+              className="absolute top-2 right-[27%] "
+            >
+              <IoClose
+                className="text-slate-300 cursor-pointer 
+            rounded-full hover:bg-slate-100 hover:text-slate-500  w-7 h-auto transition-all duration-100 "
+              />
+            </button>
             <input
               onChange={searchKeywordHandler}
-              className="placeholder:px-2 p-2 w-full rounded-lg mx-auto md:mx-0"
+              className="placeholder:px-2 p-2 w-full rounded-lg mx-auto md:mx-0 "
               placeholder="project title..."
               type="text"
               value={searchKeyword}
             />
             <button
+              disabled={searchKeyword.length < 1}
               onClick={submitSearchKeywordHandler}
-              className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200"
+              className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-purple-600 
+              rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 
+              focus:ring-offset-2 focus:ring-offset-purple-200 disabled:opacity-70"
               type="submit"
             >
               Filter
@@ -89,7 +115,16 @@ const Projects: React.FC = () => {
         isLoading={isLoading}
         isError={isError}
       />
-      <button>Next</button>
+
+      {!isLoading && (
+        <Pagination
+          paginationLimit={paginationLimit}
+          setPaginationLimit={setPaginationLimit}
+          onPageChange={(page) => setCurrentPage(page)}
+          currentPage={currentPage}
+          totalPageCount={parseInt(projects?.count / paginationLimit)}
+        />
+      )}
     </div>
   );
 };

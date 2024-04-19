@@ -10,11 +10,13 @@ import Pagination from "../components/Pagination";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { BiErrorAlt } from "react-icons/bi";
 import { MdOutlineWidgets } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
 
 const Tickets: React.FC = () => {
   const token = localStorage.getItem("token");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [paginationLimit, setPaginationLimit] = useState(10);
 
   const userString = localStorage.getItem("user");
   const { role } = JSON.parse(userString as string);
@@ -27,9 +29,13 @@ const Tickets: React.FC = () => {
     refetch,
   } = useQuery({
     queryFn: () => {
-      return getAllTickets({ limit: 11, title: searchKeyword });
+      return getAllTickets({
+        limit: paginationLimit,
+        title: searchKeyword,
+        offset: currentPage,
+      });
     },
-    queryKey: ["tickets"],
+    queryKey: ["tickets", currentPage],
     refetchOnWindowFocus: false,
   });
 
@@ -44,8 +50,13 @@ const Tickets: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     e.preventDefault();
-    setCurrentPage(1);
+    setCurrentPage(0);
     refetch();
+  };
+
+  const resetSearchFilterHandler = (): void => {
+    setSearchKeyword("");
+    setCurrentPage(1);
   };
 
   return (
@@ -65,7 +76,17 @@ const Tickets: React.FC = () => {
                 + Add new ticket
               </Link>
             )}
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 relative">
+              <button
+                disabled={searchKeyword.length < 1}
+                onClick={resetSearchFilterHandler}
+                className="absolute top-2 right-[27%] "
+              >
+                <IoClose
+                  className="text-slate-300 cursor-pointer 
+            rounded-full hover:bg-slate-100 hover:text-slate-500  w-7 h-auto transition-all duration-100 "
+                />
+              </button>
               <input
                 onChange={searchKeywordHandler}
                 className="placeholder:px-2 p-2 w-full rounded-lg mx-auto md:mx-0"
@@ -216,7 +237,13 @@ const Tickets: React.FC = () => {
               </tbody>
             </table>
 
-            <div className="border-2  flex justify-center"></div>
+            {!isLoading && (
+              <Pagination
+                onPageChange={(page) => setCurrentPage(page)}
+                currentPage={currentPage}
+                totalPageCount={parseInt(tickets?.count / paginationLimit)}
+              />
+            )}
           </div>
         </div>
       </div>

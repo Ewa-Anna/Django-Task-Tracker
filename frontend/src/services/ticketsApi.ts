@@ -1,14 +1,14 @@
 import axios from "axios"
 import clientApi from "../axios";
 
-export const getAllTickets = async ({ limit = 10, title = "" }) => {
+export const getAllTickets = async ({ limit = 10, title = "", offset = 0 }) => {
 
     try {
         const config = {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/tasks/?title=${title}&limit=${limit}`, config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/task/tasks/?title=${title}&offset=${offset - 1 * limit}&limit=${limit}`, config)
 
         return response.data;
     } catch (error) {

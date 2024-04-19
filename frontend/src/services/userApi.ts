@@ -84,7 +84,7 @@ export const validateSession = async () => {
     }
 }
 
-export const getUsers = async ({ limit = 10, name = "" }) => {
+export const getUsers = async ({ limit = 10, name = "", offset = 0, }) => {
 
     try {
 
@@ -92,7 +92,30 @@ export const getUsers = async ({ limit = 10, name = "" }) => {
             withCredentials: true,
         }
 
-        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/user/users/?name=${name}&limit=${limit}`, config)
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/user/users/?name=${name}&offset=${(offset - 1) * limit}&limit=${limit}`, config)
+
+        return response.data;
+    } catch (error) {
+        console.log(error)
+        if (axios.isAxiosError(error)) {
+            console.log("error message:", error.message)
+            throw new Error(error.message);
+        } else {
+            console.log("undexpected error", error)
+            throw new Error("An unexpected error ocured")
+        }
+    }
+}
+
+export const getUserById = async ({ id }) => {
+
+    try {
+
+        const config = {
+            withCredentials: true,
+        }
+
+        const response = await axios.get(`http://127.0.0.1:8000/task-tracker/v1/user/users/${id}`, config)
 
         return response.data;
     } catch (error) {
