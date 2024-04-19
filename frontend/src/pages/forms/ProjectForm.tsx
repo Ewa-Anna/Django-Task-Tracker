@@ -32,7 +32,7 @@ const ProjectForm: React.FC = ({
       title: project ? project?.title : "",
       description: project ? project?.description : "",
       visibility: project ? project?.visibility : "",
-      deadline: project ? project?.deadline : [],
+      deadline: project ? project?.deadline : null,
       tags: project ? project?.tags : [],
       owner: project ? project?.owner.id : "",
       attachments: project ? project?.attachments : "",
@@ -194,7 +194,7 @@ const ProjectForm: React.FC = ({
 
       <div>
         <span className="text-sm block font-semibold text-gray-700">
-          visibility
+          Visibility
         </span>
         <div className=" grid-row-5 gap-3 md:grid-cols-2 md:gap-3 lg:grid">
           {visibilityOptions &&
@@ -308,8 +308,8 @@ const ProjectForm: React.FC = ({
             Deadline date
           </span>
           <DatePicker
-            startDate={project && watch("deadline")}
-            selected={(project && watch("deadline")) || null}
+            startDate={watch("deadline")}
+            selected={watch("deadline") ? watch("deadline") : null}
             minDate={minDate}
             maxDate={maxDate}
             onChange={(date) => handleDateChange(date as Date)}
