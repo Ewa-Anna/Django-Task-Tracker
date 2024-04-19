@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.auth import get_user_model, logout
 
 from rest_framework.viewsets import ModelViewSet
@@ -35,6 +36,17 @@ class UserViewSet(ModelViewSet):
         "PATCH": ["admin"],
         "DELETE": ["admin"],
     }
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.query_params.get("query")
+
+        if query:
+            queryset = queryset.filter(
+                Q(first_name__icontains=query) | Q(last_name__icontains=query)
+            )
+
+        return queryset
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
