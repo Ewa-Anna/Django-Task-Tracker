@@ -194,7 +194,7 @@ const ProjectForm: React.FC = ({
 
       <div>
         <span className="text-sm block font-semibold text-gray-700">
-          visibility
+          Visibility
         </span>
         <div className=" grid-row-5 gap-3 md:grid-cols-2 md:gap-3 lg:grid">
           {visibilityOptions &&

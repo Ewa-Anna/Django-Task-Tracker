@@ -17,7 +17,7 @@ const UserDetails: React.FC = () => {
     <div className=" flex flex-col  h-screen w-full  flex-1  custom-scrollbar overflow-scroll  p-14   ">
       <div className=" px-14 py-8 flex flex-col sm:flex-row justify-center gap-5 sm:justify-between ">
         <div>
-          <h1>User profile</h1>
+          <h1 className="h2-bold">User profile</h1>
         </div>
         <button>Edit</button>
       </div>
@@ -36,8 +36,17 @@ const UserDetails: React.FC = () => {
             <span>{user?.first_name}</span>
             <span>{user?.last_name}</span>
           </div>
-          <span>{user?.role}</span>
-          <span>{user?.role}</span>
+          <span
+            className={`mt-10 font-bold text-xl border-2 py-2 px-4 rounded-xl uppercase  ${
+              user?.role === "guest"
+                ? "bg-blue-400 text-slate-200"
+                : user?.role === "admin"
+                ? "bg-violet-400 text-slate-100"
+                : "bg-transparent"
+            }`}
+          >
+            {user?.role}
+          </span>
         </div>
 
         <div className=" flex gap-12  h-auto  flex-col-reverse w-[100%] md:w-[90%]  xl:flex-row mx-auto  sm:shadow-sm">
@@ -55,7 +64,7 @@ const UserDetails: React.FC = () => {
                       scope="col"
                       className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
                     >
-                      first name
+                      First name
                     </th>
                     <th scope="col" className="w-3/4 border-b pb-3">
                       {user?.first_name}
@@ -67,7 +76,7 @@ const UserDetails: React.FC = () => {
                       scope="col"
                       className="text-base lg:text-xs text-slate-600 font-semibold w-1/4 border-b pb-3"
                     >
-                      last name
+                      Last name
                     </th>
                     <th scope="col" className="w-1/2  border-b pb-3">
                       {user?.last_name}
@@ -78,7 +87,7 @@ const UserDetails: React.FC = () => {
                       scope="col"
                       className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
                     >
-                      email
+                      Email
                     </th>
                     <th
                       scope="col"
@@ -98,7 +107,7 @@ const UserDetails: React.FC = () => {
                       scope="col"
                       className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
                     >
-                      gedner
+                      Gedner
                     </th>
                     <th scope="col" className="w-1/2  border-b pb-3 ">
                       <span
@@ -115,7 +124,7 @@ const UserDetails: React.FC = () => {
                       scope="col"
                       className="w-1/4 border-b pb-3 text-base lg:text-xs text-slate-600 font-semibold"
                     >
-                      joined
+                      Joined
                     </th>
                     <th scope="col" className="w-1/2  border-b pb-3">
                       <div className="flex flex-col">
@@ -145,82 +154,7 @@ const UserDetails: React.FC = () => {
             </div>
             <div className="flex flex-col gap-5">
               <h2>bio</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
-                voluptatum pariatur earum fugiat unde tempore illo aut ducimus
-                repudiandae. Nemo dignissimos asperiores error? Tenetur quam,
-                quae ea possimus perferendis optio? Ab perspiciatis placeat hic
-                quaerat, aspernatur eos velit ipsum ipsam, nostrum dolor
-                laudantium itaque animi iste blanditiis ducimus? Tenetur quod
-                illo numquam accusamus vel, vitae officia recusandae amet aut
-                laborum. Labore nemo alias nihil enim, commodi cumque pariatur,
-                tempora magni quia ab, natus quasi corrupti. Tempore quidem ex
-                porro vel. Autem fuga qui nam sequi quam praesentium dolorem
-                voluptatum dignissimos! Ipsa cumque odit corporis veniam
-                obcaecati? Odio deleniti saepe incidunt perferendis minima modi
-                reiciendis accusamus quisquam iusto, quam, dolorum est quis,
-                unde non architecto assumenda suscipit adipisci? Numquam,
-                mollitia eveniet! Tempore veniam facilis ullam nisi officiis
-                numquam doloremque tenetur magni dignissimos amet. Sunt aut
-                doloribus libero ex mollitia minima cumque iste, nulla
-                reprehenderit quia fugit, dignissimos animi distinctio
-                molestiae! Doloribus. Adipisci dolorem iure ipsum error velit
-                placeat eligendi fugiat nesciunt cum sed voluptatem distinctio
-                illum obcaecati excepturi rerum provident ipsam cupiditate eius
-                dicta, quod unde libero, totam quam non! Facere. Doloremque eius
-                sit adipisci voluptatem sed, nemo possimus aliquam atque error
-                fugiat facilis, odit exercitationem, dolore reiciendis odio
-                temporibus commodi soluta explicabo enim? Quasi numquam libero
-                deleniti unde dignissimos! Neque. Accusamus ex possimus
-                voluptatibus cum, expedita neque incidunt delectus repellendus
-                doloremque quae sint eum odit impedit dignissimos officiis
-                voluptas est sunt commodi mollitia a. Magni corrupti laborum
-                sunt explicabo nemo? Ullam consequatur porro blanditiis!
-                Repellat eligendi magni libero rerum quaerat unde cupiditate,
-                officia dignissimos delectus aut nisi ullam saepe neque,
-                pariatur beatae a facilis possimus tempore. Laudantium error a
-                provident. Placeat nesciunt a illo consequuntur velit. Cum,
-                cumque nesciunt excepturi tempora modi sequi eaque vel,
-                aspernatur, id est animi earum ea consequatur in commodi nam
-                enim pariatur maxime ut voluptatibus! Itaque similique
-                voluptatum facere excepturi, laborum sapiente voluptatem! Odit,
-                ex? Vel harum vero totam ad corrupti odit mollitia non, magnam
-                nam. Aut officia quam nihil, facere alias reiciendis inventore
-                voluptates! Ipsum nemo cupiditate exercitationem velit rem
-                dolor, eum repellendus neque distinctio fugit excepturi enim,
-                assumenda minus aut aspernatur aliquid. Dolore deserunt nostrum
-                modi quas eaque perspiciatis nobis nemo minima ut. Enim pariatur
-                sed aut consectetur, eum nulla illo facilis vero hic excepturi
-                libero quos vitae aliquid, modi laborum, quam repudiandae.
-                Molestiae sunt vel hic rerum, nihil atque sint corrupti officia!
-                Repudiandae maxime minus et architecto ipsum cupiditate
-                accusamus magni laborum eos assumenda, quis dicta culpa nisi
-                esse est ducimus possimus quisquam beatae necessitatibus
-                repellendus non laudantium nobis. Minus, optio saepe? Aperiam
-                repellat doloremque consequuntur vel suscipit iure nobis
-                excepturi nihil deleniti. Velit praesentium, saepe doloribus,
-                unde obcaecati nulla ipsum iste accusamus dicta possimus,
-                debitis error molestiae! Illum beatae accusantium similique.
-                Quae consequuntur temporibus distinctio a, exercitationem magni
-                explicabo molestiae quibusdam dolor non earum quis minus
-                necessitatibus corporis dicta! Vitae necessitatibus dicta
-                repudiandae a corporis commodi dolorem excepturi similique
-                corrupti itaque. Obcaecati, voluptates repudiandae fugiat autem
-                vero unde natus asperiores maiores a blanditiis nostrum error
-                placeat doloremque debitis saepe facere dolorem voluptate
-                commodi accusamus? Facere at reiciendis dicta. Voluptatum, quam
-                et? Commodi eius ullam suscipit. Eveniet neque, rem enim ut
-                voluptas placeat, dignissimos minima maiores, autem soluta
-                dolorem fugiat eligendi dolor voluptatum culpa. Quam doloribus
-                sapiente qui molestiae, ab odio consequuntur. Fugiat totam
-                deserunt, quasi magnam aut architecto in amet excepturi facere a
-                eos adipisci cumque ex labore aperiam quae ipsam.
-                Necessitatibus, veritatis ipsam provident unde cumque
-                consectetur saepe eum ad! Dolor, accusantium illo ipsa mollitia
-                laborum ut sint et consequatur nemo vitae perferendis est
-                officiis id dolores optio quibusdam deserunt quod? Harum sit
-                aliquam dolorem hic libero, illum quasi deserunt!
-              </span>
+              <span>{user?.profile?.bio}</span>
             </div>
           </div>
         </div>
