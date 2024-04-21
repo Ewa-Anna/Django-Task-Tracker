@@ -67,11 +67,12 @@ const ProjectDetails: React.FC = () => {
               <h3 className="font-semibold text-xl mb-6">Overall</h3>
               <div className="flex justify-between flex-wrap text-slate-800">
                 <div className="w-[300px] flex flex-col gap-3 mb-5 mx-auto sm:mx-0">
-                  <span className="font-normal">Created</span>
+                  <span className="font-semibold text-sm text-gray-500">
+                    Created
+                  </span>
 
                   <div className="flex flex-col">
-                    <span>
-                      {" "}
+                    <span className="font-semibold">
                       {new Date(project?.created).toLocaleString("en-US", {
                         month: "long",
                       })}{" "}
@@ -80,20 +81,21 @@ const ProjectDetails: React.FC = () => {
                         year: "numeric",
                       })}
                     </span>
-                    <span className="text-xs">
+                    <span className="text-xs text-slate-500 font-semibold">
                       {new Date(project?.created).toLocaleString("en-US", {
                         hour: "2-digit",
-                      })}{" "}
-                      {new Date(project?.created).toLocaleString("en-US", {
                         minute: "2-digit",
-                      })}{" "}
+                        hour12: true,
+                      })}
                     </span>
                   </div>
                 </div>
                 <div className="w-[300px] flex flex-col gap-2 mb-5 mx-auto sm:mx-0">
-                  <span className="font-normal">Due time</span>
+                  <span className="font-semibold text-sm text-gray-500">
+                    Due time
+                  </span>
                   <div className="flex flex-col">
-                    <span>
+                    <span className="font-semibold">
                       {" "}
                       {new Date(project?.deadline).toLocaleString("en-US", {
                         month: "long",
@@ -108,8 +110,10 @@ const ProjectDetails: React.FC = () => {
 
                 <div className="w-[300px] flex  gap-2 mb-5 mx-auto sm:mx-0">
                   <div className="flex flex-col">
-                    <span className="font-normal">Project Leader</span>
-                    <span className="desc">{`${project?.created_by?.first_name} ${project?.created_by?.last_name}`}</span>
+                    <span className="font-semibold text-sm text-gray-500">
+                      Project Leader
+                    </span>
+                    <span className="font-semibold">{`${project?.created_by?.first_name} ${project?.created_by?.last_name}`}</span>
                   </div>
                   <img
                     src={project?.owner?.profile?.photo || images.ProfileImage}
