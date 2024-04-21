@@ -5,6 +5,7 @@ from rest_framework import serializers
 from user.models import CustomUser
 from user.serializers import ProfileSerializer
 from tags.serializers import CustomTagSerializer
+from tags.models import CustomTags
 
 from .models import Project, Task, Comment, Attachment
 
@@ -95,7 +96,8 @@ class CustomCreatedBySerializer(serializers.StringRelatedField):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
-    tags = serializers.ListField(write_only=True, required=False)
+    tags = serializers.ListField(required=False)
+    assignees = serializers.ListField(required=False)
     attachments = AttachmentSerializer(many=True, required=False)
 
     class Meta:
@@ -117,15 +119,50 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         attachments_data = validated_data.pop("attachments", [])
         assignees_data = validated_data.pop("assignees", [])
+        tags_data = validated_data.pop("tags", [])
         project = Project.objects.create(**validated_data)
 
         for assignee in assignees_data:
             project.assignees.add(assignee)
 
+        for tag_id in tags_data:
+            try:
+                tag = CustomTags.objects.get(id=tag_id)
+                project.tags.add(tag)
+            except CustomTags.DoesNotExist:
+                pass
+
         for attachment_data in attachments_data:
             Attachment.objects.create(project=project, **attachment_data)
 
         return project
+
+    def update(self, instance, validated_data):
+        attachments_data = validated_data.pop("attachments", [])
+        assignees_data = validated_data.pop("assignees", [])
+        tags_data = validated_data.pop("tags", [])
+
+        instance.__dict__.update(validated_data)
+
+        instance.assignees.clear()
+        instance.tags.clear()
+
+        for assignee in assignees_data:
+            instance.assignees.add(assignee)
+
+        for tag_id in tags_data:
+            try:
+                tag = CustomTags.objects.get(id=tag_id)
+                instance.tags.add(tag)
+            except CustomTags.DoesNotExist:
+                pass
+
+        instance.save()
+
+        for attachment_data in attachments_data:
+            Attachment.objects.create(project=instance, **attachment_data)
+
+        return instance
 
     def validate_assignees(self, value):
         max_assignees = 10

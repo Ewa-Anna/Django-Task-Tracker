@@ -15,6 +15,7 @@ from backend.pagination import (
     CustomPagination,
     CommentPagination,
 )
+from tags.models import CustomTags
 
 from .views import CommentForTaskView
 from .models import Project, Task, Comment, Attachment
@@ -51,7 +52,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     }
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.request.method in ("POST", "PUT", "PATCH"):
             return ProjectCreateSerializer
         return ProjectSerializer
 
@@ -165,7 +166,38 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 {"detail": "You don't have permission to edit this project."},
                 status=status.HTTP_403_FORBIDDEN,
             )
-        return super().update(request, *args, **kwargs)
+        try:
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+
+            attachments_data = request.data.copy().pop("attachments", [])
+
+            processed_attachments_data = []
+            for attachment_data in attachments_data:
+                processed_attachment_data = {"file": attachment_data}
+                processed_attachments_data.append(processed_attachment_data)
+
+            for attachment_data in processed_attachments_data:
+                attachment_data["uploader"] = request.user
+                Attachment.objects.create(project=instance, **attachment_data)
+
+            response_data = {
+                "success": True,
+                "message": "Project updated successfully.",
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except serializers.ValidationError as e:
+            response_data = {"success": False, "message": e.detail}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            response_data = {
+                "success": False,
+                "message": f"Error updating project: {e}",
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TaskViewSet(viewsets.ModelViewSet):
