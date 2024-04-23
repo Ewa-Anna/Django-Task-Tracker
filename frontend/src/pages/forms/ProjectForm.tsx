@@ -61,7 +61,8 @@ const ProjectForm: React.FC = ({
       assignees,
       attachments,
     } = data;
-    console.log(data);
+
+    const assigneesArray = [...assignees];
     const isoDeadline = new Date(deadline).toISOString();
     const file = attachments[0];
     const formData = new FormData();
@@ -118,17 +119,20 @@ const ProjectForm: React.FC = ({
       formData.append("deadline", isoDeadline);
       formData.append("owner", owner);
       formData.append("visibility", visibility);
-      formData.append("attachments", file);
+
+      if (file) {
+        formData.append("attachments", file);
+      }
 
       tags.forEach((tag) => {
         formData.append("tags", tag);
       });
 
-      assignees.forEach((assigne) => {
+      assigneesArray.forEach((assigne) => {
         formData.append("assignees", assigne);
       });
     }
-
+    console.log(data);
     for (const pair of formData.entries()) {
       console.log(pair[0] + ", " + pair[1]);
     }
