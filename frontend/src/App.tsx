@@ -18,6 +18,7 @@ import EditProject from "./pages/EditProject";
 import TicketDetails from "./components/TicketDetails";
 import EditTicket from "./pages/EditTicket";
 import UserDetails from "./components/UserDetails";
+import Archive from "./pages/Archive";
 
 const App: React.FC = () => {
   return (
@@ -35,6 +36,7 @@ const App: React.FC = () => {
           <Route path="/ticket/edit/:id" element={<EditTicket />} />
           <Route path="/users" element={<Users />} />
           <Route path="/user/:id" element={<UserDetails />} />
+          <Route path="/archive" element={<Archive />} />
         </Route>
 
         <Route element={<AuthLayout />}>
