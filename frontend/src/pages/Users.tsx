@@ -70,7 +70,9 @@ const Users: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-5 sm:flex-row justify-between py-9 px-4 md:px-16 flex-wrap">
+      <div
+        className={`flex flex-col gap-5 sm:flex-row py-9 px-4 md:px-16 flex-wrap ${users?.results?.length < 3 ? "justify-start" : "justify-between "}`}
+      >
         {users &&
           users?.results.map((user) => {
             return <UserCard user={user} />;
