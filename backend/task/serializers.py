@@ -139,23 +139,24 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         attachments_data = validated_data.pop("attachments", [])
-        assignees_data = validated_data.pop("assignees", [])
-        tags_data = validated_data.pop("tags", [])
+        assignees_data = validated_data.pop("assignees", None)
+        tags_data = validated_data.pop("tags", None)
 
         instance.__dict__.update(validated_data)
 
-        instance.assignees.clear()
-        instance.tags.clear()
+        if assignees_data is not None:
+            instance.assignees.clear()
+            for assignee in assignees_data:
+                instance.assignees.add(assignee)
 
-        for assignee in assignees_data:
-            instance.assignees.add(assignee)
-
-        for tag_id in tags_data:
-            try:
-                tag = CustomTags.objects.get(id=tag_id)
-                instance.tags.add(tag)
-            except CustomTags.DoesNotExist:
-                pass
+        if tags_data is not None:
+            instance.tags.clear()
+            for tag_id in tags_data:
+                try:
+                    tag = CustomTags.objects.get(id=tag_id)
+                    instance.tags.add(tag)
+                except CustomTags.DoesNotExist:
+                    pass
 
         instance.save()
 
