@@ -15,7 +15,6 @@ from backend.pagination import (
     CustomPagination,
     CommentPagination,
 )
-from tags.models import CustomTags
 
 from .views import CommentForTaskView
 from .models import Project, Task, Comment, Attachment
@@ -192,6 +191,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             response_data = {"success": False, "message": e.detail}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
+        # pylint: disable=broad-except
         except Exception as e:
             response_data = {
                 "success": False,
