@@ -87,7 +87,7 @@ class CustomCreatedBySerializer(serializers.StringRelatedField):
                 "first_name": value.first_name,
                 "last_name": value.last_name,
                 "email": value.email,
-                "photo": value.profile.photo,
+                "photo": value.profile.photo.url if value.profile.photo else None,
             }
         return None
 
