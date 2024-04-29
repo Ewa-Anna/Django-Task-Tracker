@@ -1,9 +1,21 @@
+import cloudinary
+import cloudinary.uploader
+
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
     AbstractBaseUser,
 )
+from django.core.exceptions import ValidationError
+
+
+def validate_file_size(value):
+    max_file_size_mb = 20
+    max_file_size_bytes = max_file_size_mb * 1024 * 1024
+
+    if value.size > max_file_size_bytes:
+        raise ValidationError("File size exceeds maximum limit (20MB).")
 
 
 ROLES = [
@@ -95,7 +107,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
-    photo = models.URLField(blank=True)
+    photo = models.FileField(
+        upload_to="photos/%Y/%m/%d/", validators=[validate_file_size]
+    )
     birthdate = models.DateField(blank=True, null=True, verbose_name="Date of Birth")
     gender = models.CharField(max_length=20, choices=GENDER, blank=True)
 
@@ -110,3 +124,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+
+    def delete(self, *args, **kwargs):
+        if self.photo:
+            public_id = "/".join(self.photo.name.split("/")[-7:])
+            cloudinary.uploader.destroy(public_id)
+            print(f"Deleted file with public ID: {public_id}")
+        super().delete(*args, **kwargs)

@@ -16,10 +16,17 @@ User = get_user_model()
 
 
 class ProfileSerializer(ModelSerializer):
+    url = serializers.SerializerMethodField()
+
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = ["user", "bio", "url", "birthdate", "gender"]
         read_only_fields = ["is_configured"]
+
+    def get_url(self, obj):
+        if obj.photo and hasattr(obj.photo, "url") and obj.photo.url:
+            return obj.photo.url
+        return "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png"
 
     def validate_birthdate(self, value):
         today = timezone.now()
@@ -37,9 +44,7 @@ class ProfileSerializer(ModelSerializer):
         instance.birthdate = validated_data.get("birthdate", instance.birthdate)
         instance.gender = validated_data.get("gender", instance.gender)
 
-        if any(
-            field in validated_data for field in ["bio", "photo", "birthdate", "gender"]
-        ):
+        if any(field in validated_data for field in ["bio", "birthdate", "gender"]):
             instance.is_configured = True
 
         instance.save()
@@ -187,7 +192,7 @@ class UserProfileSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)
     bio = serializers.CharField(required=False)
-    photo = serializers.ImageField(required=False)
+    # photo = serializers.ImageField(required=False)
     birthdate = serializers.DateField(required=False)
     gender = serializers.ChoiceField(choices=GENDER, required=False)
     theme = serializers.ChoiceField(choices=THEMES, required=False)

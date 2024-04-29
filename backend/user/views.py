@@ -1,3 +1,4 @@
+from django.core.files.uploadedfile import UploadedFile
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
@@ -6,6 +7,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django_rest_passwordreset.views import ResetPasswordConfirm
 
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
@@ -71,7 +73,7 @@ class LoginView(APIView):
             "join_date": user.join_date,
             "last_loggin": user.last_loggin,
             "bio": profile.bio,
-            "photo": profile.photo,
+            "photo": profile.photo.url if profile.photo else None,
             "birthdate": profile.birthdate,
             "gender": profile.gender,
             "csrf_token": request.META.get("CSRF_COOKIE"),
@@ -237,6 +239,7 @@ class DashboardView(APIView):
     permission_classes = [IsAuthenticated, IsProfileComplete]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     serializers = UserProfileSerializer
+    parser_classes = [MultiPartParser, FormParser, FileUploadParser]
 
     def get_user_data(self, user):
         profile = Profile.objects.get_or_create(user=user)[0]
@@ -249,7 +252,7 @@ class DashboardView(APIView):
             "join_date": user.join_date,
             "last_login": user.last_login,
             "bio": profile.bio,
-            "photo": profile.photo,
+            "photo": profile.photo.url if profile.photo else None,
             "birthdate": profile.birthdate,
             "gender": profile.gender,
         }
@@ -281,13 +284,17 @@ class DashboardView(APIView):
 
     def update_user_profile(self, user, profile, request_data):
         user_fields = ["first_name", "last_name"]
-        profile_fields = ["bio", "photo", "birthdate", "gender"]
+        profile_fields = ["bio", "birthdate", "gender"]
 
         for field in user_fields:
             setattr(user, field, request_data.get(field, getattr(user, field)))
 
         for field in profile_fields:
             setattr(profile, field, request_data.get(field, getattr(profile, field)))
+
+        photo_file = request_data.get('photo')
+        if isinstance(photo_file, UploadedFile):
+            profile.photo = photo_file
 
         user.save()
         profile.save()
@@ -300,7 +307,7 @@ class DashboardView(APIView):
 
         profile, _ = Profile.objects.get_or_create(user=user)
         profile.bio = request.data.get("bio", profile.bio)
-        profile.photo = request.data.get("photo", profile.photo)
+
         profile.birthdate = request.data.get("birthdate", profile.birthdate)
         profile.gender = request.data.get("gender", profile.gender)
         profile.save()
@@ -355,7 +362,7 @@ class SessionValidationView(APIView):
             "join_date": user.join_date,
             "last_loggin": user.last_loggin,
             "bio": profile.bio,
-            "photo": profile.photo,
+            "photo": profile.photo.url if profile.photo else None,
             "birthdate": profile.birthdate,
             "gender": profile.gender,
             "csrf_token": request.META.get("CSRF_COOKIE"),
@@ -372,6 +379,7 @@ class OnboardingView(APIView):
     is_configured value to True.
     """
 
+    parser_classes = [MultiPartParser, FormParser, FileUploadParser]
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
