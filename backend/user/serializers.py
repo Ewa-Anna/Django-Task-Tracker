@@ -26,6 +26,7 @@ class ProfileSerializer(ModelSerializer):
     def get_url(self, obj):
         if obj.photo and hasattr(obj.photo, "url") and obj.photo.url:
             return obj.photo.url
+        # pylint: disable=C0301
         return "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png"
 
     def validate_birthdate(self, value):
