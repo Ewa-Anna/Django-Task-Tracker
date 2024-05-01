@@ -5,17 +5,23 @@ import { login } from "../../services/userApi";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { useAccountStore } from "../../store";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const setAccount = useAccountStore((state) => state.setAccount);
+  const setCsrfToken = useAccountStore((state) => state.setCsrfToken);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       login({ email, password }),
     onSuccess: (data) => {
-      localStorage.setItem("user", JSON.stringify(data));
-      localStorage.setItem("token", data.csrf_token);
+      // localStorage.setItem("user", JSON.stringify(data));
+
+      setAccount(data);
+      setCsrfToken("XD");
+
       navigate("/");
     },
     onError: (error: Error) => {

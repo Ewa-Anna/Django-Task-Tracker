@@ -78,20 +78,17 @@ export const registerAccount = async ({
   }
 };
 
-export const logout = async ({ token }: { token: string }) => {
-  console.log(token);
+export const logout = async ({ csrfToken }: { csrfToken: string }) => {
+  console.log(csrfToken);
   try {
     const config = {
-      credentials: "include",
       withCredentials: true,
-      withXSRFToken: true,
-      xsrfHeaderName: "X-CSRFToken",
       headers: {
-        "X-CSRFToken": token,
+        "X-CSRFToken": csrfToken,
       },
     };
 
-    const response = await clientApi.post(
+    const response = await clientApi({ csrfToken }).post(
       "http://127.0.0.1:8000/task-tracker/v1/user/logout/",
       config
     );

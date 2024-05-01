@@ -7,6 +7,7 @@ import { GrAttachment } from "react-icons/gr";
 import { ImGift } from "react-icons/im";
 import { DiVim } from "react-icons/di";
 import { IoTrashBinSharp } from "react-icons/io5";
+import { useAccountStore } from "../../store";
 
 const ProjectForm: React.FC = ({
   project,
@@ -18,6 +19,7 @@ const ProjectForm: React.FC = ({
 }) => {
   const [deadlineDateError, setDeadlineDateError] = useState("");
   const [isDateSelected, setIsDateSelected] = useState(false);
+  const csrfToken = useAccountStore((state) => state.csrfToken);
 
   const {
     register,
@@ -132,11 +134,11 @@ const ProjectForm: React.FC = ({
         formData.append("assignees", assigne);
       });
     }
-    console.log(data);
+
     for (const pair of formData.entries()) {
       console.log(pair[0] + ", " + pair[1]);
     }
-    handleSave({ formData });
+    handleSave({ csrfToken, formData });
   });
 
   const handleDateChange = (date) => {

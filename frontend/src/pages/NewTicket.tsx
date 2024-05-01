@@ -48,8 +48,9 @@ const NewTicket: React.FC = () => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: ({ formData }) => {
+    mutationFn: ({ csrfToken, formData }) => {
       return createNewTicket({
+        csrfToken,
         formData,
       });
     },
@@ -60,8 +61,8 @@ const NewTicket: React.FC = () => {
     },
   });
 
-  const handleSave = ({ formData }) => {
-    mutate({ formData });
+  const handleSave = ({ csrfToken, formData }) => {
+    mutate({ csrfToken, formData });
   };
 
   return (

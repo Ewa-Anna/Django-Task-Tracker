@@ -12,18 +12,11 @@ import { useAccountStore } from "../store";
 const Projects: React.FC = () => {
   const userAccount = useAccountStore((state) => state.account);
 
-  console.log(userAccount);
-  const token = localStorage.getItem("token");
-  console.log(token);
+  const crsfToken = useAccountStore((state) => state.csrfToken);
 
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [paginationLimit, setPaginationLimit] = useState(12);
-
-  console.log("paginationLimit");
-  console.log(paginationLimit);
-  const userString = localStorage.getItem("user");
-  const { role } = JSON.parse(userString as string);
 
   const {
     data: projects,
@@ -71,7 +64,7 @@ const Projects: React.FC = () => {
         </h1>
 
         <div className="flex flex-col sm:flex-row justify-between gap-10 w-full  mb-6 ">
-          {role === "admin" && (
+          {userAccount && userAccount.role === "admin" && (
             <Link
               to={"/project/new"}
               className="border-2 px-2 py-2.5 text-center bg-purple-500 text-white font-semibold rounded-lg hover:opacity-85"

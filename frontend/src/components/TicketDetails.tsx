@@ -17,15 +17,14 @@ import { MdOutlinePending, MdPublic } from "react-icons/md";
 import CommentContainer from "./CommentContainer";
 import CommentForm from "../pages/forms/CommentForm";
 import toast from "react-hot-toast";
+import { useAccountStore } from "../store";
 
 const TicketDetails = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [breadCrumbsData, setBreadCrumbsData] = useState([]);
   const [affectedComment, setAffectedComment] = useState(null);
-  const { role } = JSON.parse(localStorage.getItem("user") || "null") as
-    | string
-    | null;
+  const userAccount = useAccountStore((state) => state.account);
 
   const { data: ticket } = useQuery({
     queryFn: () => getTicketDetails({ id }),
@@ -45,8 +44,8 @@ const TicketDetails = () => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: ({ formData }) => {
-      return addComment({ formData });
+    mutationFn: ({ csrfToken, formData }) => {
+      return addComment({ csrfToken, formData });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["comments"]);
@@ -54,8 +53,8 @@ const TicketDetails = () => {
     },
   });
   const { mutate: updateMutate } = useMutation({
-    mutationFn: ({ commentId, formData }) => {
-      return updateComment({ commentId, formData });
+    mutationFn: ({ csrfToken, commentId, formData }) => {
+      return updateComment({ csrfToken, commentId, formData });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["comments"]);
@@ -65,8 +64,8 @@ const TicketDetails = () => {
   });
 
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: ({ commentId }) => {
-      return deleteComment({ commentId });
+    mutationFn: ({ csrfToken, commentId }) => {
+      return deleteComment({ csrfToken, commentId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["comments"]);
@@ -75,15 +74,15 @@ const TicketDetails = () => {
     },
   });
 
-  const handleSave = ({ formData }) => {
-    mutate({ formData });
+  const handleSave = ({ csrfToken, formData }) => {
+    mutate({ csrfToken, formData });
   };
 
-  const handleUpdateComment = ({ commentId, formData }) => {
-    updateMutate({ commentId, formData });
+  const handleUpdateComment = ({ csrfToken, commentId, formData }) => {
+    updateMutate({ csrfToken, commentId, formData });
   };
-  const handleDeleteComment = ({ commentId }) => {
-    deleteMutate({ commentId });
+  const handleDeleteComment = ({ csrfToken, commentId }) => {
+    deleteMutate({ csrfToken, commentId });
   };
 
   return (
@@ -91,7 +90,7 @@ const TicketDetails = () => {
       <div className="flex gap-2 md:gap-4 lg:gap-7  h-auto  flex-col-reverse w-[100%] md:w-[90%] py-8 xl:flex-row mx-auto ">
         {/* LEFT */}
         <div className="flex flex-col  gap-5 flex-grow px-4 lg:px-14 py-5 flex-1 h-auto  pb-20 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ">
-          {role === "admin" && (
+          {userAccount && userAccount.role === "admin" && (
             <div className="flex justify-end">
               <Link to={`/ticket/edit/${id}`}>
                 <button className="bg-blue-400 text-white py-1 px-3.5 font-semibold rounded">
@@ -192,14 +191,14 @@ const TicketDetails = () => {
                       ticket?.type === "question"
                         ? "bg-gray-500 px-2 py-1.5"
                         : ticket?.type === "bug"
-                        ? "bg-rose-500 px-6 py-1.5"
-                        : ticket?.type === "improvement"
-                        ? "bg-pink-500 px-2 py-1.5"
-                        : ticket?.type === "feature"
-                        ? "bg-purple-400 px-2.5 py-1.5"
-                        : ticket?.type === "other"
-                        ? "bg-blue-400 px-2.5 py-1.5"
-                        : ""
+                          ? "bg-rose-500 px-6 py-1.5"
+                          : ticket?.type === "improvement"
+                            ? "bg-pink-500 px-2 py-1.5"
+                            : ticket?.type === "feature"
+                              ? "bg-purple-400 px-2.5 py-1.5"
+                              : ticket?.type === "other"
+                                ? "bg-blue-400 px-2.5 py-1.5"
+                                : ""
                     }`}
                   >
                     {ticket?.type}
@@ -219,12 +218,12 @@ const TicketDetails = () => {
                       ticket?.priority === "low"
                         ? "bg-emerald-500 px-5 py-1.5"
                         : ticket?.priority === "medium"
-                        ? "bg-amber-400 px-6 py-1.5"
-                        : ticket?.priority === "high"
-                        ? "bg-rose-500 px-4 py-1.5"
-                        : ticket?.priority === "critical"
-                        ? "bg-orange-400 px-2.5 py-1.5"
-                        : ""
+                          ? "bg-amber-400 px-6 py-1.5"
+                          : ticket?.priority === "high"
+                            ? "bg-rose-500 px-4 py-1.5"
+                            : ticket?.priority === "critical"
+                              ? "bg-orange-400 px-2.5 py-1.5"
+                              : ""
                     }`}
                   >
                     {ticket?.priority}

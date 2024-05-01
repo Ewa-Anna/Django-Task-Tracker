@@ -9,12 +9,11 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { images } from "../constants";
 import { FaFileArrowUp } from "react-icons/fa6";
 import { IoMdDownload } from "react-icons/io";
+import { useAccountStore } from "../store";
 
 const ProjectDetails: React.FC = () => {
-  const { role } = JSON.parse(localStorage.getItem("user") || "null") as
-    | string
-    | null;
-
+  const userAccount = useAccountStore((state) => state.account);
+  const { role } = userAccount;
   const { id } = useParams();
   const [breadCrumbsData, setBreadCrumbsData] = useState([]);
 

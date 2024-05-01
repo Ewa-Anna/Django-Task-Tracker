@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useAccountStore } from "../../store";
 
 const CommentForm = ({
   comment,
@@ -13,7 +14,7 @@ const CommentForm = ({
   loading = false,
 }) => {
   console.log(ticketId);
-
+  const csrfToken = useAccountStore((state) => state.csrfToken);
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       text: comment ? comment?.text : "",
@@ -29,12 +30,12 @@ const CommentForm = ({
     formData.append("project", projectId);
 
     if (comment) {
-      handleUpdateComment({ commentId: comment?.id, formData });
+      handleUpdateComment({ csrfToken, commentId: comment?.id, formData });
       reset();
       return;
     }
 
-    handleSave({ formData });
+    handleSave({ csrfToken, formData });
     reset();
   });
 

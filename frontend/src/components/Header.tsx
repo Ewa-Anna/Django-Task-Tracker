@@ -8,13 +8,14 @@ import { MdOutlineArrowRight } from "react-icons/md";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useAccountStore } from "../store";
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const csrfToken = useAccountStore((state) => state.csrfToken);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ token }) => logout({ token }),
+    mutationFn: ({ csrfToken }) => logout({ csrfToken }),
     onSuccess: (data) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
@@ -25,8 +26,8 @@ export const Header: React.FC = () => {
     },
   });
 
-  const logoutHandler = ({ token }) => {
-    mutate({ token });
+  const logoutHandler = ({ csrfToken }) => {
+    mutate({ csrfToken });
   };
 
   return (
@@ -53,7 +54,7 @@ export const Header: React.FC = () => {
           </li>
         </ul>
         <button
-          onClick={() => logoutHandler({ token })}
+          onClick={() => logoutHandler({ csrfToken })}
           className="border-2 border-violet-600 px-6 py-2 rounded-full
                          text-violet-600 font-semibold hover:bg-violet-600 hover:text-slate-100 transition-all duration-200"
         >

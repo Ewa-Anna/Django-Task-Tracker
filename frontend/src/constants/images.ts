@@ -4,6 +4,7 @@ import ProfileImage from "../assets/icons/user.svg";
 import ProjectImage from "../assets/projectImage.svg";
 import LandingImage from "../assets/LandingImage.svg";
 import RegisterImage from "../assets/registerImage.svg";
+import OnboardingImage from "../assets/onboardingImage.png";
 
 const images = {
   Logo,
@@ -11,6 +12,7 @@ const images = {
   ProfileImage,
   ProjectImage,
   RegisterImage,
+  OnboardingImage,
 };
 
 export default images;

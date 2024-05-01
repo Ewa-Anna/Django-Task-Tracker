@@ -11,15 +11,14 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { BiErrorAlt } from "react-icons/bi";
 import { MdOutlineWidgets } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
+import { useAccountStore } from "../store";
 
 const Tickets: React.FC = () => {
-  const token = localStorage.getItem("token");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [paginationLimit, setPaginationLimit] = useState(10);
 
-  const userString = localStorage.getItem("user");
-  const { role } = JSON.parse(userString as string);
+  const userAccount = useAccountStore((state) => state.account);
 
   const {
     data: tickets,
@@ -68,7 +67,7 @@ const Tickets: React.FC = () => {
           </h1>
 
           <div className="flex flex-col sm:flex-row justify-between gap-10 w-full  mb-6 ">
-            {role === "admin" && (
+            {userAccount && userAccount.role === "admin" && (
               <Link
                 to={"/ticket/new"}
                 className="border-2 px-2 py-2.5 text-center bg-purple-500 text-white font-semibold rounded-lg hover:opacity-85"

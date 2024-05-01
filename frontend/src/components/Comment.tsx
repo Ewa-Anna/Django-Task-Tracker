@@ -3,6 +3,7 @@ import { FiEdit2, FiTrash } from "react-icons/fi";
 import CommentForm from "../pages/forms/CommentForm";
 import { images } from "../constants";
 import { AiOutlineLike } from "react-icons/ai";
+import { useAccountStore } from "../store";
 const Comment = ({
   comment,
   projectId,
@@ -14,6 +15,7 @@ const Comment = ({
   handleDeleteComment,
 }) => {
   const [isUserLoggined, setIsUserLoggedIn] = useState(true);
+  const csrfToken = useAccountStore((state) => state.csrfToken);
 
   console.log(comment);
 
@@ -91,7 +93,9 @@ const Comment = ({
               </button>
               <button
                 className="flex items-center space-x-2"
-                onClick={() => handleDeleteComment({ commentId: comment.id })}
+                onClick={() =>
+                  handleDeleteComment({ csrfToken, commentId: comment.id })
+                }
               >
                 <FiTrash className="w-4 h-auto" />
                 <span>Delete</span>

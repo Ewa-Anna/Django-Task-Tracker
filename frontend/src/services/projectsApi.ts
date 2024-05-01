@@ -101,9 +101,16 @@ export const getVisibilityOptions = async () => {
   }
 };
 
-export const createNewProject = async ({ formData }) => {
+export const createNewProject = async ({ csrfToken, formData }) => {
   try {
-    const response = await clientApi.post(
+    // const config = {
+    //   withCredentials: true,
+    //   headers: {
+    //     "X-CSRFToken": csrfToken,
+    //   },
+    // };
+
+    const response = await clientApi({ csrfToken }).post(
       "http://127.0.0.1:8000/task-tracker/v1/task/projects/",
       formData
     );
@@ -121,11 +128,11 @@ export const createNewProject = async ({ formData }) => {
   }
 };
 
-export const updateProject = async ({ formData }) => {
+export const updateProject = async ({ csrfToken, formData }) => {
   try {
     const projectId = formData.get("id");
 
-    const response = await clientApi.patch(
+    const response = await clientApi({ csrfToken }).patch(
       `http://127.0.0.1:8000/task-tracker/v1/task/projects/${projectId}/`,
       formData
     );
