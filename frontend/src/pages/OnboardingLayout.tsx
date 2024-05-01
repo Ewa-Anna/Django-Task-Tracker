@@ -33,8 +33,8 @@ const OnboardingLayout: React.FC = () => {
   });
 
   return (
-    <div className="w-full flex flex-col max-w-7xl mx-auto  h-screen ">
-      <section className="flex  h-full overflow-scroll custom-scrollbar ">
+    <div className="w-full flex flex-col max-w-7xl mx-auto  h-screen overflow-scroll custom-scrollbar ">
+      <section className="flex  h-full  ">
         <Outlet />
       </section>
     </div>

@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
+import { useAccountStore } from "../../store";
 
-const OnboardingForm: React.FC = () => {
+const OnboardingForm: React.FC = ({ onSave }) => {
+  const csrfToken = useAccountStore((state) => state.csrfToken);
   const [deadlineDateError, setDeadlineDateError] = useState("");
-  const { register, watch, handleSubmit, setValue } = useForm({
+  const {
+    register,
+    watch,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       gender: "",
       birthday: "",
@@ -38,6 +46,7 @@ const OnboardingForm: React.FC = () => {
 
   const handleSave = handleSubmit((data) => {
     console.log(data);
+    onSave({ csrfToken: csrfToken, formData: data });
   });
 
   return (
@@ -57,7 +66,7 @@ const OnboardingForm: React.FC = () => {
               >
                 <input
                   {...register("gender", {
-                    required: "Please chose gender",
+                    required: "Please select gender",
                   })}
                   name="gender"
                   type="radio"
@@ -69,6 +78,11 @@ const OnboardingForm: React.FC = () => {
               </label>
             );
           })}
+          {errors.gender && (
+            <span className="text-xs text-rose-500">
+              {errors.gender?.message}
+            </span>
+          )}
         </div>
       </div>
       <div className="w-full">
@@ -97,10 +111,27 @@ const OnboardingForm: React.FC = () => {
         </label>
         <input
           id="phone"
-          {...register("phone", { required: "Phone is required" })}
+          {...register("phone", {
+            validate: (value) => {
+              const phoneNumber = Number(value.trim());
+              if (isNaN(phoneNumber)) {
+                return "Invalid number";
+              }
+              if (value.trim().length < 9 || value.trim().length > 12) {
+                return "Phone number should have 9 to 12 digits";
+              }
+
+              return true;
+            },
+          })}
           type="text"
           className="py-2"
         />
+        {errors?.phone && (
+          <span className="text-xs text-rose-500 mt-2">
+            {errors?.phone?.message}
+          </span>
+        )}
       </div>
       <div className="w-full flex flex-col">
         <label htmlFor="">Prolfile photo</label>
