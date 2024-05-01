@@ -292,7 +292,7 @@ class DashboardView(APIView):
         for field in profile_fields:
             setattr(profile, field, request_data.get(field, getattr(profile, field)))
 
-        photo_file = request_data.get('photo')
+        photo_file = request_data.get("photo")
         if isinstance(photo_file, UploadedFile):
             profile.photo = photo_file
 
