@@ -19,6 +19,8 @@ import TicketDetails from "./components/TicketDetails";
 import EditTicket from "./pages/EditTicket";
 import UserDetails from "./components/UserDetails";
 import Archive from "./pages/Archive";
+import OnboardingLayout from "./pages/OnboardingLayout";
+import OnboardPage from "./pages/OnboardPage";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +39,10 @@ const App: React.FC = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/user/:id" element={<UserDetails />} />
           <Route path="/archive" element={<Archive />} />
+        </Route>
+
+        <Route element={<OnboardingLayout />}>
+          <Route index path="/onboarding" element={<OnboardPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>
