@@ -214,9 +214,10 @@ const ProjectForm: React.FC = ({
                     key={id}
                     htmlFor={label}
                     className={`${
-                      watch("visibility") === value &&
-                      " bg-[#a5b4fc] text-white font-bold"
-                    }  text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2`}
+                      watch("visibility") === value
+                        ? " bg-[#a5b4fc] text-white font-bold"
+                        : "bg-gray-200 "
+                    }  text-sm flex gap-1 text-gray-700 cursor-pointer rounded p-4 mt-3 truncate md:mt-2`}
                   >
                     <input
                       {...register("visibility", {

@@ -12,7 +12,7 @@ const RootLayout: React.FC = () => {
   const setCsrfToken = useAccountStore((state) => state.setCsrfToken);
   const navigate = useNavigate();
 
-  const isConfigured = false;
+  const isConfigured = true;
 
   if (!isConfigured) {
     navigate("/onboarding");

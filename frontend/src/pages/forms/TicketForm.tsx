@@ -223,9 +223,10 @@ const TicketForm: React.FC = ({
                     key={id}
                     htmlFor={label}
                     className={`${
-                      watch("priority") === value &&
-                      " bg-blue-300 text-white font-bold"
-                    }  text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2`}
+                      watch("priority") === value
+                        ? " bg-blue-300 text-white font-bold"
+                        : "bg-gray-200"
+                    }  text-sm flex gap-1 text-gray-700 cursor-pointer  rounded p-4 mt-3 truncate md:mt-2`}
                   >
                     <input
                       {...register("priority", {
@@ -263,9 +264,10 @@ const TicketForm: React.FC = ({
                     key={id}
                     htmlFor={label}
                     className={`${
-                      watch("type") === value &&
-                      " bg-blue-300 text-white font-bold"
-                    }  text-sm flex gap-1 text-gray-700 cursor-pointer bg-gray-200 rounded p-4 mt-3 truncate md:mt-2`}
+                      watch("type") === value
+                        ? " bg-blue-300 text-white font-bold"
+                        : "bg-gray-200 "
+                    }  text-sm flex gap-1 text-gray-700 cursor-pointer rounded p-4 mt-3 truncate md:mt-2`}
                   >
                     <input
                       {...register("type", {
