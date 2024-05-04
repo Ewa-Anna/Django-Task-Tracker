@@ -1,15 +1,16 @@
-# React-Django-Task-Tracker
-This repository contains a full-stack task management system built with React and Django.
+# Django-Task-Tracker
+This repository contains a backend for task management system built with Django Rest Framework.
+
+The frontend is available [here](https://github.com/HurasAdam/React-Django-Task-Tracker).
 
 ## Table of Contents
-- [Overview](#project-overview)
-- [Installation](#how-to-install-and-run-the-project)
+- [Overview](#overview)
+- [Installation](#installation)
 - [Tests](#tests)
 - [Docker](#docker-compose)
 - [Features](#features)
 - [Tools](#technologies-and-frameworks)
 - [License](#license)
-- [Contributors](#contributors)
 
 
 ## Overview
@@ -18,9 +19,7 @@ The application allows users to create, edit, and organize tasks effectively. Th
 
 ## Installation
 ### Running project locally
-For frontend please refer to [frontend README.md](https://github.com/HurasAdam/React-Django-Task-Tracker)
-
-For backend please refer to [backend README.md](backend/README.md)
+Please refer to [backend README.md](backend/README.md)
 
 ### docker-compose
 Building Docker Image
@@ -41,17 +40,6 @@ Backend
 
 
 ## Technologies and frameworks
-- Frontend
-    
-    [![React](https://skillicons.dev/icons?i=react)](https://skillicons.dev)
-    [![Tailwind](https://skillicons.dev/icons?i=tailwind)](https://skillicons.dev)
-    [![Typescript](https://skillicons.dev/icons?i=typescript)](https://skillicons.dev)
-    [![JS](https://skillicons.dev/icons?i=javascript)](https://skillicons.dev)
-    [![HTML](https://skillicons.dev/icons?i=html)](https://skillicons.dev)
-    [![CSS](https://skillicons.dev/icons?i=css)](https://skillicons.dev)
-    - React Query
-    - Axios
-    - Shadcn
 
 - Backend
     
@@ -78,10 +66,3 @@ Backend
 
 ## License
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
-
-## Contributors
-### Frontend
-> [HurasAdam](https://github.com/HurasAdam)
-
-### Backend
-> [Ewa-Anna](https://github.com/Ewa-Anna)
