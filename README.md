@@ -18,7 +18,7 @@ The application allows users to create, edit, and organize tasks effectively. Th
 
 ## Installation
 ### Running project locally
-For frontend please refer to [frontend README.md](frontend/README.md)
+For frontend please refer to [frontend README.md](https://github.com/HurasAdam/React-Django-Task-Tracker)
 
 For backend please refer to [backend README.md](backend/README.md)
 
