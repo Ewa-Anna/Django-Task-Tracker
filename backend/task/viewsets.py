@@ -1,4 +1,6 @@
+from django.http import Http404
 from django.utils import timezone
+from django.db.models import Q
 
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.decorators import action
@@ -58,16 +60,20 @@ class ProjectViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def get_queryset(self):
         queryset = super().get_queryset()
+        user = self.request.user
+
         title = self.request.query_params.get("title")
         owner = self.request.query_params.get("owner")
         tags = self.request.query_params.getlist("tags")
         ordering = self.request.query_params.get("ordering")
-        visibility = self.request.query_params.get("visibility", "public")
 
         start_date = self.request.query_params.get("start_date")
         end_date = self.request.query_params.get("end_date")
 
-        queryset = Project.objects.all()
+        queryset = queryset.filter(
+            Q(visibility="public")
+            | (Q(visibility="private") & (Q(owner=user) | Q(assignees=user)))
+        )
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -80,9 +86,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         if ordering:
             queryset = queryset.order_by(ordering)
-
-        if visibility:
-            queryset = queryset.filter(visibility=visibility)
 
         if start_date:
             start_date = timezone.make_aware(
@@ -97,6 +100,27 @@ class ProjectViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(deadline__date__lte=end_date)
 
         return queryset
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        lookup_value = self.kwargs[self.lookup_field]
+        user = self.request.user
+
+        try:
+            obj = (
+                queryset.filter(pk=lookup_value)
+                .filter(
+                    Q(visibility="public")
+                    | (Q(visibility="private") & (Q(owner=user) | Q(assignees=user)))
+                )
+                .distinct()
+                .get()
+            )
+            return obj
+        except queryset.model.DoesNotExist as exc:
+            raise Http404("Project not found.") from exc
+        except queryset.model.MultipleObjectsReturned as exc:
+            raise Http404("Multiple projects found with the same ID.") from exc
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
