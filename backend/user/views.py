@@ -76,6 +76,7 @@ class LoginView(APIView):
             "photo": profile.photo.url if profile.photo else None,
             "birthdate": profile.birthdate,
             "gender": profile.gender,
+            "is_configured": profile.is_configured,
             "csrf_token": request.META.get("CSRF_COOKIE"),
         }
 
@@ -365,6 +366,7 @@ class SessionValidationView(APIView):
             "photo": profile.photo.url if profile.photo else None,
             "birthdate": profile.birthdate,
             "gender": profile.gender,
+            "is_configured": profile.is_configured,
             "csrf_token": request.META.get("CSRF_COOKIE"),
         }
         response_data["success"] = True
