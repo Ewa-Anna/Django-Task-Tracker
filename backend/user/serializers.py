@@ -71,6 +71,8 @@ class UserSerializer(ModelSerializer):
             "profile",
             "theme",
             "role",
+            "join_date",
+            "last_loggin",
         ]
         extra_kwargs = {
             "password": {"write_only": True},
