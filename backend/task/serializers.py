@@ -1,3 +1,4 @@
+import cloudinary
 from django.utils import timezone
 
 from rest_framework import serializers
@@ -14,6 +15,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
     uploader = serializers.HiddenField(default=serializers.CurrentUserDefault())
     url = serializers.SerializerMethodField()
     filename_to_display = serializers.SerializerMethodField()
+    mimeType = serializers.SerializerMethodField()
+    size_in_mb = serializers.SerializerMethodField()
 
     class Meta:
         model = Attachment
@@ -26,6 +29,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
             "comment",
             "uploader",
             "filename_to_display",
+            "mimeType",
+            "size_in_mb",
         ]
 
     def get_url(self, obj):
@@ -48,6 +53,31 @@ class AttachmentSerializer(serializers.ModelSerializer):
             file_name = file_url.split("/")[-1]
             filename_without_suffix = file_name.rsplit("_", 1)[0]
             return filename_without_suffix
+        return None
+
+    def get_mimeType(self, obj):
+        url = self.get_url(obj)
+        if url:
+            public_id = url.split("/fl_attachment/v1/")[1]
+            try:
+                cloudinary_info = cloudinary.api.resource(public_id)
+                return cloudinary_info.get("format")
+            except Exception as e:
+                print(f"Error fetching Cloudinary resource: {e}")
+        return None
+
+    def get_size_in_mb(self, obj):
+        url = self.get_url(obj)
+        if url:
+            public_id = url.split("/fl_attachment/v1/")[1]
+            try:
+                cloudinary_info = cloudinary.api.resource(public_id)
+                size_in_bytes = cloudinary_info.get("bytes")
+                size_in_kb = size_in_bytes / 1024
+                size_in_mb = size_in_kb / 1024
+                return round(size_in_mb, 2)
+            except Exception as e:
+                print(f"Error fetching Cloudinary resource: {e}")
         return None
 
 
