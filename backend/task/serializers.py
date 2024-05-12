@@ -75,7 +75,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
                 size_in_bytes = cloudinary_info.get("bytes")
                 size_in_kb = size_in_bytes / 1024
                 size_in_mb = size_in_kb / 1024
-                return round(size_in_mb, 2)
+                return round(size_in_mb, 3)
             except Exception as e:
                 print(f"Error fetching Cloudinary resource: {e}")
         return None
