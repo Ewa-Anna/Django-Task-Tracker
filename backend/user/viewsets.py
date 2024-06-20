@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.contrib.auth import get_user_model, logout
+from django.forms import ValidationError
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
@@ -40,11 +41,18 @@ class UserViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         query = self.request.query_params.get("query")
+        role = self.request.query_params.get("role")
+        valid_roles = ["guest", "member", "manager", "admin"]
 
         if query:
             queryset = queryset.filter(
                 Q(first_name__icontains=query) | Q(last_name__icontains=query)
             )
+
+        if role:
+            if role not in valid_roles:
+                raise ValidationError({"role": "Invalid role specified."})
+            queryset = queryset.filter(role=role)
 
         return queryset
 
