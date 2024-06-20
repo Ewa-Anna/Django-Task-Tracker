@@ -62,6 +62,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
             try:
                 cloudinary_info = cloudinary.api.resource(public_id)
                 return cloudinary_info.get("format")
+            # pylint: disable=W0718
             except Exception as e:
                 print(f"Error fetching Cloudinary resource: {e}")
         return None
@@ -76,6 +77,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
                 size_in_kb = size_in_bytes / 1024
                 size_in_mb = size_in_kb / 1024
                 return round(size_in_mb, 3)
+            # pylint: disable=W0718
             except Exception as e:
                 print(f"Error fetching Cloudinary resource: {e}")
         return None
