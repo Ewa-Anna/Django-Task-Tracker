@@ -20,7 +20,7 @@ class ProfileSerializer(ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ["user", "bio", "url", "birthdate", "gender"]
+        fields = ["user", "bio", "url", "birthdate", "gender", "photo"]
         read_only_fields = ["is_configured"]
 
     def get_url(self, obj):
@@ -45,7 +45,7 @@ class ProfileSerializer(ModelSerializer):
         instance.birthdate = validated_data.get("birthdate", instance.birthdate)
         instance.gender = validated_data.get("gender", instance.gender)
 
-        if any(field in validated_data for field in ["bio", "birthdate", "gender"]):
+        if any(field in validated_data for field in ["bio", "photo", "birthdate", "gender"]):
             instance.is_configured = True
 
         instance.save()
