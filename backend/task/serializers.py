@@ -4,7 +4,7 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from user.models import CustomUser
-from user.serializers import ProfileSerializer
+from user.serializers import ProfileSerializer, UserSerializer
 from tags.serializers import CustomTagSerializer
 from tags.models import CustomTags
 
@@ -128,8 +128,8 @@ class CustomCreatedBySerializer(serializers.StringRelatedField):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
-    tags = serializers.ListField(required=False)
-    assignees = serializers.ListField(required=False)
+    tags = serializers.ListSerializer(child=CustomTagSerializer(), required=False)
+    assignees = serializers.ListSerializer(child=UserSerializer(), required=False)
     attachments = AttachmentSerializer(many=True, required=False)
 
     class Meta:
@@ -152,10 +152,15 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
         attachments_data = validated_data.pop("attachments", [])
         assignees_data = validated_data.pop("assignees", [])
         tags_data = validated_data.pop("tags", [])
+
         project = Project.objects.create(**validated_data)
 
-        for assignee in assignees_data:
-            project.assignees.add(assignee)
+        for assignee_data in assignees_data:
+            try:
+                assignee = CustomUser.objects.get(id=assignee_data["id"])
+                project.assignees.add(assignee)
+            except CustomUser.DoesNotExist:
+                pass 
 
         for tag_id in tags_data:
             try:
@@ -171,15 +176,22 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         attachments_data = validated_data.pop("attachments", [])
-        assignees_data = validated_data.pop("assignees", None)
-        tags_data = validated_data.pop("tags", None)
+        assignees_data = validated_data.pop("assignees", [])
+        tags_data = validated_data.pop("tags", [])
 
         instance.__dict__.update(validated_data)
+        instance.save()
 
-        if assignees_data is not None:
-            instance.assignees.clear()
-            for assignee in assignees_data:
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.assignees.clear()
+        for assignee_data in assignees_data:
+            try:
+                assignee = CustomUser.objects.get(pk=assignee_data["id"])
                 instance.assignees.add(assignee)
+            except CustomUser.DoesNotExist:
+                pass
 
         if tags_data is not None:
             instance.tags.clear()
@@ -196,7 +208,14 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             Attachment.objects.create(project=instance, **attachment_data)
 
         return instance
+    
+    def create_assignees(self, project, assignee_data):
+        assignee_id = assignee_data.get("id")
 
+        if assignee_id is not None:
+            assignee = CustomUser.objects.get(pk=assignee_id)
+            project.assignees.add(assignee)
+            
     def validate_assignees(self, value):
         max_assignees = 10
 

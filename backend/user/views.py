@@ -378,7 +378,8 @@ class SessionValidationView(APIView):
 class OnboardingView(APIView):
     """
     This view allows user to first-time update the profile in order to set
-    is_configured value to True.
+    is_configured value to True. Accepts: bio, birthdate, photo (file) and
+    gender (male, female, empty).
     """
 
     parser_classes = [MultiPartParser, FormParser, FileUploadParser]
