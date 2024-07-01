@@ -3,7 +3,7 @@ astroid==3.0.2
 attrs==23.2.0
 autobahn==23.6.2
 Automat==22.10.0
-black==23.12.1
+black==24.4.2
 bleach==6.1.0
 certifi==2023.11.17
 cffi==1.16.0
@@ -32,7 +32,7 @@ djangorestframework-simplejwt==5.3.1
 djoser==2.2.2
 drf-extensions==0.7.1
 drf-flex-fields==1.0.2
-drf-spectacular==0.27.1
+drf-spectacular==0.27.2
 drf-spectacular-sidecar==2024.3.4
 drf_api_logger==1.1.15
 exceptiongroup==1.2.0
@@ -54,8 +54,6 @@ platformdirs==4.1.0
 pluggy==1.4.0
 psycopg2==2.9.9
 psycopg2-binary==2.9.9
-pyasn1==0.5.1
-pyasn1-modules==0.3.0
 pycodestyle==2.11.1
 pycparser==2.21
 pyflakes==3.2.0
@@ -66,7 +64,7 @@ pytest==8.0.0
 pytest-django==4.8.0
 python-dotenv==1.0.0
 python3-openid==3.2.0
-pytz==2023.3.post1
+pytz==2024.1
 PyYAML==6.0.1
 referencing==0.33.0
 requests==2.31.0
