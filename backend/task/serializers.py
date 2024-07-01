@@ -160,7 +160,7 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
                 assignee = CustomUser.objects.get(id=assignee_data["id"])
                 project.assignees.add(assignee)
             except CustomUser.DoesNotExist:
-                pass 
+                pass
 
         for tag_id in tags_data:
             try:
@@ -208,14 +208,14 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             Attachment.objects.create(project=instance, **attachment_data)
 
         return instance
-    
+
     def create_assignees(self, project, assignee_data):
         assignee_id = assignee_data.get("id")
 
         if assignee_id is not None:
             assignee = CustomUser.objects.get(pk=assignee_id)
             project.assignees.add(assignee)
-            
+
     def validate_assignees(self, value):
         max_assignees = 10
 
