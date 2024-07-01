@@ -45,7 +45,9 @@ class ProfileSerializer(ModelSerializer):
         instance.birthdate = validated_data.get("birthdate", instance.birthdate)
         instance.gender = validated_data.get("gender", instance.gender)
 
-        if any(field in validated_data for field in ["bio", "photo", "birthdate", "gender"]):
+        if any(
+            field in validated_data for field in ["bio", "photo", "birthdate", "gender"]
+        ):
             instance.is_configured = True
 
         instance.save()
