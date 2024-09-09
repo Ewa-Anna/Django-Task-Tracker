@@ -67,7 +67,7 @@ python3-openid==3.2.0
 pytz==2024.1
 PyYAML==6.0.1
 referencing==0.33.0
-requests==2.31.0
+requests==2.32.3
 requests-oauthlib==2.0.0
 rpds-py==0.20.0
 service-identity==24.1.0
