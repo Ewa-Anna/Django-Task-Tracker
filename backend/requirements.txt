@@ -39,7 +39,7 @@ exceptiongroup==1.2.0
 flake8==7.0.0
 hyperlink==21.0.0
 idna==3.6
-incremental==22.10.0
+incremental==24.7.2
 inflection==0.5.1
 iniconfig==2.0.0
 isort==5.13.2
