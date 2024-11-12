@@ -20,7 +20,7 @@ dill==0.3.8
 Django==5.0.1
 django-audit-log==0.7.0
 django-cloudinary-storage==0.3.0
-django-cors-headers==4.4.0
+django-cors-headers==4.6.0
 django-database-url==1.0.3
 django-extensions==3.2.3
 django-filter==24.2
