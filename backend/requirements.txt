@@ -3,7 +3,7 @@ astroid==3.0.2
 attrs==24.2.0
 autobahn==24.4.2
 Automat==24.8.1
-black==24.4.2
+black==24.10.0
 bleach==6.1.0
 certifi==2023.11.17
 cffi==1.17.1
