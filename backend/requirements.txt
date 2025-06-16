@@ -36,7 +36,7 @@ drf-spectacular==0.27.2
 drf-spectacular-sidecar==2024.11.1
 drf_api_logger==1.1.16
 exceptiongroup==1.2.0
-flake8==7.0.0
+flake8==7.2.0
 hyperlink==21.0.0
 idna==3.6
 incremental==24.7.2
