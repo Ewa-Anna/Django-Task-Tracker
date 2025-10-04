@@ -1,4 +1,4 @@
-﻿asgiref==3.8.1
+﻿asgiref==3.9.2
 astroid==3.3.10
 attrs==24.2.0
 autobahn==24.4.2
