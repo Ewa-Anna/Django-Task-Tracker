@@ -42,7 +42,7 @@ idna==3.6
 incremental==24.7.2
 inflection==0.5.1
 iniconfig==2.0.0
-isort==5.13.2
+isort==6.1.0
 jsonschema==4.21.1
 jsonschema-specifications==2025.4.1
 mccabe==0.7.0
