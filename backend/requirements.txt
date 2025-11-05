@@ -32,7 +32,7 @@ djangorestframework-simplejwt==5.3.1
 djoser==2.3.3
 drf-extensions==0.7.1
 drf-flex-fields==1.0.2
-drf-spectacular==0.27.2
+drf-spectacular==0.29.0
 drf-spectacular-sidecar==2025.10.1
 drf_api_logger==1.1.16
 exceptiongroup==1.2.0
