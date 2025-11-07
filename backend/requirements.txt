@@ -38,7 +38,7 @@ drf_api_logger==1.1.16
 exceptiongroup==1.2.0
 flake8==7.3.0
 hyperlink==21.0.0
-idna==3.6
+idna==3.11
 incremental==24.7.2
 inflection==0.5.1
 iniconfig==2.0.0
