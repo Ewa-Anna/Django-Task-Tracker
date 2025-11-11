@@ -58,7 +58,7 @@ pycodestyle==2.14.0
 pycparser==2.23
 pyflakes==3.2.0
 PyJWT==2.10.1
-pylint==3.0.3
+pylint==4.0.2
 pyOpenSSL==25.3.0
 pytest==8.4.2
 pytest-django==4.11.1
