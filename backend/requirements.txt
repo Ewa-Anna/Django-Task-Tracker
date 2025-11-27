@@ -28,7 +28,7 @@ django-rest-passwordreset==1.5.0
 django-taggit==6.1.0
 django-templated-mail==1.1.1
 djangorestframework==3.16.1
-djangorestframework-simplejwt==5.3.1
+djangorestframework-simplejwt==5.5.1
 djoser==2.3.3
 drf-extensions==0.7.1
 drf-flex-fields==1.0.2
