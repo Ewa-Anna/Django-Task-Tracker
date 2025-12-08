@@ -1,6 +1,6 @@
 ﻿asgiref==3.10.0
 astroid==4.0.2
-attrs==24.2.0
+attrs==25.4.0
 autobahn==25.10.2
 Automat==25.4.16
 black==25.9.0
