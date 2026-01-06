@@ -8,7 +8,7 @@ bleach==6.1.0
 certifi==2025.10.5
 cffi==1.17.1
 channels==4.3.1
-charset-normalizer==3.4.3
+charset-normalizer==3.4.4
 click==8.3.0
 cloudinary==1.44.1
 colorama==0.4.6
