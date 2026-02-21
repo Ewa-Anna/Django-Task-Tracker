@@ -17,7 +17,7 @@ cryptography==46.0.3
 daphne==4.2.1
 defusedxml==0.8.0rc2
 dill==0.4.1
-Django==6.0.1
+Django==6.0.2
 django-audit-log==0.7.0
 django-cloudinary-storage==0.3.0
 django-cors-headers==4.9.0
