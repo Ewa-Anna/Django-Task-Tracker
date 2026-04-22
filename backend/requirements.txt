@@ -72,7 +72,7 @@ requests-oauthlib==2.0.0
 rpds-py==0.30.0
 service-identity==24.2.0
 six==1.17.0
-social-auth-app-django==5.4.0
+social-auth-app-django==5.8.0
 social-auth-core==4.8.5
 sqlparse==0.5.5
 tomli==2.4.0
