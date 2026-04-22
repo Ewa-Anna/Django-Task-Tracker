@@ -57,7 +57,7 @@ psycopg2-binary==2.9.11
 pycodestyle==2.14.0
 pycparser==3.0
 pyflakes==3.4.0
-PyJWT==2.10.1
+PyJWT==2.12.1
 pylint==4.0.5
 pyOpenSSL==25.3.0
 pytest==9.0.2
