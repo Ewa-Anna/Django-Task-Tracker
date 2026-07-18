@@ -13,7 +13,7 @@ click==8.4.2
 cloudinary==1.44.2
 colorama==0.4.6
 constantly==23.10.4
-cryptography==48.0.0
+cryptography==49.0.0
 daphne==4.2.1
 defusedxml==0.8.0rc2
 dill==0.4.1
